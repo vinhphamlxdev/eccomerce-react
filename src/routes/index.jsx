@@ -1,4 +1,5 @@
 import Home from "../pages/Home";
+import ProductDeatail from "../pages/ProductDetail";
 import Product from "../pages/Products";
 import SignUp from "../pages/SignUp";
 export const publicRoutes = [
@@ -13,5 +14,9 @@ export const publicRoutes = [
   {
     path: "/signup",
     component: SignUp,
+  },
+  {
+    path: "/product/:id",
+    component: ProductDeatail,
   },
 ];
