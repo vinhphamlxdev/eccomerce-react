@@ -13,6 +13,5 @@ export const publicRoutes = [
   {
     path: "/signup",
     component: SignUp,
-    layout: null,
   },
 ];

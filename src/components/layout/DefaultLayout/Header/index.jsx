@@ -7,11 +7,13 @@ import { FaPlus } from "react-icons/fa6";
 import styled from "styled-components";
 import { categoryData } from "../../../Data";
 import { AiOutlineThunderbolt } from "react-icons/ai";
+import { NavLink } from "react-router-dom";
 
 export default function Header() {
-  const [show, setShow] = React.useState(false);
+  const [showCategory, setShowCategory] = React.useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
   const [activeSubMenu, setActiveSubMenu] = useState(null);
+
   const handleMenuClick = (index) => {
     activeMenu === index ? setActiveMenu(null) : setActiveMenu(index);
   };
@@ -51,10 +53,13 @@ export default function Header() {
             </button>
           </div>
         </div>
-        <button className="signup-btn items-center flex gap-x-2 bg-[#B21E02] text-[#F1F3E4] py-2 px-2 text-sm">
+        <NavLink
+          to={"/signup"}
+          className="signup-btn items-center flex gap-x-2 bg-[#B21E02] text-[#F1F3E4] py-2 px-2 text-sm"
+        >
           <i className="bi text-[#FFFF00] text-base bi-person-plus-fill"></i>
           <span>Đăng ký</span>
-        </button>
+        </NavLink>
       </div>
       <div className="flex flex-col py-3">
         <div className="bg-white   justify-between items-center grid gap-x-3 grid-cols-4">
@@ -126,91 +131,106 @@ export default function Header() {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-4 gap-x-3">
-        <div className="col-span-1 flex items-center  bg-primary justify-between text-white px-3 py-2">
-          <FaBars className="text-lg" />
-          <span className="uppercase text-lg font-semibold">
-            DANH MỤC SẢN PHẨM
-          </span>
-          <FaPlus className="text-lg" />
-        </div>
-        <div className="col-span-2">
-          <div className="rounded-md header-search">
-            <div className="bg-[#FFFFE6] flex items-center relative">
-              <input
-                className="text-gray-400 w-full text-base outline-none pl-3 pr-6 py-2"
-                placeholder="Tìm sản phẩm..."
-                type="text"
-              />
-              <i className="bi text-lg  text-[#1D8DD9] absolute top-2/4 right-2 -translate-y-2/4 bi-search"></i>
+      <div className="relative z-[200]">
+        <div className="grid grid-cols-12 gap-x-3 ">
+          <div
+            onClick={() => setShowCategory(!showCategory)}
+            className="col-span-3 cursor-pointer select-none transition-all hover:opacity-75 flex items-center  bg-primary justify-between text-white px-3 py-2"
+          >
+            <FaBars className="text-lg" />
+            <span className="uppercase text-lg font-semibold">
+              DANH MỤC SẢN PHẨM
+            </span>
+            {showCategory ? (
+              <i className="bi text-lg bi-chevron-up"></i>
+            ) : (
+              <FaPlus className="text-lg" />
+            )}
+          </div>
+          <div className="col-span-6">
+            <div className="rounded-md header-search">
+              <div className="bg-[#FFFFE6] flex items-center relative">
+                <input
+                  className="text-gray-400 w-full text-base outline-none pl-3 pr-6 py-2"
+                  placeholder="Tìm sản phẩm..."
+                  type="text"
+                />
+                <i className="bi text-lg  text-[#1D8DD9] absolute top-2/4 right-2 -translate-y-2/4 bi-search"></i>
+              </div>
             </div>
           </div>
+          <div className="col-span-3 justify-center flex items-center  bg-primary text-white px-3 py-2">
+            <button className="flex btn gap-x-3 justify-center items-center">
+              <i className="bi bi-cart text-secondary text-xl hover:opacity-75 transition-all"></i>
+              <span className="text-lg font-semibold">0 Sản phẩm</span>
+            </button>
+          </div>
         </div>
-        <div className="col-span-1 justify-center flex items-center  bg-primary text-white px-3 py-2">
-          <button className="flex btn gap-x-3 justify-center items-center">
-            <i className="bi bi-cart text-secondary text-xl hover:opacity-75 transition-all"></i>
-            <span className="text-lg font-semibold">0 Sản phẩm</span>
-          </button>
-        </div>
-      </div>
-      <div className="category-menu w-full flex flex-col bg-[#CBCBCB]">
-        {categoryData.map((item, index) => {
-          return (
-            <div key={item.id} className="relative category-menu__item">
-              <div
-                onClick={() => handleMenuClick(index)}
-                className="py-[2px] px-3 cursor-pointer transition-all hover:bg-[#B82F15] text-white bg-bgCategoryItem mb-[1px] flex justify-between items-center"
-              >
-                <div className="flex items-center gap-x-3">
-                  <i className="bi pointer-events-none text-base text-white cursor-pointer bi-caret-right-fill"></i>
-                  <div className="text-white hover:bg-[#0000CC] inline-block px-2 py-2 text-base">
-                    {item.name}
+        {showCategory && (
+          <div className="category-menu absolute top-full w-full flex flex-col bg-[#CBCBCB]">
+            {categoryData.map((item, index) => {
+              return (
+                <div key={item.id} className="relative category-menu__item">
+                  <div
+                    onClick={() => handleMenuClick(index)}
+                    className="py-[2px] px-3 cursor-pointer transition-all hover:bg-[#B82F15] text-white bg-bgCategoryItem mb-[1px] flex justify-between items-center"
+                  >
+                    <div className="flex items-center gap-x-3">
+                      <i className="bi pointer-events-none text-base text-white cursor-pointer bi-caret-right-fill"></i>
+                      <div className="text-white hover:bg-[#0000CC] inline-block px-2 py-2 text-base">
+                        {item.name}
+                      </div>
+                    </div>
+                    <i className="bi text-white text-xl cursor-pointer pointer-events-none bi-plus"></i>
                   </div>
-                </div>
-                <i className="bi text-white text-xl cursor-pointer pointer-events-none bi-plus"></i>
-              </div>
-              {activeMenu === index && (
-                <div className="caterory-panel  bg-[#CBCBCB]  flex-col">
-                  {item?.children?.map((child, index) => {
-                    return (
-                      <div key={child.name} className="">
-                        <div
-                          onClick={() => handleSubMenuClick(index)}
-                          className="py-[2px] pl-7 pr-3 cursor-pointer transition-all  text-white bg-[#646461] border-b border-[#F1FAFE] flex justify-between items-center"
-                        >
-                          <div className="flex justify-between items-center w-full caterory-panel__content">
-                            <div className="flex items-center gap-x-3">
-                              <i className="bi pointer-events-none text-base text-white cursor-pointer bi-chevron-right"></i>
-                              <div className="text-white hover:bg-[#0000CC] inline-block px-2 py-2 text-base">
-                                {child.name}
+                  {activeMenu === index && (
+                    <div className="caterory-panel  bg-[#CBCBCB]  flex-col">
+                      {item?.children?.map((child, index) => {
+                        return (
+                          <div key={child.name} className="">
+                            <div
+                              onClick={() => handleSubMenuClick(index)}
+                              className="py-[2px] pl-7 pr-3 cursor-pointer transition-all  text-white bg-[#646461] border-b border-[#F1FAFE] flex justify-between items-center"
+                            >
+                              <div className="flex justify-between items-center w-full caterory-panel__content">
+                                <div className="flex items-center gap-x-3">
+                                  <i className="bi pointer-events-none text-base text-white cursor-pointer bi-chevron-right"></i>
+                                  <div className="text-white hover:bg-[#0000CC] inline-block px-2 py-2 text-base">
+                                    {child.name}
+                                  </div>
+                                </div>
+                                <i
+                                  className={`bi text-white text-xl cursor-pointer pointer-events-none bi-plus`}
+                                ></i>
                               </div>
                             </div>
-                            <i className="bi text-white text-xl cursor-pointer pointer-events-none bi-plus"></i>
+                            {activeSubMenu === index && (
+                              <div className="category-panel__submenu pb-2 flex-wrap gap-y-[2px] pl-3 pr-7 flex items-center gap-x-[2px]">
+                                {child?.lastMenu?.map((last, index) => {
+                                  return (
+                                    <button
+                                      key={index}
+                                      className="bg-[#ECECEC] hover:bg-white transition-all border-solid  text-[##002343] py-1 rounded-sm flex items-center pr-3 pl-7 gap-x-1"
+                                    >
+                                      <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
+                                      <span className="text-sm">
+                                        {last.name}
+                                      </span>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            )}
                           </div>
-                        </div>
-                        {activeSubMenu === index && (
-                          <div className="category-panel__submenu pb-2 flex-wrap gap-y-[2px] pl-3 pr-7 flex items-center gap-x-[2px]">
-                            {child?.lastMenu?.map((last, index) => {
-                              return (
-                                <button
-                                  key={index}
-                                  className="bg-[#ECECEC] hover:bg-white transition-all border-solid  text-[##002343] py-1 rounded-sm flex items-center pr-3 pl-7 gap-x-1"
-                                >
-                                  <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
-                                  <span className="text-sm">{last.name}</span>
-                                </button>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          );
-        })}
+              );
+            })}
+          </div>
+        )}
       </div>
     </StyledHeader>
   );
