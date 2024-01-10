@@ -1,10 +1,11 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
+import { getAllAddress } from "../services/AddressApi";
 
 export default function useAddress(errors, setError) {
   const [districts, setDistricts] = React.useState([]);
   const { data: provicesData } = useQuery({
-    queryKey: ["provices"],
+    queryKey: ["provinces"],
     onSuccess: () => {},
     queryFn: () => getAllAddress(),
     onError: (err) => {
@@ -13,7 +14,6 @@ export default function useAddress(errors, setError) {
   });
   const handleChangeProvinces = (e) => {
     const provinceName = e.target.value;
-    console.log(provinceName);
     if (provinceName) {
       delete errors.cityAddress;
 

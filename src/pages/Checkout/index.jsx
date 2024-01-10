@@ -12,6 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { getAllAddress } from "../../services/AddressApi";
 import { useQuery } from "@tanstack/react-query";
 import useAddress from "../../Hooks/useAddress";
+import Button from "../../components/Button";
 
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
@@ -53,14 +54,14 @@ export default function Checkout() {
     resolver: yupResolver(schemaValidate),
   });
 
-  const handleSignUp = async (data) => {
+  const handleCheckout = async (data) => {
     console.log(data);
   };
   const {
     districts,
     handleChangeDistricts,
-    handleChangeProvinces,
     provicesData,
+    handleChangeProvinces,
   } = useAddress(errors, setError);
   return (
     <CheckoutStyled className="checkout-page">
@@ -70,7 +71,7 @@ export default function Checkout() {
           title="Vui lòng điền thông tin để tiếp tục mua hàng"
           icon="bi-card-heading"
         />
-        <div className="p-3 grid grid-cols-2 gap-x-3">
+        <div className="p-3 grid grid-cols-2 gap-x-4">
           <div className="checkout-form flex flex-col">
             <CheckoutType />
             <div className="mt-4">
@@ -84,123 +85,233 @@ export default function Checkout() {
                     </span>
                   </div>
                   <form
-                    onSubmit={handleSubmit(handleSignUp)}
+                    onSubmit={handleSubmit(handleCheckout)}
                     action=""
                     className="flex flex-col mt-10 form-layout"
                   >
                     <Field>
-                      <span className="text-sm text-right text-[#3B3B3B]">
-                        Họ tên
-                      </span>
-                      <Input name="fullName" control={control} />
+                      <div className="flex gap-x-1 items-center">
+                        <Input
+                          name="fullName"
+                          placeholder="Họ tên"
+                          control={control}
+                        />
+                        <span className="text-xs font-normal text-red-600">
+                          *
+                        </span>
+                      </div>
                       <span className="text-xs font-normal text-red-600">
-                        * {errors?.fullName?.message}
+                        {errors?.fullName?.message}
                       </span>
                     </Field>
                     <Field>
-                      <span className="text-sm text-right text-[#3B3B3B]">
-                        Điện thoại
-                      </span>
-                      <Input name="phoneNumber" control={control} />
+                      <div className="flex gap-x-1 items-center">
+                        <Input
+                          placeholder="Họ tên"
+                          name="phoneNumber"
+                          control={control}
+                        />
+                        <span className="text-xs font-normal text-red-600">
+                          *
+                        </span>
+                      </div>
                       <span className="text-xs font-normal text-red-600">
-                        * {errors?.phoneNumber?.message}
+                        {errors?.phoneNumber?.message}
                       </span>
                     </Field>
                     <Field>
-                      <span className="text-sm text-right text-[#3B3B3B]">
-                        Email
-                      </span>
-                      <Input name="email" control={control} />
+                      <div className="flex gap-x-1 items-center">
+                        <Input
+                          placeholder="Email"
+                          name="email"
+                          control={control}
+                        />
+                        <span className="text-xs font-normal text-red-600">
+                          *
+                        </span>
+                      </div>
                       <span className="text-xs font-normal text-red-600">
-                        * {errors?.email?.message}
+                        {errors?.email?.message}
                       </span>
                     </Field>
                     <Field>
-                      <span className="text-sm text-right text-[#3B3B3B]">
-                        Mật khẩu
-                      </span>
-                      <Input
-                        name="password"
-                        type="password"
-                        control={control}
-                      />
+                      <div className="flex gap-x-1 items-center">
+                        <Input
+                          placeholder="Mật khẩu"
+                          name="password"
+                          type="password"
+                          control={control}
+                        />
+                        <span className="text-xs font-normal text-red-600">
+                          *
+                        </span>
+                      </div>
                       <span className="text-xs font-normal text-red-600">
-                        * {errors?.password?.message}
+                        {errors?.password?.message}
                       </span>
                     </Field>
                     <Field>
-                      <span className="text-sm text-right text-[#3B3B3B]">
-                        Xác nhận mật khẩu
-                      </span>
-                      <Input
-                        name="passwordConfirm"
-                        type="password"
-                        control={control}
-                      />
+                      <div className="flex gap-x-1 items-center">
+                        <Input
+                          placeholder="Xác nhận mật khẩu"
+                          name="passwordConfirm"
+                          type="password"
+                          control={control}
+                        />
+                        <span className="text-xs font-normal text-red-600">
+                          *
+                        </span>
+                      </div>
                       <span className="text-xs font-normal text-red-600">
-                        * {errors?.passwordConfirm?.message}
+                        {errors?.passwordConfirm?.message}
                       </span>
                     </Field>
                     <Field>
-                      <span className="text-sm text-right text-[#3B3B3B]">
-                        Địa chỉ
-                      </span>
-                      <Input
-                        placeholder="Số nhà, tên đường, phường/xã"
-                        name="address"
-                        control={control}
-                      />
+                      <div className="flex gap-x-1 items-center">
+                        <Input
+                          placeholder="Địa chỉ (số nhà, tên đường, phường/xã)"
+                          name="address"
+                          control={control}
+                        />
+                        <span className="text-xs font-normal text-red-600">
+                          *
+                        </span>
+                      </div>
                       <span className="text-xs font-normal text-red-600">
-                        * {errors?.address?.message}
+                        {errors?.address?.message}
                       </span>
                     </Field>
                     <Field>
-                      <span className="text-sm text-right text-[#3B3B3B]">
-                        Tỉnh/Thành
-                      </span>
-                      <Select
-                        data={provicesData}
-                        control={control}
-                        onChange={handleChangeProvices}
-                        name="cityAddress"
-                        register={register}
-                      />
+                      <div className="flex gap-x-1 items-center">
+                        <Select
+                          data={provicesData}
+                          control={control}
+                          name="cityAddress"
+                          register={register}
+                          label="Chọn tỉnh thành"
+                          onChange={handleChangeProvinces}
+                        />
+                        <span className="text-xs font-normal text-red-600">
+                          *
+                        </span>
+                      </div>
                       <span className="text-xs font-normal text-red-600">
-                        * {errors?.cityAddress?.message}
+                        {errors?.cityAddress?.message}
                       </span>
                     </Field>
                     <Field>
-                      <span className="text-sm text-right text-[#3B3B3B]">
-                        Quận/Huyện
-                      </span>
-                      <Select
-                        data={districts}
-                        control={control}
-                        name="districtAddress"
-                        register={register}
-                        onChange={handleChangeDistricts}
-                      />
+                      <div className="flex gap-x-1 items-center">
+                        <Select
+                          data={districts}
+                          control={control}
+                          name="districtAddress"
+                          register={register}
+                          onChange={handleChangeDistricts}
+                          label="Chọn quận huyện"
+                        />
+                        <span className="text-xs font-normal text-red-600">
+                          *
+                        </span>
+                      </div>
 
                       <span className="text-xs font-normal text-red-600">
-                        * {errors?.districtAddress?.message}
+                        {errors?.districtAddress?.message}
                       </span>
                     </Field>
                     <div className="grid grid-cols-3 gap-x-2">
                       <span></span>
-                      <div className="btn-signup">
-                        <button
+                      <div className="btn-checkout">
+                        <Button
+                          title="Tiếp tục"
                           type="submit"
-                          className="bg-bgbtn hover:opacity-75 transition-all text-white py-1 rounded-sm flex items-center px-3 gap-x-2"
+                          className="bg-primaryBtn flex-row-reverse"
                         >
-                          <i className="bi text-base text-secondary bi-person-plus-fill"></i>
-                          <span className="text-sm">Đăng ký</span>
-                        </button>
+                          <i className="bi text-base text-secondary bi-chevron-double-right"></i>
+                        </Button>
                       </div>
-                      <span></span>
                     </div>
                   </form>
                 </div>
               </div>
+            </div>
+          </div>
+          <div className="checkout-invoice flex flex-col gap-y-4">
+            <div className="invoice-container">
+              <div className="invoice-heading">ĐƠN HÀNG</div>
+              <div className="invoice-grid invoice-firstgrid">
+                <div className="invoice-item__header">
+                  <span>STT</span>
+                </div>
+                <div className="invoice-item__header">
+                  <span>Hình</span>
+                </div>
+                <div className="invoice-item__header">
+                  <span>Tên sản phẩm</span>
+                </div>
+                <div className="invoice-item__header">
+                  <span>Thành tiền</span>
+                </div>
+              </div>
+              <div className="invoice-grid">
+                <div className="invoice-item__header">
+                  <span>1</span>
+                </div>
+                <div className="invoice-item__header">
+                  <img
+                    src="https://thegioidien.com/hmhB/E8332RJS5_WG_G19714880800.jpg"
+                    alt=""
+                  />
+                </div>
+                <div className="invoice-item__header">
+                  <span>Bộ 2 ổ cắm mạng cat5e</span>
+                </div>
+                <div className="invoice-item__header caculate-total">
+                  <div className="flex flex-col w-full gap-y-2">
+                    <div className="flex items-center w-full justify-between">
+                      <span>ĐVT: Cái</span>
+                      <div className="flex gap-x-[3px] items-center">
+                        <span className="text-red-500 text-sm">X</span>
+                        <span className="mb-1">2</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center w-full justify-between">
+                      <span>Đơn giá</span>
+                      <div className="flex gap-x-[3px] items-center">
+                        <span className="text-gray-700 text-sm">445.700</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center w-full justify-end gap-x-2">
+                      <span className="text-red-500">=</span>
+                      <span className="text-gray-700 text-sm">891.400</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="invoice-grid">
+                <div className="invoice-item__header invoice-flexend">
+                  <span>Tạm tính:</span>
+                </div>
+                <div className="invoice-item__header invoice-flexend">
+                  <span>891.400</span>
+                </div>
+              </div>
+            </div>
+            {/*  */}
+            <div className="flex justify-between items-center">
+              <Button
+                title="Chọn thêm sản phẩm"
+                type="submit"
+                className="bg-primaryBtn"
+              >
+                <i className="bi text-base text-secondary bi-chevron-double-left"></i>
+              </Button>
+              <Button
+                title="Xóa đon hàng"
+                type="submit"
+                className="bg-primaryBtn"
+              >
+                <i className="bi text-base text-secondary bi-trash"></i>
+              </Button>
             </div>
           </div>
         </div>
@@ -212,5 +323,51 @@ const CheckoutStyled = styled.div`
   .checkout-form__control {
     border: 1px solid #d1d1d1;
     padding: 1rem;
+  }
+  .invoice-container {
+    border-left: 1px solid #fedbd7;
+    border-right: 1px solid #fedbd7;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+  .invoice-heading {
+    padding: 0.7rem;
+    font-size: 1.1rem;
+    background-color: #fedbd7;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #002f3f;
+  }
+  .invoice-grid {
+    color: #002f3f;
+    display: grid;
+    background-color: #fff;
+    grid-template-columns: 40px 60px minmax(60px, 1fr) 190px;
+    border-bottom: 1px solid #fedbd7;
+    &.invoice-firstgrid {
+      background-color: #fff1f0;
+    }
+    &:last-child {
+      grid-template-columns: minmax(60px, 1fr) 190px;
+      border-bottom: 1px solid #fedbd7;
+    }
+  }
+
+  .invoice-item__header {
+    display: flex;
+    align-items: center;
+    border-right: 1px solid #fedbd7;
+    overflow: hidden;
+    padding: 5px;
+    justify-content: center;
+    &.caculate-total {
+      justify-content: space-between;
+    }
+    &.invoice-flexend {
+      justify-content: flex-end;
+    }
   }
 `;

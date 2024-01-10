@@ -117,14 +117,14 @@ export default function SignUp() {
             action=""
             className="flex flex-col mt-10 form-layout"
           >
-            <Field>
+            <Field className="grid">
               <span className="text-sm text-right text-[#3B3B3B]">Họ tên</span>
               <Input name="fullName" control={control} />
               <span className="text-xs font-normal text-red-600">
                 * {errors?.fullName?.message}
               </span>
             </Field>
-            <Field>
+            <Field className="grid">
               <span className="text-sm text-right text-[#3B3B3B]">
                 Điện thoại
               </span>
@@ -133,14 +133,14 @@ export default function SignUp() {
                 * {errors?.phoneNumber?.message}
               </span>
             </Field>
-            <Field>
+            <Field className="grid">
               <span className="text-sm text-right text-[#3B3B3B]">Email</span>
               <Input name="email" control={control} />
               <span className="text-xs font-normal text-red-600">
                 * {errors?.email?.message}
               </span>
             </Field>
-            <Field>
+            <Field className="grid">
               <span className="text-sm text-right text-[#3B3B3B]">
                 Mật khẩu
               </span>
@@ -149,7 +149,7 @@ export default function SignUp() {
                 * {errors?.password?.message}
               </span>
             </Field>
-            <Field>
+            <Field className="grid">
               <span className="text-sm text-right text-[#3B3B3B]">
                 Xác nhận mật khẩu
               </span>
@@ -158,7 +158,7 @@ export default function SignUp() {
                 * {errors?.passwordConfirm?.message}
               </span>
             </Field>
-            <Field>
+            <Field className="grid">
               <span className="text-sm text-right text-[#3B3B3B]">Địa chỉ</span>
               <Input
                 placeholder="Số nhà, tên đường, phường/xã"
@@ -169,7 +169,7 @@ export default function SignUp() {
                 * {errors?.address?.message}
               </span>
             </Field>
-            <Field>
+            <Field className="grid">
               <span className="text-sm text-right text-[#3B3B3B]">
                 Tỉnh/Thành
               </span>
@@ -186,7 +186,7 @@ export default function SignUp() {
                 * {errors?.cityAddress?.message}
               </span>
             </Field>
-            <Field>
+            <Field className="grid">
               <span className="text-sm text-right text-[#3B3B3B]">
                 Quận/Huyện
               </span>

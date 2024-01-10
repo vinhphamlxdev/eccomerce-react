@@ -37,6 +37,7 @@ export default function Select({
 }
 
 const SelectStyles = styled.div`
+  width: 100%;
   select {
     width: 100%;
     outline: none;

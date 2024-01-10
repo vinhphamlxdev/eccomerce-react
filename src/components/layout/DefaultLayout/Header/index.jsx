@@ -21,7 +21,7 @@ export default function Header() {
     activeSubMenu === index ? setActiveSubMenu(null) : setActiveSubMenu(index);
   };
   return (
-    <StyledHeader className="header flex flex-col">
+    <StyledHeader className="header w-full flex flex-col">
       <div className="flex bg-[#6A1300] items-center justify-between">
         <div className="flex items-center">
           <div className="px-2 gap-x-2 py-1 flex items-center">
@@ -34,7 +34,7 @@ export default function Header() {
               <span>Chia sẻ</span>
             </button>
           </div>
-          <div className="flex items-center">
+          <div className="flex header-navlink items-center">
             <button className="btn btn-header border-solid border-r border-l border-gray-950 py-3 px-2 gap-x-2">
               <i className="bi text-secondary bi-file-earmark-pdf"></i>
               <span>Tài liệu kỹ thuật</span>
@@ -62,7 +62,7 @@ export default function Header() {
         </NavLink>
       </div>
       <div className="flex flex-col py-3">
-        <div className="bg-white   justify-between items-center grid gap-x-3 grid-cols-4">
+        <div className="bg-white   justify-between header-grid items-center grid gap-x-3 grid-cols-4">
           <NavLink
             to={"/"}
             className="header-logo cursor-pointer col-span-1 p-2"
@@ -265,6 +265,7 @@ const StyledHeader = styled.div`
       #bf442d
     );
   }
+  .signup-btn:hover,
   .btn-header:hover {
     background-color: #b9331a;
     background-image: linear-gradient(
@@ -278,5 +279,16 @@ const StyledHeader = styled.div`
       #b21e02
     );
     color: #fff;
+  }
+
+  @media screen and (max-width: 1180px) {
+    .header-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media screen and (max-width: 990px) {
+    .header-navlink {
+      display: none;
+    }
   }
 `;

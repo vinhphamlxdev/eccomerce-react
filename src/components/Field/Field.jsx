@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 
-const Field = ({ children }) => {
+const Field = ({ children, className = "" }) => {
   return (
-    <FieldStyles className="field-control grid grid-cols-3 items-center gap-x-2">
+    <FieldStyles
+      className={`field-control  grid-cols-3 items-center gap-x-2 ${className}`}
+    >
       {children}
     </FieldStyles>
   );
