@@ -1,21 +1,28 @@
 import React from "react";
+import { useController } from "react-hook-form";
 import styled from "styled-components";
-export default function TextArea() {
+export default function TextArea({ name = "", control, placeholder = "" }) {
+  const { field } = useController({
+    control,
+    name,
+    defaultValue: "",
+  });
+
   return (
     <StyledTextArea>
       <textarea
+        placeholder={placeholder}
         name=""
         rows={3}
         cols={20}
-        id="ctl13_txtNoidung"
-        placeholder="Nội dung..."
-        defaultValue={""}
+        id={name}
+        {...field}
       />
     </StyledTextArea>
   );
 }
 const StyledTextArea = styled.div`
-  width: 768px;
+  width: 826px;
   textarea {
     width: 100%;
     outline: none;

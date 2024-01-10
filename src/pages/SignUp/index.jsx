@@ -12,7 +12,13 @@ import { LoadingButton } from "../../components/Loading";
 import Select from "../../components/Select";
 import { getAllAddress } from "../../services/AddressApi";
 import { useQuery } from "@tanstack/react-query";
-
+import BreadCrumb from "../../components/BreadCrumb";
+import HeadingSession from "../../components/HeadingSession";
+import useAddress from "../../Hooks/useAddress";
+const breadcrumbPaths = [
+  { label: "Trang chủ", url: "/" },
+  { label: "Đăng ký", url: "/signup" },
+];
 const REGEX_PASSWORD =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 const PHONE_REG_EXP = /^[0-9]{10}$/;
@@ -40,7 +46,8 @@ const schemaValidate = Yup.object({
 export default function SignUp() {
   const navigate = useNavigate();
   const [districts, setDistricts] = React.useState([]);
-
+  const [provinceValue, setProvinceValue] = React.useState("");
+  const [districtValue, setDistrictValue] = React.useState("");
   const {
     control,
     handleSubmit,
@@ -51,9 +58,7 @@ export default function SignUp() {
     mode: "onChange",
     resolver: yupResolver(schemaValidate),
   });
-  const handleSignUp = async (data) => {
-    console.log(data);
-  };
+
   const { data: provicesData } = useQuery({
     queryKey: ["provices"],
     onSuccess: () => {},
@@ -62,22 +67,31 @@ export default function SignUp() {
       console.log(err);
     },
   });
-  const handleChangeProvices = (e) => {
-    const provinceCode = +e.target.value;
-    if (provinceCode) {
-      delete errors.cityAddress;
+  const handleSignUp = async (data) => {
+    console.log(data);
+    const { fullName, phoneNumber, email, password, address, cityAddress } =
+      data;
+  };
 
-      const currProvice = provicesData.find(
-        (province) => province.code === provinceCode
+  const handleChangeProvinces = (e) => {
+    const provinceName = e.target.value;
+    setProvinceValue(provinceName);
+    setDistrictValue("");
+    if (provinceName) {
+      delete errors.cityAddress;
+      const currProvince = provicesData.find(
+        (province) => province.name === provinceName
       );
-      if (currProvice) {
-        setDistricts(currProvice.districts);
+      if (currProvince) {
+        setDistricts(currProvince.districts);
       }
     }
   };
+
   const handleChangeDistricts = (e) => {
-    const districtCode = +e.target.value;
-    if (districtCode) {
+    const districtName = e.target.value;
+    setDistrictValue(districtName);
+    if (districtName) {
       setError("districtAddress", { message: "" });
       delete errors.districtAddress;
     }
@@ -85,21 +99,14 @@ export default function SignUp() {
   const { disabledStyle, isDisabled } = useDisabled(isSubmitting);
   return (
     <StyledSignUp className="signup-page">
-      <div className="breadcrumb-session gap-x-3 px-3 py-3 flex items-center">
-        <div className="flex items-center gap-x-1">
-          <i className="bi text-[#E24B01] text-base bi-house"></i>
-          <span className="text-sm">Trang chủ</span>
-        </div>
-        <div className="flex items-center gap-x-1">
-          <i className="bi bi-chevron-right text-[#E24B01] text-base"></i>
-          <span className="text-sm">Đăng ký</span>
-        </div>
-      </div>
-      <div className="signup-container ">
-        <div className="signup-heading flex items-center gap-x-2">
-          <i className="bi bi-person-plus-fill text-secondary text-lg"></i>
-          <span>Đăng ký thành viên</span>
-        </div>
+      <BreadCrumb paths={breadcrumbPaths} />
+
+      <div className="signup-container border-session">
+        <HeadingSession
+          title="Đăng ký thành viên"
+          icon="bi bi-person-plus-fill text-secondary text-lg"
+        />
+
         <div className="p-3 flex flex-col">
           <div className="flex items-center gap-x-1 justify-end text-xs">
             <span className="text-red-400">*</span>
@@ -169,9 +176,11 @@ export default function SignUp() {
               <Select
                 data={provicesData}
                 control={control}
-                onChange={handleChangeProvices}
+                onChange={handleChangeProvinces}
                 name="cityAddress"
                 register={register}
+                label="Chọn tỉnh thành"
+                value={provinceValue}
               />
               <span className="text-xs font-normal text-red-600">
                 * {errors?.cityAddress?.message}
@@ -187,6 +196,8 @@ export default function SignUp() {
                 name="districtAddress"
                 register={register}
                 onChange={handleChangeDistricts}
+                label="Chọn quận huyện"
+                value={districtValue}
               />
 
               <span className="text-xs font-normal text-red-600">

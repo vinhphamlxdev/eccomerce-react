@@ -1,3 +1,5 @@
+import Cart from "../pages/Cart";
+import Checkout from "../pages/Checkout";
 import Home from "../pages/Home";
 import ProductDeatail from "../pages/ProductDetail";
 import Product from "../pages/Products";
@@ -18,5 +20,13 @@ export const publicRoutes = [
   {
     path: "/product/:id",
     component: ProductDeatail,
+  },
+  {
+    path: "/cart",
+    component: Cart,
+  },
+  {
+    path: "/checkout",
+    component: Checkout,
   },
 ];

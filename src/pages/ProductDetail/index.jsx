@@ -11,30 +11,23 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import TextArea from "../../components/TextArea";
 import Button from "../../components/Button";
-
+import { FaBarsStaggered } from "react-icons/fa6";
+import ProductItem from "../../components/ProductItem";
+import BreadCrumb from "../../components/BreadCrumb";
+import { NavLink } from "react-router-dom";
+const breadcrumbPaths = [
+  { label: "Trang chủ", url: "/" },
+  { label: "Sản phẩm", url: "/cart" },
+];
 const REGEX_PASSWORD =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 const PHONE_REG_EXP = /^[0-9]{10}$/;
 const schemaValidate = Yup.object({
   fullName: Yup.string().required("Vui lòng nhập họ tên!!"),
-  phoneNumber: Yup.string()
-    .matches(PHONE_REG_EXP, "Vui lòng nhập đúng định dạng số điện thoại!")
-    .required("Vùi lòng nhập số điện thoại!"),
   email: Yup.string()
     .email("Email không đúng định dạng!")
     .required("Vui lòng nhập email!!"),
-  password: Yup.string()
-    .required("Vui lòng nhập mật khẩu!")
-    .matches(
-      REGEX_PASSWORD,
-      "Mật khẩu phải có ít nhất 8 ký tự, ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt!"
-    ),
-  passwordConfirm: Yup.string()
-    .required("Vui lòng xác nhận mật khẩu!!")
-    .oneOf([Yup.ref("password")], "Mật khẩu xác nhận không đúng!"),
-  address: Yup.string().required("Vui lòng nhập địa chỉ!"),
-  cityAddress: Yup.string().required("Vui lòng chọn tỉnh thành!"),
-  districtAddress: Yup.string().required("Vui lòng chọn quận huyện!"),
+  content: Yup.string().required("Vui lòng nhập nội dung!"),
 });
 export default function ProductDeatail() {
   const {
@@ -47,19 +40,14 @@ export default function ProductDeatail() {
     mode: "onChange",
     resolver: yupResolver(schemaValidate),
   });
+  const handlePostComment = async (data) => {
+    console.log(errors);
+    console.log(data);
+  };
   return (
     <StyledProductDeatail className="product-detail">
-      <div className="breadcrumb-session gap-x-3 px-3 py-3 flex items-center">
-        <div className="flex items-center gap-x-1">
-          <i className="bi text-[#E24B01] text-base bi-house"></i>
-          <span className="text-sm">Trang chủ</span>
-        </div>
-        <div className="flex items-center gap-x-1">
-          <i className="bi bi-chevron-right text-[#E24B01] text-base"></i>
-          <span className="text-sm">Sản phẩm</span>
-        </div>
-      </div>
-      <div className="product-detail__container flex flex-col">
+      <BreadCrumb paths={breadcrumbPaths} />
+      <div className="product-detail__container flex flex-col mb-4">
         <div className="heading items-center flex justify-between">
           <div className="flex items-center gap-x-2 py-[6px]">
             <i className="bi text-secondary text-lg bi-lightning-fill"></i>
@@ -127,10 +115,13 @@ export default function ProductDeatail() {
                     </div>
                     <span className="text-[#430B01] text-sm">Cái</span>
                   </div>
-                  <button className="bg-bgbtn hover:opacity-75 transition-all text-white py-2 rounded-sm flex items-center px-3 gap-x-2">
+                  <NavLink
+                    to={"/cart"}
+                    className="bg-bgbtn hover:opacity-75 transition-all text-white py-2 rounded-sm flex items-center px-3 gap-x-2"
+                  >
                     <i className="bi text-base text-secondary bi-cart"></i>
                     <span className="text-sm">Mua hàng</span>
-                  </button>
+                  </NavLink>
                 </div>
               </div>
             </div>
@@ -411,14 +402,17 @@ export default function ProductDeatail() {
           </div>
         </div>
         {/*comment  */}
-        <div className="comment-session mt-4 p-2 bg-[#F9F9F9] flex flex-col gap-y-3">
+        <div className="comment-session mt-4 pt-2 px-2 pb-6 bg-[#F9F9F9] flex flex-col gap-y-3">
           <div>
             <button className="comment-amount text-white flex items-center gap-x-2">
               <TbMessageCircle className="text-secondary text-lg" />
               <span>Đánh Giá Sản Phẩm (0)</span>
             </button>
           </div>
-          <div className="flex flex-col gap-y-3">
+          <form
+            onSubmit={handleSubmit(handlePostComment)}
+            className="flex flex-col gap-y-3"
+          >
             <div className="flex gap-x-3 items-center">
               <div className="flex items-center form-field gap-x-2">
                 <div className="w-[320px]">
@@ -428,9 +422,13 @@ export default function ProductDeatail() {
                     control={control}
                   />
                 </div>
-                <span className="text-sm font-normal text-red-600">
-                  * Vui lòng nhập họ tên!
-                </span>
+                <div
+                  className={`${errors?.fullName?.message ? "w-[166px]" : ""}`}
+                >
+                  <span className="text-sm font-normal text-red-600">
+                    * {errors?.fullName?.message}
+                  </span>
+                </div>
               </div>
               <div className="flex items-center form-field gap-x-2">
                 <div className="w-[320px]">
@@ -441,24 +439,56 @@ export default function ProductDeatail() {
                   />
                 </div>
                 <span className="text-sm font-normal text-red-600">
-                  * Vui lòng nhập email!
+                  * {errors?.email?.message}
                 </span>
               </div>
             </div>
             <div className="form-field flex items-center gap-x-2">
-              <TextArea />
+              <TextArea
+                control={control}
+                placeholder="Nội dung..."
+                name="content"
+              />
               <span className="text-sm font-normal text-red-600">
-                * Vui lòng nhập họ tên!
+                * {errors?.content?.message}
               </span>
             </div>
             <div className="btn-send__comment">
-              <Button title="Gửi đánh giá" className="bg-[#646461]">
+              <Button
+                isDisabled={isSubmitting}
+                type="submit"
+                title="Gửi đánh giá"
+                className="bg-[#646461]"
+              >
                 <i className="bi text-secondary text-base bi-send-fill"></i>
               </Button>
             </div>
-          </div>
+          </form>
         </div>
         {/*  */}
+        {/* similar product */}
+        <div className="similar-product">
+          <div className="similar-product__heading">
+            <div className=" gap-x-2 inline-block cursor-pointer hover:opacity-80  items-center">
+              <FaBarsStaggered className="text-[#E24B01] inline mr-2 text-base" />
+              <span className="text-sm">
+                Sản Phẩm Khác Thuộc Series 56, Isolator IP66 - Clipsal/Schneider
+              </span>
+            </div>
+          </div>
+          <div className="product-similar-container p-3">
+            <div className="grid grid-cols-6 gap-x-3 gap-y-5">
+              <ProductItem />
+              <ProductItem />
+              <ProductItem />
+              <ProductItem />
+              <ProductItem />
+              <ProductItem />
+              <ProductItem />
+              <ProductItem />
+            </div>
+          </div>
+        </div>
       </div>
     </StyledProductDeatail>
   );
@@ -514,5 +544,13 @@ const StyledProductDeatail = styled.div`
     background-color: #48322a;
     background-image: linear-gradient(to top, #48322a, #604d46);
     color: #fff;
+  }
+  .similar-product {
+    .similar-product__heading {
+      padding: 0.5rem;
+      background-color: #f2d9d4;
+      background-image: linear-gradient(to bottom, #f2d9d4, #fff);
+      border-top: 1px solid #b21e02;
+    }
   }
 `;

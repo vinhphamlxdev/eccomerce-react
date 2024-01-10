@@ -35,19 +35,19 @@ export default function Header() {
             </button>
           </div>
           <div className="flex items-center">
-            <button className="btn border-solid border-r border-l border-gray-950 py-3 px-2 gap-x-2">
+            <button className="btn btn-header border-solid border-r border-l border-gray-950 py-3 px-2 gap-x-2">
               <i className="bi text-secondary bi-file-earmark-pdf"></i>
               <span>Tài liệu kỹ thuật</span>
             </button>
-            <button className="btn border-solid border-r border-gray-950 py-3 px-2 gap-x-2">
+            <button className="btn btn-header border-solid border-r border-gray-950 py-3 px-2 gap-x-2">
               <i className="bi bi-question-circle text-secondary"></i>
               <span>Hướng dẫn</span>
             </button>
-            <button className="btn border-solid border-r border-gray-950 py-3 px-2 gap-x-2">
+            <button className="btn btn-header border-solid border-r border-gray-950 py-3 px-2 gap-x-2">
               <i className="bi text-secondary bi-database"></i>
               <span>Bảng giá sản phẩm</span>
             </button>
-            <button className="btn border-solid border-r border-gray-950 py-3 px-2 gap-x-2">
+            <button className="btn btn-header border-solid border-r border-gray-950 py-3 px-2 gap-x-2">
               <i className="bi text-secondary bi-file-earmark-person"></i>
               <span>Liên hệ</span>
             </button>
@@ -63,9 +63,12 @@ export default function Header() {
       </div>
       <div className="flex flex-col py-3">
         <div className="bg-white   justify-between items-center grid gap-x-3 grid-cols-4">
-          <div className="header-logo col-span-1 p-2">
+          <NavLink
+            to={"/"}
+            className="header-logo cursor-pointer col-span-1 p-2"
+          >
             <img src={logo} alt="" />
-          </div>
+          </NavLink>
           <div className=" col-span-2 justify-center grid grid-cols-2 gap-x-3">
             <div className="flex gap-x-3 items-center">
               <i className="bi text-blue-500 text-2xl bi-telephone"></i>
@@ -160,10 +163,13 @@ export default function Header() {
             </div>
           </div>
           <div className="col-span-3 justify-center flex items-center  bg-primary text-white px-3 py-2">
-            <button className="flex btn gap-x-3 justify-center items-center">
+            <NavLink
+              to={"/cart"}
+              className="flex btn gap-x-3 justify-center items-center"
+            >
               <i className="bi bi-cart text-secondary text-xl hover:opacity-75 transition-all"></i>
               <span className="text-lg font-semibold">0 Sản phẩm</span>
-            </button>
+            </NavLink>
           </div>
         </div>
         {showCategory && (
@@ -258,5 +264,19 @@ const StyledHeader = styled.div`
       #c24d37,
       #bf442d
     );
+  }
+  .btn-header:hover {
+    background-color: #b9331a;
+    background-image: linear-gradient(
+      to bottom,
+      #f8ead9,
+      #c24d37,
+      #b9331a,
+      #b9331a,
+      #b9331a,
+      #b21e02,
+      #b21e02
+    );
+    color: #fff;
   }
 `;

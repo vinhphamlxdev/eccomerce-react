@@ -99,4 +99,17 @@ export const GlobalClasses = css`
     background-color: #b21e02;
     color: #fff;
   }
+  select {
+    width: 100%;
+    outline: none;
+    background-color: transparent;
+    border: 1px solid #e4e4e4;
+    border-radius: 2px;
+    transition: all 0.2s linear;
+    color: #aaaaaa;
+    font-size: 14px;
+  }
+  select:focus {
+    border: 1px solid #000;
+  }
 `;

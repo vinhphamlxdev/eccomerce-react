@@ -4,7 +4,7 @@ import discount from "../../assets/discount.png";
 
 export default function ProductItem() {
   return (
-    <StyledProductItem className="product-item flex flex-col relative items-center">
+    <StyledProductItem className="product-item cursor-pointer flex flex-col relative items-center">
       <div className="product-item__discount">
         <span className="text-[#FFFF00] text-sm">-30%</span>
       </div>

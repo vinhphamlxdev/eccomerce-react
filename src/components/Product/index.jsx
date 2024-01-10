@@ -26,7 +26,7 @@ export default function Product() {
           </div>
         </div>
         <div className="p-3 product-container">
-          <div className="grid grid-cols-6 gap-x-3">
+          <div className="grid grid-cols-6 gap-x-3 gap-y-5">
             <ProductItem />
             <ProductItem />
             <ProductItem />

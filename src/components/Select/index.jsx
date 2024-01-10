@@ -8,16 +8,25 @@ export default function Select({
   control,
   name = "",
   register,
+  label = "",
+  value = "",
   ...props
 }) {
+  console.log(register(name));
+
   return (
     <SelectStyles>
-      <select {...register(name)} onChange={onChange} className="px-3 py-1">
-        <option value="">-- Chọn tỉnh thành</option>
+      <select
+        value={value}
+        {...register(name)}
+        onChange={onChange}
+        className="px-3 py-1"
+      >
+        <option value="">-- {label}</option>
         {data?.length > 0 &&
           data.map((item, index) => {
             return (
-              <option key={item.code} value={item.code}>
+              <option key={item.code} value={item.name}>
                 {item.name}
               </option>
             );
