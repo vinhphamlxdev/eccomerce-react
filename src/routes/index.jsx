@@ -2,7 +2,7 @@ import Cart from "../pages/Cart";
 import Checkout from "../pages/Checkout";
 import Home from "../pages/Home";
 import ProductDeatail from "../pages/ProductDetail";
-import Product from "../pages/Products";
+import ProductPage from "../pages/Products";
 import SignUp from "../pages/SignUp";
 export const publicRoutes = [
   {
@@ -11,7 +11,7 @@ export const publicRoutes = [
   },
   {
     path: "/products",
-    component: Product,
+    component: ProductPage,
   },
   {
     path: "/signup",

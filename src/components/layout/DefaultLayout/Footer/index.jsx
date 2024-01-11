@@ -3,34 +3,32 @@ import styled from "styled-components";
 import { AiOutlineThunderbolt } from "react-icons/ai";
 import logo from "../../../../assets/bocongthuong.png";
 import ftbg from "../../../../assets/ftbg.jpg";
+import Button from "../../../Button";
 export default function Footer() {
   return (
     <StyledFooter className="footer-session bg-bgFooter">
-      <div className="flex justify-center items-center p-3 w-full gap-x-3">
-        <button className="bg-bgbtn hover:opacity-75 transition-all text-white py-1 rounded-sm flex items-center px-3 gap-x-2">
+      <div className="flex flex-wrap gap-y-3 justify-center items-center p-3 w-full gap-x-3">
+        <Button title="Trang chủ" className="bg-bgbtn">
           <i className="bi text-base text-secondary bi-house"></i>
-          <span className="text-sm">Trang chủ</span>
-        </button>
-        <button className="bg-bgbtn hover:opacity-75 transition-all text-white py-1 rounded-sm flex items-center px-3 gap-x-2">
+        </Button>
+        <Button title="Tài liệu kỹ thuật" className="bg-bgbtn">
           <i className="bi text-base text-secondary bi-file-earmark-pdf"></i>
-          <span className="text-sm">Tài liệu kỹ thuật</span>
-        </button>
-        <button className="bg-bgbtn hover:opacity-75 transition-all text-white py-1 rounded-sm flex items-center px-3 gap-x-2">
+        </Button>
+        <Button title="Hướng dẫn" className="bg-bgbtn">
           <i className="bi text-base text-secondary bi-question-circle"></i>
-          <span className="text-sm">Hướng dẫn</span>
-        </button>
-        <button className="bg-bgbtn hover:opacity-75 transition-all text-white py-1 rounded-sm flex items-center px-3 gap-x-2">
+        </Button>
+        <Button title="Bảng giá sản phẩm" className="bg-bgbtn">
           <i className="bi text-base text-secondary bi-database"></i>
-          <span className="text-sm">Bảng giá sản phẩm</span>
-        </button>
-        <button className="bg-bgbtn hover:opacity-75 transition-all text-white py-1 rounded-sm flex items-center px-3 gap-x-2">
+        </Button>
+        <Button title="Liên hệ" className="bg-bgbtn">
           <i className="bi text-base text-secondary bi-file-earmark-person"></i>
-          <span className="text-sm">Liên hệ</span>
-        </button>
-        <button className="bg-bgbtn hover:opacity-75 transition-all text-white py-1 rounded-sm flex items-center px-3 gap-x-2">
+        </Button>
+        <Button
+          title="Quy định - điều khoản sử dụng website"
+          className="bg-bgbtn"
+        >
           <i className="bi text-base text-secondary bi-file-earmark-text"></i>
-          <span className="text-sm">Quy định - điều khoản sử dụng website</span>
-        </button>
+        </Button>
       </div>
       <div className="flex justify-center items-center flex-wrap gap-y-2 p-3 w-full gap-x-3">
         <button className="bg-transparent hover:bg-white transition-all border-solid border-[#6A1300] border text-[#430B01 py-1 rounded-sm flex items-center px-2 gap-x-1">
@@ -86,20 +84,22 @@ export default function Footer() {
         <div className="flex justify-center items-center">
           <img className="h-[34px]" src={logo} alt="" />
         </div>
-        <div className="flex items-center mt-3 flex-col justify-center">
-          <span>Bản quyền © 2008-2022 thuộc về thegioidien.com</span>
-          <span>
+        <div className="flex items-center text-sm mt-3 flex-col justify-center">
+          <span className="text-center">
+            Bản quyền © 2008-2022 thuộc về thegioidien.com
+          </span>
+          <span className="text-center">
             Ghi rõ nguồn khi sử dụng các thông tin tại WWW.THEGIOIDIEN.COM.
           </span>
-          <span>
+          <span className="text-center">
             WWW.THEGIOIDIEN.COM thuộc sở hữu và điều hành bởi Công ty TNHH Thế
             Giới Điện
           </span>
-          <span>
+          <span className="text-center">
             Văn phòng giao dịch: 98D Linh Đông, Khu Phố 7, Phường Linh Đông,
             TP.Thủ Đức, TP.HCM
           </span>
-          <span>
+          <span className="text-center">
             GPKD: 0305921340 , Sở KHĐT TPHCM cấp ngày 23/08/2008. Địa chỉ: 32
             đường số 35, khu phố 2, phường Linh Đông, thành phố Thủ Đức, TP HCM
           </span>
@@ -112,4 +112,6 @@ const StyledFooter = styled.div`
   background-image: url(${ftbg});
   background-repeat: repeat;
   border-bottom: 8px solid #540f00;
+  @media screen and (max-width: 768px) {
+  }
 `;

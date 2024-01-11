@@ -18,13 +18,13 @@ export default function SliderBrand() {
       {
         breakpoint: 0,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 5,
         },
       },
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 4,
+          slidesToShow: 8,
         },
       },
       {

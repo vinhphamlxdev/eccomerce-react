@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { categoryData } from "../../../Data";
 import { AiOutlineThunderbolt } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
+import Button from "../../../Button";
 
 export default function Header() {
   const [showCategory, setShowCategory] = React.useState(false);
@@ -60,16 +61,20 @@ export default function Header() {
           <i className="bi text-[#FFFF00] text-base bi-person-plus-fill"></i>
           <span>Đăng ký</span>
         </NavLink>
+        <button className="acount-btn hidden items-center  gap-x-2 bg-[#B21E02] text-[#F1F3E4] py-2 px-2 text-sm">
+          <i className="bi text-[#FFFF00] text-base bi-person-fill"></i>
+          <span>Tài khoản</span>
+        </button>
       </div>
       <div className="flex flex-col py-3">
-        <div className="bg-white   justify-between header-grid items-center grid gap-x-3 grid-cols-4">
+        <div className="bg-white   justify-between header-grid items-center grid gap-x-3 grid-cols-12">
           <NavLink
             to={"/"}
-            className="header-logo cursor-pointer col-span-1 p-2"
+            className="header-logo cursor-pointer col-span-3 p-2"
           >
             <img src={logo} alt="" />
           </NavLink>
-          <div className=" col-span-2 justify-center grid grid-cols-2 gap-x-3">
+          <div className=" col-span-6 justify-center header-contact grid grid-cols-2 gap-x-3">
             <div className="flex gap-x-3 items-center">
               <i className="bi text-blue-500 text-2xl bi-telephone"></i>
               <div className="flex flex-col">
@@ -85,7 +90,7 @@ export default function Header() {
               <i className="bi text-blue-500 text-2xl bi-envelope"></i>
               <div className="flex flex-col">
                 <span className="text-[#0D427A] font-medium text-base">
-                  028 3720 2968 - 0967 266 277
+                  sales@thegioidien.com
                 </span>
                 <span className="text-[#8D8D8D] text-sm">
                   Thứ 2-6: 8-17H; Thứ 7: 8-12H
@@ -93,52 +98,57 @@ export default function Header() {
               </div>
             </div>
           </div>
-          <div className="p-3 bg-[#DBDBDB] col-span-1 rounded-sm flex flex-col gap-y-2">
-            <div className="flex gap-x-3 justify-between items-center">
-              <div className="flex gap-x-2  items-center">
+          <div className="p-2 bg-[#DBDBDB] header-signin col-span-3 rounded-sm flex flex-col gap-y-2">
+            <div className="flex  justify-between items-center">
+              <div className="flex w-[135px] flex-shrink-0 gap-x-2   items-center">
                 <i className="bi text-[#003B4F] text-lg bi-person"></i>
                 <span className="text-sm text-red-800">Tài khoản</span>
               </div>
-              <div className="relative">
+              <div className="relative flex-1">
                 <input
-                  className="text-sm border bg-white border-gray-500 outline-none py-2 px-3"
+                  className="text-sm border w-full focus:border-gray-800 bg-white border-gray-500 outline-none py-2 px-3"
                   placeholder="Email hoặc điện thoại"
                   type="text"
                 />
               </div>
             </div>
-            <div className="flex gap-x-3 justify-between items-center">
-              <div className="flex gap-x-2  items-center">
+            <div className="flex  justify-between items-center">
+              <div className="flex w-[135px] gap-x-2  items-center">
                 <i className="bi text-[#003B4F] text-lg bi-key"></i>
                 <span className="text-sm text-red-800">Mật khẩu</span>
               </div>
-              <div className="relative">
+              <div className="relative flex-1">
                 <input
-                  className="text-sm border bg-white border-gray-500 outline-none py-2 px-3"
+                  className="text-sm border focus:border-gray-800 w-full bg-white border-gray-500 outline-none py-2 px-3"
                   placeholder="Mật khẩu"
                   type="text"
                 />
               </div>
             </div>
-            <div className="flex items-center gap-x-3">
-              <div className="">
+            <div className="flex items-center ">
+              <div className="w-[135px] flex-shrink-0">
                 <span className="text-gray-500 transition-all hover:opacity-75 cursor-pointer">
                   Quên mật khẩu?
                 </span>
               </div>
-              <button className="flex transition-all hover:opacity-80 gap-x-2 items-center text-white rounded-sm bg-[#1C8DD9] px-2 py-2">
-                <TbLock className="text-secondary text-lg" />
-                <span>Đăng Nhập</span>
-              </button>
+              <div className="relative flex flex-1 justify-start">
+                <Button className=" bg-primaryBtn btn-login" title="Đăng Nhập">
+                  <TbLock className="text-secondary text-lg" />
+                </Button>
+                {/* <button className="flex transition-all hover:opacity-80 gap-x-2 items-center text-white rounded-sm bg-[#1C8DD9] px-2 py-2">
+                  <TbLock className="text-secondary text-lg" />
+                  <span>Đăng Nhập</span>
+                </button> */}
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div className="relative z-[200]">
-        <div className="grid grid-cols-12 gap-x-3 ">
+        <div className="grid grid-cols-12 gap-x-3 grid-search">
           <div
             onClick={() => setShowCategory(!showCategory)}
-            className="col-span-3 cursor-pointer select-none transition-all hover:opacity-75 flex items-center  bg-primary justify-between text-white px-3 py-2"
+            className="col-span-3 category-accordion cursor-pointer select-none transition-all hover:opacity-75 flex items-center  bg-primary justify-between text-white px-3 py-2"
           >
             <FaBars className="text-lg" />
             <span className="uppercase text-lg font-semibold">
@@ -150,7 +160,7 @@ export default function Header() {
               <FaPlus className="text-lg" />
             )}
           </div>
-          <div className="col-span-6">
+          <div className="col-span-6 search-control">
             <div className="rounded-md header-search">
               <div className="bg-[#FFFFE6] flex items-center relative">
                 <input
@@ -162,7 +172,7 @@ export default function Header() {
               </div>
             </div>
           </div>
-          <div className="col-span-3 justify-center flex items-center  bg-primary text-white px-3 py-2">
+          <div className="col-span-3 cart-session justify-center flex items-center  bg-primary text-white px-3 py-2">
             <NavLink
               to={"/cart"}
               className="flex btn gap-x-3 justify-center items-center"
@@ -281,14 +291,109 @@ const StyledHeader = styled.div`
     color: #fff;
   }
 
+  @media screen and (max-width: 1200px) {
+    .header-contact {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      row-gap: 16px;
+    }
+    .header-grid {
+      /* grid-template-columns: repeat(2, 1fr); */
+    }
+    .header-logo,
+    .header-contact,
+    .header-signin,
+    .category-accordion,
+    .search-control,
+    .cart-session {
+      grid-column: span 4 / span 4;
+    }
+  }
+  .btn-login {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
   @media screen and (max-width: 1180px) {
     .header-grid {
-      grid-template-columns: repeat(2, 1fr);
+      /* grid-template-columns: repeat(2, 1fr); */
     }
   }
   @media screen and (max-width: 990px) {
     .header-navlink {
       display: none;
+    }
+    .header-signin,
+    .header-logo {
+      grid-column: span 6 / span 6;
+      order: 1;
+    }
+    .header-contact {
+      order: 2;
+      grid-column: span 12 / span 12;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap-reverse;
+      justify-content: space-around;
+      align-items: center;
+      height: 100%;
+    }
+  }
+  @media screen and (max-width: 840px) {
+    .grid-search {
+      row-gap: 1rem;
+    }
+    .header-search {
+      border-radius: 0;
+    }
+    .search-control {
+      grid-column: span 12 / span 12;
+      order: 1;
+    }
+    .cart-session,
+    .category-accordion {
+      order: 2;
+      grid-column: span 6 / span 6;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .header-contact {
+      flex-direction: column-reverse;
+    }
+  }
+  @media screen and (max-width: 628px) {
+    .header-contact {
+      flex-direction: column-reverse;
+    }
+  }
+  @media screen and (max-width: 580px) {
+    .header-signin {
+      display: none;
+    }
+    .header-logo {
+      grid-column: span 12 / span 12;
+      justify-content: center;
+      display: flex;
+      img {
+        max-width: 80%;
+      }
+    }
+    .search-control {
+      order: 2;
+    }
+    .cart-session {
+      grid-column: span 12 / span 12;
+      order: 1;
+    }
+    .category-accordion {
+      grid-column: span 12 / span 12;
+      order: 3;
+    }
+    .signup-btn {
+      display: none;
+    }
+    .acount-btn {
+      display: flex;
     }
   }
 `;

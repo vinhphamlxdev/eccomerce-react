@@ -4,6 +4,10 @@ export const GlobalClasses = css`
     max-width: 1300px;
     margin: auto;
   }
+  .grid {
+    display: grid;
+    grid-gap: 1rem !important;
+  }
 
   .pb-session {
     padding-bottom: 16px;

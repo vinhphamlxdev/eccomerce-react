@@ -87,7 +87,7 @@ export default function SignUp() {
       }
     }
   };
-
+  console.log(districtValue);
   const handleChangeDistricts = (e) => {
     const districtName = e.target.value;
     setDistrictValue(districtName);
@@ -112,112 +112,133 @@ export default function SignUp() {
             <span className="text-red-400">*</span>
             <span className="text-gray-400">là thông tin bắt buộc</span>
           </div>
-          <form
-            onSubmit={handleSubmit(handleSignUp)}
-            action=""
-            className="flex flex-col mt-10 form-layout"
-          >
-            <Field className="grid">
-              <span className="text-sm text-right text-[#3B3B3B]">Họ tên</span>
-              <Input name="fullName" control={control} />
-              <span className="text-xs font-normal text-red-600">
-                * {errors?.fullName?.message}
-              </span>
-            </Field>
-            <Field className="grid">
-              <span className="text-sm text-right text-[#3B3B3B]">
-                Điện thoại
-              </span>
-              <Input name="phoneNumber" control={control} />
-              <span className="text-xs font-normal text-red-600">
-                * {errors?.phoneNumber?.message}
-              </span>
-            </Field>
-            <Field className="grid">
-              <span className="text-sm text-right text-[#3B3B3B]">Email</span>
-              <Input name="email" control={control} />
-              <span className="text-xs font-normal text-red-600">
-                * {errors?.email?.message}
-              </span>
-            </Field>
-            <Field className="grid">
-              <span className="text-sm text-right text-[#3B3B3B]">
-                Mật khẩu
-              </span>
-              <Input name="password" type="password" control={control} />
-              <span className="text-xs font-normal text-red-600">
-                * {errors?.password?.message}
-              </span>
-            </Field>
-            <Field className="grid">
-              <span className="text-sm text-right text-[#3B3B3B]">
-                Xác nhận mật khẩu
-              </span>
-              <Input name="passwordConfirm" type="password" control={control} />
-              <span className="text-xs font-normal text-red-600">
-                * {errors?.passwordConfirm?.message}
-              </span>
-            </Field>
-            <Field className="grid">
-              <span className="text-sm text-right text-[#3B3B3B]">Địa chỉ</span>
-              <Input
-                placeholder="Số nhà, tên đường, phường/xã"
-                name="address"
-                control={control}
-              />
-              <span className="text-xs font-normal text-red-600">
-                * {errors?.address?.message}
-              </span>
-            </Field>
-            <Field className="grid">
-              <span className="text-sm text-right text-[#3B3B3B]">
-                Tỉnh/Thành
-              </span>
-              <Select
-                data={provicesData}
-                control={control}
-                onChange={handleChangeProvinces}
-                name="cityAddress"
-                register={register}
-                label="Chọn tỉnh thành"
-                value={provinceValue}
-              />
-              <span className="text-xs font-normal text-red-600">
-                * {errors?.cityAddress?.message}
-              </span>
-            </Field>
-            <Field className="grid">
-              <span className="text-sm text-right text-[#3B3B3B]">
-                Quận/Huyện
-              </span>
-              <Select
-                data={districts}
-                control={control}
-                name="districtAddress"
-                register={register}
-                onChange={handleChangeDistricts}
-                label="Chọn quận huyện"
-                value={districtValue}
-              />
-
-              <span className="text-xs font-normal text-red-600">
-                * {errors?.districtAddress?.message}
-              </span>
-            </Field>
-            <div className="grid grid-cols-3 gap-x-2">
-              <span></span>
-              <div className="btn-signup">
-                <button
-                  type="submit"
-                  className="bg-bgbtn hover:opacity-75 transition-all text-white py-1 rounded-sm flex items-center px-3 gap-x-2"
-                >
-                  <i className="bi text-base text-secondary bi-person-plus-fill"></i>
-                  <span className="text-sm">Đăng ký</span>
-                </button>
-              </div>
-              <span></span>
-            </div>
-          </form>
+          <div className="flex justify-center">
+            <form
+              onSubmit={handleSubmit(handleSignUp)}
+              action=""
+              className="flex flex-col mt-10 form-layout items-end gap-y-4"
+            >
+              <Field className="flex">
+                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                  Họ tên
+                </div>
+                <div className="flex items-center form-control__input relative gap-x-2">
+                  <Input name="fullName" control={control} />
+                  <span className="text-xs form-error font-normal text-red-600">
+                    * {errors?.fullName?.message}
+                  </span>
+                </div>
+              </Field>
+              <Field className="flex">
+                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                  Điện thoại
+                </div>
+                <div className="flex items-center form-control__input relative gap-x-2">
+                  <Input name="phoneNumber" control={control} />
+                  <span className="text-xs form-error font-normal text-red-600">
+                    * {errors?.phoneNumber?.message}
+                  </span>
+                </div>
+              </Field>
+              <Field className="flex">
+                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                  Email
+                </div>
+                <div className="flex items-center form-control__input relative gap-x-2">
+                  <Input name="email" control={control} />
+                  <span className="text-xs form-error font-normal text-red-600">
+                    * {errors?.email?.message}
+                  </span>
+                </div>
+              </Field>
+              <Field className="flex">
+                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                  Mật khẩu
+                </div>
+                <div className="flex items-center form-control__input relative gap-x-2">
+                  <Input name="password" control={control} />
+                  <span className="text-xs form-error font-normal text-red-600">
+                    * {errors?.password?.message}
+                  </span>
+                </div>
+              </Field>
+              <Field className="flex">
+                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                  Xác nhận mật khẩu
+                </div>
+                <div className="flex items-center form-control__input relative gap-x-2">
+                  <Input name="passwordConfirm" control={control} />
+                  <span className="text-xs form-error font-normal text-red-600">
+                    * {errors?.passwordConfirm?.message}
+                  </span>
+                </div>
+              </Field>
+              <Field className="flex">
+                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                  Địa chỉ
+                </div>
+                <div className="flex items-center form-control__input relative gap-x-2">
+                  <Input name="address" control={control} />
+                  <span className="text-xs form-error font-normal text-red-600">
+                    * {errors?.address?.message}
+                  </span>
+                </div>
+              </Field>
+              <Field className="flex">
+                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                  Tỉnh/Thành
+                </div>
+                <div className="flex items-center form-control__input relative gap-x-2">
+                  <Select
+                    data={provicesData}
+                    control={control}
+                    onChange={handleChangeProvinces}
+                    name="cityAddress"
+                    register={register}
+                    label="Chọn tỉnh thành"
+                    value={provinceValue}
+                  />
+                  <span className="text-xs form-error font-normal text-red-600">
+                    * {errors?.cityAddress?.message}
+                  </span>
+                </div>
+              </Field>
+              <Field className="flex">
+                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                  Quận/Huyện
+                </div>
+                <div className="flex items-center form-control__input relative gap-x-2">
+                  <Select
+                    data={provicesData}
+                    control={control}
+                    onChange={handleChangeProvinces}
+                    name="cityAddress"
+                    register={register}
+                    label="Chọn quận huyện"
+                    value={provinceValue}
+                  />
+                  <span className="text-xs form-error font-normal text-red-600">
+                    * {errors?.cityAddress?.message}
+                  </span>
+                </div>
+              </Field>
+              <Field className="flex">
+                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]"></div>
+                <div className="flex items-center form-control__input relative gap-x-2">
+                  <div className="btn-signup ml-auto w-[500px]">
+                    <button
+                      type="submit"
+                      className="bg-bgbtn submit-button mr-auto hover:opacity-75 transition-all text-white py-1 rounded-sm flex items-center px-3 gap-x-2"
+                    >
+                      <i className="bi text-base text-secondary bi-person-plus-fill"></i>
+                      <span className="text-sm">Đăng ký</span>
+                    </button>
+                  </div>
+                  <span className="text-xs form-error font-normal text-red-600"></span>
+                </div>
+              </Field>
+            </form>
+          </div>
         </div>
       </div>
     </StyledSignUp>
@@ -226,6 +247,9 @@ export default function SignUp() {
 const StyledSignUp = styled.div`
   .signup-contaner {
     border: 1px solid #b21e02;
+  }
+  .form-layout {
+    align-items: center;
   }
   .signup-heading {
     background-color: #b21e02;
@@ -240,5 +264,86 @@ const StyledSignUp = styled.div`
     color: #fff;
     font-size: 1.2rem;
     padding: 0.5rem;
+  }
+
+  .field-control input[type="text"],
+  .field-control input[type="password"],
+  .field-control select {
+    width: 500px;
+  }
+  .field-control,
+  .form-layout {
+    width: 100%;
+  }
+  @media screen and (max-width: 1200px) {
+    .field-control {
+      width: initial;
+    }
+
+    .form-layout {
+      align-items: flex-end;
+      width: initial;
+    }
+    .field-control {
+      display: flex;
+      justify-content: center;
+    }
+    .field-control .form-label {
+      width: auto;
+    }
+    .form-control__input {
+      flex-direction: column;
+      align-items: flex-start;
+      .form-error {
+        position: absolute;
+        left: 0;
+        top: 106%;
+      }
+    }
+  }
+  @media screen and (max-width: 992px) {
+    .btn-signup,
+    .field-control input[type="text"],
+    .field-control input[type="password"],
+    .field-control select {
+      width: 400px;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .field-input,
+    .field-select {
+      width: 100%;
+    }
+    .btn-signup {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .submit-button {
+      margin-right: 0;
+    }
+    .form-layout {
+      width: 100%;
+    }
+    .field-control {
+      flex-direction: column;
+      width: 100%;
+      align-items: flex-start;
+    }
+    .form-control__input {
+      width: 100%;
+    }
+    .field-control input[type="text"],
+    .field-control input[type="password"],
+    .field-control select {
+      width: 100%;
+    }
+  }
+
+  input[type="text"],
+  input[type="password"],
+  select {
+    padding: 0.5rem;
+    font-size: 16px;
   }
 `;

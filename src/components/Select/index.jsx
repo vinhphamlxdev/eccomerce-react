@@ -12,10 +12,8 @@ export default function Select({
   value = "",
   ...props
 }) {
-  console.log(register(name));
-
   return (
-    <SelectStyles>
+    <SelectStyles className="field-select">
       <select
         value={value}
         {...register(name)}
@@ -37,9 +35,7 @@ export default function Select({
 }
 
 const SelectStyles = styled.div`
-  width: 100%;
   select {
-    width: 100%;
     outline: none;
     background-color: transparent;
     border: 1px solid #e4e4e4;

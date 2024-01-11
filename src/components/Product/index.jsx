@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import productlogo from "../../assets/productlogo.jpg";
 import ProductItem from "../ProductItem";
+import Button from "../Button";
 export default function Product() {
   return (
     <StyledProduct className="product-session pt-session pb-session">
@@ -25,13 +26,21 @@ export default function Product() {
             <img className="rounded-sm" src={productlogo} alt="" />
           </div>
         </div>
-        <div className="p-3 product-container">
-          <div className="grid grid-cols-6 gap-x-3 gap-y-5">
+        <div className="px-3 pt-3 product-container">
+          <div className="grid grid-cols-6 gap-x-3 gap-y-5 product-list">
             <ProductItem />
             <ProductItem />
             <ProductItem />
             <ProductItem />
             <ProductItem />
+            <ProductItem />
+            <ProductItem />
+            <ProductItem />
+          </div>
+          <div className="viewmore-button mt-3 hidden justify-end items-center p-3">
+            <Button title="Xem thêm" className="viewmore-btn ">
+              <i className="bi text-secondary text-base bi-chevron-double-right"></i>
+            </Button>
           </div>
         </div>
       </div>
@@ -49,5 +58,54 @@ const StyledProduct = styled.div`
       #dbdbdb,
       #dbdbdb
     );
+  }
+  @media screen and (max-width: 1200px) {
+    .product-logo__list {
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+    }
+    .product-list {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .viewmore-button {
+      display: flex;
+    }
+    .viewmore-btn {
+      text-decoration: none;
+      background-color: #b21e02;
+      background-image: linear-gradient(
+        to bottom,
+        #b21e02,
+        #b21e02,
+        #b93016,
+        #b21e02,
+        #b21e02
+      );
+      border-radius: 3px;
+      color: #ededed;
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 0.7rem;
+    }
+  }
+  @media screen and (max-width: 990px) {
+    .product-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .product-logo__list {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .product-logo__list {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+  @media screen and (max-width: 610px) {
+    .product-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .product-logo__list {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
   }
 `;

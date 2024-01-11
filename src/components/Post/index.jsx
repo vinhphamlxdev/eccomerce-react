@@ -1,16 +1,16 @@
 import React from "react";
-
+import styled from "styled-components";
 export default function Post() {
   return (
-    <div className="pb-session post-session grid grid-cols-3 gap-x-3">
-      <div className="post-item bg-[#EDEDED] border-b-[3px] border-solid border-[#94AAB1] flex flex-col">
+    <StyledPost className="pb-session post-session grid grid-cols-3 gap-x-3">
+      <div className="post-colum bg-[#EDEDED] border-b-[3px] border-solid border-[#94AAB1] flex flex-col">
         <div className="post-item__heading flex justify-center items-center bg-primary p-2 gap-x-3">
           <i className="bi bi-question-circle text-secondary"></i>
           <span className="text-white text-base font-medium">
             Hướng dẫn - Câu hỏi thường gặp
           </span>
         </div>
-        <div className="grid grid-cols-2 py-4 px-2 gap-x-2 gap-y-3">
+        <div className="grid grid-cols-2 py-4 px-2 gap-x-2 gap-y-3 post-list__item">
           <div className="flex flex-col gap-y-2">
             <img
               src="https://thegioidien.com/hmhNews/images065020878382724388.jpg"
@@ -49,7 +49,7 @@ export default function Post() {
           </div>
         </div>
       </div>
-      <div className="post-item bg-[#EDEDED] border-b-[3px] border-solid border-[#94AAB1] flex flex-col">
+      <div className="post-colum bg-[#EDEDED] border-b-[3px] border-solid border-[#94AAB1] flex flex-col">
         <div className="post-item__heading flex justify-center items-center bg-primary p-2 gap-x-3">
           <i className="bi bi-file-earmark-pdf text-secondary"></i>
           <span className="text-white text-base font-medium">
@@ -95,7 +95,7 @@ export default function Post() {
           </div>
         </div>
       </div>
-      <div className="post-item bg-[#EDEDED] border-b-[3px] border-solid border-[#94AAB1] flex flex-col">
+      <div className="post-column bg-[#EDEDED] border-b-[3px] border-solid border-[#94AAB1] flex flex-col">
         <div className="post-item__heading flex justify-center items-center bg-primary p-2 gap-x-3">
           <i className="bi bi-file-earmark-pdf text-secondary"></i>
           <span className="text-white text-base font-medium">
@@ -141,6 +141,18 @@ export default function Post() {
           </div>
         </div>
       </div>
-    </div>
+    </StyledPost>
   );
 }
+const StyledPost = styled.div`
+  @media screen and (max-width: 1250px) {
+    .post-list__item {
+      display: flex;
+      flex-direction: column;
+      row-gap: 1rem;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+`;

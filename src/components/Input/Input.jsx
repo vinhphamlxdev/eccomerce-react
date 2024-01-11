@@ -15,7 +15,7 @@ const Input = ({
   });
 
   return (
-    <InputStyles>
+    <InputStyles className="field-input">
       <input
         className="px-3 py-1"
         placeholder={placeholder}
@@ -31,7 +31,6 @@ export default Input;
 
 const InputStyles = styled.div`
   position: relative;
-  width: 100%;
   display: flex;
   align-items: center;
   input {

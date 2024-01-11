@@ -62,34 +62,36 @@ export default function ProductDeatail() {
         </div>
         <div className="py-4 bg-[#EFEFEF] px-3">
           <div className="grid grid-cols-12">
-            <div className="col-span-5">
-              <div className="flex gap-x-3 items-center">
+            <div className="col-span-5 chat-list__logo ">
+              <div className="flex gap-x-3 flex-wrap items-center">
                 <span className="text-sm">Chát:</span>
                 <img src={zalo} alt="" />
                 <img src={messeger} alt="" />
                 <img src={telegram} alt="" />
               </div>
             </div>
-            <div className="col-span-7">
-              <div className="flex flex-col gap-y-3">
-                <div className="flex items-center gap-x-4">
+            <div className="col-span-7 product-change__quantity">
+              <div className="flex flex-col gap-y-3 rowgap">
+                <div className="flex items-center gap-x-4 flex-wrap">
                   <div className="flex gap-x-1 items-center">
                     <span className="text-base text-[#430B01]">Giá bán:</span>
                     <span className="text-lg text-blue-600">9.500</span>
                     <span className="text-[#430B01] text-xs">vnđ/Cái.</span>
                   </div>
-                  <div className="flex gap-x-1 items-center">
-                    <span className="text-sm text-[#3B3B3B]">
-                      Giá thị trường:
-                    </span>
-                    <span className=" text-[#936B62] text-sm line-through">
-                      13.500
-                    </span>
-                    <span className="text-[#3B3B3B] text-xs">vnđ/Cái.</span>
-                  </div>
-                  <div className="flex gap-x-1 items-center">
-                    <span className="text-sm text-[#3B3B3B]">Tiết kiệm:</span>
-                    <span className=" text-blue-500 text-sm">30%</span>
+                  <div className="flex items-center gap-x-3">
+                    <div className="flex gap-x-1 items-center">
+                      <span className="text-sm text-[#3B3B3B]">
+                        Giá thị trường:
+                      </span>
+                      <span className=" text-[#936B62] text-sm line-through">
+                        13.500
+                      </span>
+                      <span className="text-[#3B3B3B] text-xs">vnđ/Cái.</span>
+                    </div>
+                    <div className="flex gap-x-1 items-center">
+                      <span className="text-sm text-[#3B3B3B]">Tiết kiệm:</span>
+                      <span className=" text-blue-500 text-sm">30%</span>
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-x-3">
@@ -128,8 +130,8 @@ export default function ProductDeatail() {
           </div>
         </div>
         <div className="px-2 py-2">
-          <div className="grid grid-cols-12">
-            <div className="col-span-5">
+          <div className="grid grid-cols-12 product-detail__layout">
+            <div className="col-span-5 detail-image__main">
               <div className="flex flex-col product-detail-image__session h-[484px]">
                 <div className="product-detail__image relative flex justify-center">
                   <img
@@ -159,7 +161,7 @@ export default function ProductDeatail() {
                 </div>
               </div>
             </div>
-            <div className="col-span-7">
+            <div className="col-span-7 product-information">
               <div className="h-[484px] product-detail__information overflow-y-scroll">
                 <div className="flex flex-col gap-y-3">
                   <span className="text-[#003b4f] font-semibold text-base">
@@ -552,5 +554,22 @@ const StyledProductDeatail = styled.div`
       background-image: linear-gradient(to bottom, #f2d9d4, #fff);
       border-top: 1px solid #b21e02;
     }
+  }
+  @media screen and (max-width: 1200px) {
+    .chat-list__logo {
+      grid-column: span 4 / span 4;
+    }
+    .product-change__quantity {
+      grid-column: span 8 / span 8;
+      & .rowgap {
+        row-gap: 30px;
+      }
+    }
+    .detail-image__main,
+    .product-information {
+      grid-column: span 6 / span 6;
+    }
+  }
+  @media screen and (max-width: 768px) {
   }
 `;

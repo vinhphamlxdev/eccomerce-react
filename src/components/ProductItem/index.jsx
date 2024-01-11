@@ -10,7 +10,7 @@ export default function ProductItem() {
       </div>
       <div className="flex flex-col">
         <div className="product-item__image">
-          <img src="https://thegioidien.com/hmhB/A24225274574112.jpg" alt="" />
+          <img src="https://thegioidien.com/hmhB/9105641634772.jpg" alt="" />
         </div>
         <div className="mt-3 text-[#000] font-semibold transition-all hover:opacity-75 flex justify-center items-center">
           A242/25
