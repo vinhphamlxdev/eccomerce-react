@@ -45,6 +45,6 @@ const SelectStyles = styled.div`
     font-size: 14px;
   }
   select:focus {
-    border: 1px solid #000;
+    border: 1px solid #fb8500;
   }
 `;

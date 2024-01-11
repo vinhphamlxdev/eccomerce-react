@@ -53,6 +53,7 @@ export default function SignUp() {
     handleSubmit,
     register,
     setError,
+    setValueField,
     formState: { errors, isValid, isSubmitting },
   } = useForm({
     mode: "onChange",
@@ -69,14 +70,16 @@ export default function SignUp() {
   });
   const handleSignUp = async (data) => {
     console.log(data);
-    const { fullName, phoneNumber, email, password, address, cityAddress } =
-      data;
   };
 
+  console.log("render");
   const handleChangeProvinces = (e) => {
     const provinceName = e.target.value;
+    if (!provinceName) {
+      setProvinceValue("");
+      setDistricts([]);
+    }
     setProvinceValue(provinceName);
-    setDistrictValue("");
     if (provinceName) {
       delete errors.cityAddress;
       const currProvince = provicesData.find(
@@ -86,17 +89,18 @@ export default function SignUp() {
         setDistricts(currProvince.districts);
       }
     }
+    setDistrictValue("");
   };
-  console.log(districtValue);
+  console.log(provinceValue, districtValue, "error", errors);
   const handleChangeDistricts = (e) => {
     const districtName = e.target.value;
     setDistrictValue(districtName);
-    if (districtName) {
-      setError("districtAddress", { message: "" });
-      delete errors.districtAddress;
-    }
+
+    // if (districtName) {
+    //   setError("districtAddress", { message: "" });
+    //   delete errors.districtAddress;
+    // }
   };
-  const { disabledStyle, isDisabled } = useDisabled(isSubmitting);
   return (
     <StyledSignUp className="signup-page">
       <BreadCrumb paths={breadcrumbPaths} />
@@ -209,16 +213,16 @@ export default function SignUp() {
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Select
-                    data={provicesData}
+                    data={districts}
                     control={control}
-                    onChange={handleChangeProvinces}
-                    name="cityAddress"
+                    onChange={handleChangeDistricts}
+                    name="districtAddress"
                     register={register}
                     label="Chọn quận huyện"
-                    value={provinceValue}
+                    value={districtValue}
                   />
                   <span className="text-xs form-error font-normal text-red-600">
-                    * {errors?.cityAddress?.message}
+                    * {errors?.districtAddress?.message}
                   </span>
                 </div>
               </Field>

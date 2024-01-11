@@ -44,7 +44,7 @@ const InputStyles = styled.div`
     font-size: 14px;
   }
   input:focus {
-    border: 1px solid #000;
+    border: 1px solid #fb8500;
   }
   input::-webkit-input-placeholder {
     color: #b2b3bd;

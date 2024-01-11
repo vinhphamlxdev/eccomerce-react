@@ -71,7 +71,7 @@ export default function Checkout() {
           title="Vui lòng điền thông tin để tiếp tục mua hàng"
           icon="bi-card-heading"
         />
-        <div className="p-3 grid grid-cols-2 gap-x-4">
+        <div className="p-3 grid grid-cols-2 gap-x-4 checkout-layout">
           <div className="checkout-form flex flex-col">
             <CheckoutType />
             <div className="mt-4">
@@ -368,6 +368,17 @@ const CheckoutStyled = styled.div`
     }
     &.invoice-flexend {
       justify-content: flex-end;
+    }
+  }
+  .field-input,
+  .field-select {
+    width: 100%;
+  }
+
+  @media screen and (max-width: 768px) {
+    .checkout-layout {
+      display: flex;
+      flex-direction: column;
     }
   }
 `;

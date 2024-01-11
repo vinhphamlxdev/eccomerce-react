@@ -61,7 +61,7 @@ export default function ProductDeatail() {
           </button>
         </div>
         <div className="py-4 bg-[#EFEFEF] px-3">
-          <div className="grid grid-cols-12">
+          <div className="grid product-viewtop grid-cols-12">
             <div className="col-span-5 chat-list__logo ">
               <div className="flex gap-x-3 flex-wrap items-center">
                 <span className="text-sm">Chát:</span>
@@ -94,7 +94,7 @@ export default function ProductDeatail() {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-x-3">
+                <div className="flex items-center gap-x-3 cart-buy">
                   <div className="flex gap-x-2 items-center">
                     <span className="text-[#430B01] text-sm">Số lượng</span>
                     <div className="quantity-btn py-[2px] overflow-hidden flex bg-[#B5B5B4] rounded-sm">
@@ -571,5 +571,14 @@ const StyledProductDeatail = styled.div`
     }
   }
   @media screen and (max-width: 768px) {
+    .product-viewtop,
+    .product-detail__layout {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-buy {
+      justify-content: center;
+    }
   }
 `;
