@@ -2,7 +2,7 @@ import * as React from "react";
 import { styled } from "styled-components";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import { Controller, useForm, useFormContext } from "react-hook-form";
+import { Controller, set, useForm, useFormContext } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Field } from "../../components/Field";
 import { Input } from "../../components/Input";
@@ -15,6 +15,9 @@ import { useQuery } from "@tanstack/react-query";
 import BreadCrumb from "../../components/BreadCrumb";
 import HeadingSession from "../../components/HeadingSession";
 import useAddress from "../../Hooks/useAddress";
+import ReCAPTCHA from "react-google-recaptcha";
+import CheckBox from "../../components/Checkbox";
+const RE_CAPCHA_KEY = `6Ld8RE4pAAAAAGWSlk1jelWHB36syF4tGRYkHPHm`;
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Đăng ký", url: "/signup" },
@@ -22,13 +25,14 @@ const breadcrumbPaths = [
 const REGEX_PASSWORD =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 const PHONE_REG_EXP = /^[0-9]{10}$/;
+const EMAIL_REG_EXP = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 const schemaValidate = Yup.object({
   fullName: Yup.string().required("Vui lòng nhập họ tên!!"),
   phoneNumber: Yup.string()
     .matches(PHONE_REG_EXP, "Vui lòng nhập đúng định dạng số điện thoại!")
     .required("Vùi lòng nhập số điện thoại!"),
   email: Yup.string()
-    .email("Email không đúng định dạng!")
+    .matches(EMAIL_REG_EXP, "Email không đúng định dạng!")
     .required("Vui lòng nhập email!!"),
   password: Yup.string()
     .required("Vui lòng nhập mật khẩu!")
@@ -42,18 +46,25 @@ const schemaValidate = Yup.object({
   address: Yup.string().required("Vui lòng nhập địa chỉ!"),
   cityAddress: Yup.string().required("Vui lòng chọn tỉnh thành!"),
   districtAddress: Yup.string().required("Vui lòng chọn quận huyện!"),
+  agreeTerms: Yup.boolean().oneOf([true], "Vui lòng đồng ý để tiếp tục!"),
 });
 export default function SignUp() {
   const navigate = useNavigate();
   const [districts, setDistricts] = React.useState([]);
   const [provinceValue, setProvinceValue] = React.useState("");
   const [districtValue, setDistrictValue] = React.useState("");
+  const [reCapchaValue, setReCapchaValue] = React.useState("");
+  const [recaptchaExpired, setRecaptchaExpired] = React.useState(true);
+  const [isChecked, setIsChecked] = React.useState({
+    agreeTerms: false,
+    promoInfo: false,
+  });
   const {
     control,
     handleSubmit,
     register,
-    setError,
-    setValueField,
+    setValue: setFormValue,
+    clearErrors,
     formState: { errors, isValid, isSubmitting },
   } = useForm({
     mode: "onChange",
@@ -69,19 +80,29 @@ export default function SignUp() {
     },
   });
   const handleSignUp = async (data) => {
-    console.log(data);
+    if (recaptchaExpired) {
+      // Xử lý khi reCAPTCHA hết hạn
+      console.log("reCAPTCHA expired. Please refresh and try again.");
+      return;
+    }
+    const requestData = {
+      ...data,
+      promoInfo: isChecked.promoInfo,
+    };
+
+    console.log(requestData);
   };
 
-  console.log("render");
   const handleChangeProvinces = (e) => {
     const provinceName = e.target.value;
+    setFormValue("districtAddress", "");
     if (!provinceName) {
       setProvinceValue("");
       setDistricts([]);
     }
     setProvinceValue(provinceName);
     if (provinceName) {
-      delete errors.cityAddress;
+      clearErrors("cityAddress");
       const currProvince = provicesData.find(
         (province) => province.name === provinceName
       );
@@ -91,15 +112,37 @@ export default function SignUp() {
     }
     setDistrictValue("");
   };
-  console.log(provinceValue, districtValue, "error", errors);
   const handleChangeDistricts = (e) => {
     const districtName = e.target.value;
-    setDistrictValue(districtName);
-
-    // if (districtName) {
-    //   setError("districtAddress", { message: "" });
-    //   delete errors.districtAddress;
-    // }
+    if (districtName) {
+      clearErrors("districtAddress");
+      setDistrictValue(districtName);
+    }
+  };
+  const handleChangeRecapcha = (value) => {
+    setReCapchaValue(value);
+    if (!value) {
+      setRecaptchaExpired(true);
+      setReCapchaValue("");
+    } else {
+      setRecaptchaExpired(false);
+    }
+  };
+  const handleExpiredRecapcha = () => {
+    setRecaptchaExpired(true);
+    setReCapchaValue("");
+    console.log(
+      "reCAPTCHA expired. Please refresh and try again.",
+      recaptchaExpired
+    );
+  };
+  const handleAgreeTerms = (e) => {
+    const checked = e.target.checked;
+    setIsChecked((prev) => ({ ...prev, agreeTerms: checked }));
+  };
+  const handleReceivePromoInfo = (e) => {
+    const checked = e.target.checked;
+    setIsChecked((prev) => ({ ...prev, promoInfo: checked }));
   };
   return (
     <StyledSignUp className="signup-page">
@@ -123,73 +166,73 @@ export default function SignUp() {
               className="flex flex-col mt-10 form-layout items-end gap-y-4"
             >
               <Field className="flex">
-                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                <div className="text-sm  text-right form-label  w-[450px] text-[#3B3B3B]">
                   Họ tên
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input name="fullName" control={control} />
-                  <span className="text-xs form-error font-normal text-red-600">
+                  <span className="text-xs form-error font-normal text-errBg">
                     * {errors?.fullName?.message}
                   </span>
                 </div>
               </Field>
               <Field className="flex">
-                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                <div className="text-sm  text-right form-label  w-[450px] text-[#3B3B3B]">
                   Điện thoại
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input name="phoneNumber" control={control} />
-                  <span className="text-xs form-error font-normal text-red-600">
+                  <span className="text-xs form-error font-normal text-errBg">
                     * {errors?.phoneNumber?.message}
                   </span>
                 </div>
               </Field>
               <Field className="flex">
-                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                <div className="text-sm  text-right form-label  w-[450px] text-[#3B3B3B]">
                   Email
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input name="email" control={control} />
-                  <span className="text-xs form-error font-normal text-red-600">
+                  <span className="text-xs form-error font-normal text-errBg">
                     * {errors?.email?.message}
                   </span>
                 </div>
               </Field>
               <Field className="flex">
-                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                <div className="text-sm  text-right form-label  w-[450px] text-[#3B3B3B]">
                   Mật khẩu
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input name="password" control={control} />
-                  <span className="text-xs form-error font-normal text-red-600">
+                  <span className="text-xs form-error font-normal text-errBg">
                     * {errors?.password?.message}
                   </span>
                 </div>
               </Field>
               <Field className="flex">
-                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                <div className="text-sm  text-right form-label  w-[450px] text-[#3B3B3B]">
                   Xác nhận mật khẩu
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input name="passwordConfirm" control={control} />
-                  <span className="text-xs form-error font-normal text-red-600">
+                  <span className="text-xs form-error font-normal text-errBg">
                     * {errors?.passwordConfirm?.message}
                   </span>
                 </div>
               </Field>
               <Field className="flex">
-                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                <div className="text-sm  text-right form-label  w-[450px] text-[#3B3B3B]">
                   Địa chỉ
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input name="address" control={control} />
-                  <span className="text-xs form-error font-normal text-red-600">
+                  <span className="text-xs form-error font-normal text-errBg">
                     * {errors?.address?.message}
                   </span>
                 </div>
               </Field>
               <Field className="flex">
-                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                <div className="text-sm  text-right form-label  w-[450px] text-[#3B3B3B]">
                   Tỉnh/Thành
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
@@ -202,13 +245,13 @@ export default function SignUp() {
                     label="Chọn tỉnh thành"
                     value={provinceValue}
                   />
-                  <span className="text-xs form-error font-normal text-red-600">
+                  <span className="text-xs form-error font-normal text-errBg">
                     * {errors?.cityAddress?.message}
                   </span>
                 </div>
               </Field>
               <Field className="flex">
-                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]">
+                <div className="text-sm  text-right form-label  w-[450px] text-[#3B3B3B]">
                   Quận/Huyện
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
@@ -221,13 +264,56 @@ export default function SignUp() {
                     label="Chọn quận huyện"
                     value={districtValue}
                   />
-                  <span className="text-xs form-error font-normal text-red-600">
+                  <span className="text-xs form-error font-normal text-errBg">
                     * {errors?.districtAddress?.message}
                   </span>
                 </div>
               </Field>
+              <Field className="flex field-recapcha">
+                <div className="text-sm form-label__recapchar  text-right form-label  w-[450px] text-[#3B3B3B]"></div>
+                <div className="flex items-center form-control__input form-recapcha relative gap-x-2">
+                  <div className="recapcha">
+                    <ReCAPTCHA
+                      sitekey={RE_CAPCHA_KEY}
+                      onChange={handleChangeRecapcha}
+                      onExpired={handleExpiredRecapcha}
+                    />
+                  </div>
+                  <span className="text-xs form-error font-normal text-errBg"></span>
+                </div>
+              </Field>
+              <Field className="flex field-recapcha field-agreeTerms">
+                <div className="text-sm form-label__recapchar  text-right form-label  w-[450px] text-[#3B3B3B]"></div>
+                <div className="flex items-center form-control__input form-recapcha relative gap-x-2">
+                  <div className="flex flex-col gap-y-1 justify-start">
+                    <CheckBox
+                      name="agreeTerms"
+                      register={register}
+                      label="Tôi đồng ý với các điều khoản và quy định sử dụng tại thegioidien.com"
+                      onChange={handleAgreeTerms}
+                    />
+                    <span className="text-xs form-error font-normal text-errBg">
+                      {errors?.agreeTerms?.message}
+                    </span>
+                  </div>
+                  <span className="text-xs form-error font-normal text-errBg"></span>
+                </div>
+              </Field>
+              <Field className="flex field-recapcha field-agreeTerms">
+                <div className="text-sm form-label__recapchar  text-right form-label  w-[450px] text-[#3B3B3B]"></div>
+                <div className="flex items-center form-control__input form-recapcha relative gap-x-2">
+                  <div className="flex flex-col gap-y-1 justify-start">
+                    <CheckBox
+                      name="promoInfo"
+                      register={register}
+                      label="Tôi đồng ý với các điều khoản và quy định sử dụng tại thegioidien.com"
+                      onChange={handleReceivePromoInfo}
+                    />
+                  </div>
+                </div>
+              </Field>
               <Field className="flex">
-                <div className="text-sm  text-right form-label w-[450px] text-[#3B3B3B]"></div>
+                <div className="text-sm  text-right form-label  w-[450px] text-[#3B3B3B]"></div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <div className="btn-signup ml-auto w-[500px]">
                     <button
@@ -238,7 +324,7 @@ export default function SignUp() {
                       <span className="text-sm">Đăng ký</span>
                     </button>
                   </div>
-                  <span className="text-xs form-error font-normal text-red-600"></span>
+                  <span className="text-xs form-error font-normal text-errBg"></span>
                 </div>
               </Field>
             </form>
@@ -279,7 +365,20 @@ const StyledSignUp = styled.div`
   .form-layout {
     width: 100%;
   }
+  .form-label {
+    flex-shrink: 0;
+  }
+  .field-control.field-agreeTerms {
+    margin-bottom: 0;
+  }
   @media screen and (max-width: 1200px) {
+    .field-recapcha {
+      width: 100%;
+    }
+    .form-control__input.form-recapcha {
+      margin-right: auto;
+      width: 500px;
+    }
     .field-control {
       width: initial;
     }
@@ -306,6 +405,7 @@ const StyledSignUp = styled.div`
     }
   }
   @media screen and (max-width: 992px) {
+    .form-control__input.form-recapcha,
     .btn-signup,
     .field-control input[type="text"],
     .field-control input[type="password"],

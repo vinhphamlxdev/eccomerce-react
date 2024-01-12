@@ -10,6 +10,7 @@ export default {
         bgbtn: "#1C8DD9",
         bgCategoryItem: "#48322A",
         primaryBtn: "#1C8DD9",
+        errBg: "#CC0000",
       },
     },
   },
