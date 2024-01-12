@@ -13,11 +13,15 @@ import { getAllAddress } from "../../services/AddressApi";
 import { useQuery } from "@tanstack/react-query";
 import useAddress from "../../Hooks/useAddress";
 import Button from "../../components/Button";
-
+import useRecaptcha from "../../Hooks/useRecapcha";
+import CheckBox from "../../components/Checkbox";
+import ReCAPTCHA from "react-google-recaptcha";
+const RE_CAPCHA_KEY = import.meta.env.VITE_RE_CAPCHA_KEY;
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Điền Thông Tin", url: "/checkout" },
 ];
+const EMAIL_REG_EXP = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 const REGEX_PASSWORD =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 const PHONE_REG_EXP = /^[0-9]{10}$/;
@@ -27,8 +31,8 @@ const schemaValidate = Yup.object({
     .matches(PHONE_REG_EXP, "Vui lòng nhập đúng định dạng số điện thoại!")
     .required("Vùi lòng nhập số điện thoại!"),
   email: Yup.string()
-    .email("Email không đúng định dạng!")
-    .required("Vui lòng nhập email!!"),
+    .matches(EMAIL_REG_EXP, "Email không đúng định dạng!")
+    .required("Vui lòng nhập email!"),
   password: Yup.string()
     .required("Vui lòng nhập mật khẩu!")
     .matches(
@@ -41,28 +45,56 @@ const schemaValidate = Yup.object({
   address: Yup.string().required("Vui lòng nhập địa chỉ!"),
   cityAddress: Yup.string().required("Vui lòng chọn tỉnh thành!"),
   districtAddress: Yup.string().required("Vui lòng chọn quận huyện!"),
+  agreeTerms: Yup.boolean().oneOf([true], "Vui lòng đồng ý để tiếp tục!"),
 });
 export default function Checkout() {
+  const [isChecked, setIsChecked] = React.useState({
+    agreeTerms: false,
+    promoInfo: false,
+  });
   const {
     control,
     handleSubmit,
     register,
-    setError,
+    setValue: setFormValue,
+    clearErrors,
     formState: { errors, isValid, isSubmitting },
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(schemaValidate),
   });
 
-  const handleCheckout = async (data) => {
+  const {
+    reCapchaValue,
+    recaptchaExpired,
+    handleRecapchaChange,
+    handleExpiredRecapcha,
+  } = useRecaptcha();
+  const handleOrder = async (data) => {
+    if (recaptchaExpired) {
+      // Xử lý khi reCAPTCHA hết hạn
+      console.log("reCAPTCHA expired. Please refresh and try again.");
+      return;
+    }
+
     console.log(data);
   };
   const {
+    districtValue,
     districts,
     handleChangeDistricts,
-    provicesData,
     handleChangeProvinces,
-  } = useAddress(errors, setError);
+    provicesData,
+    provinceValue,
+    setDistrictValue,
+    setDistricts,
+    setProvinceValue,
+  } = useAddress(setFormValue, clearErrors);
+  const handleAgreeTerms = (e) => {
+    const checked = e.target.checked;
+    setIsChecked((prev) => ({ ...prev, agreeTerms: checked }));
+  };
+
   return (
     <CheckoutStyled className="checkout-page">
       <BreadCrumb paths={breadcrumbPaths} />
@@ -85,7 +117,7 @@ export default function Checkout() {
                     </span>
                   </div>
                   <form
-                    onSubmit={handleSubmit(handleCheckout)}
+                    onSubmit={handleSubmit(handleOrder)}
                     action=""
                     className="flex flex-col mt-10 form-layout"
                   >
@@ -186,10 +218,11 @@ export default function Checkout() {
                         <Select
                           data={provicesData}
                           control={control}
+                          onChange={handleChangeProvinces}
                           name="cityAddress"
                           register={register}
                           label="Chọn tỉnh thành"
-                          onChange={handleChangeProvinces}
+                          value={provinceValue}
                         />
                         <span className="text-xs font-normal text-red-600">
                           *
@@ -204,10 +237,11 @@ export default function Checkout() {
                         <Select
                           data={districts}
                           control={control}
+                          onChange={handleChangeDistricts}
                           name="districtAddress"
                           register={register}
-                          onChange={handleChangeDistricts}
                           label="Chọn quận huyện"
+                          value={districtValue}
                         />
                         <span className="text-xs font-normal text-red-600">
                           *
@@ -216,6 +250,41 @@ export default function Checkout() {
 
                       <span className="text-xs font-normal text-red-600">
                         {errors?.districtAddress?.message}
+                      </span>
+                    </Field>
+                    <Field>
+                      <div className="flex gap-x-1 items-center">
+                        <div className="recapcha">
+                          <ReCAPTCHA
+                            sitekey={RE_CAPCHA_KEY}
+                            onChange={handleRecapchaChange}
+                            onExpired={handleExpiredRecapcha}
+                          />
+                        </div>
+                        <span className="text-xs font-normal text-red-600">
+                          *
+                        </span>
+                      </div>
+
+                      <span className="text-xs font-normal text-red-600">
+                        {errors?.districtAddress?.message}
+                      </span>
+                    </Field>
+                    <Field>
+                      <div className="flex gap-x-1 items-center">
+                        <CheckBox
+                          name="agreeTerms"
+                          register={register}
+                          label="Tôi đồng ý với các điều khoản và quy định sử dụng tại thegioidien.com"
+                          onChange={handleAgreeTerms}
+                        />
+                        <span className="text-xs font-normal text-red-600">
+                          *
+                        </span>
+                      </div>
+
+                      <span className="text-xs font-normal text-red-600">
+                        {errors?.agreeTerms?.message}
                       </span>
                     </Field>
                     <div className="grid grid-cols-3 gap-x-2">

@@ -2,10 +2,13 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllAddress } from "../services/AddressApi";
 
-export default function useAddress(errors, setError) {
+export default function useAddress(setFormValue, clearErrors) {
+  const [provinceValue, setProvinceValue] = React.useState("");
+  const [districtValue, setDistrictValue] = React.useState("");
   const [districts, setDistricts] = React.useState([]);
+
   const { data: provicesData } = useQuery({
-    queryKey: ["provinces"],
+    queryKey: ["provices"],
     onSuccess: () => {},
     queryFn: () => getAllAddress(),
     onError: (err) => {
@@ -14,9 +17,14 @@ export default function useAddress(errors, setError) {
   });
   const handleChangeProvinces = (e) => {
     const provinceName = e.target.value;
+    setFormValue("districtAddress", "");
+    if (!provinceName) {
+      setProvinceValue("");
+      setDistricts([]);
+    }
+    setProvinceValue(provinceName);
     if (provinceName) {
-      delete errors.cityAddress;
-
+      clearErrors("cityAddress");
       const currProvince = provicesData.find(
         (province) => province.name === provinceName
       );
@@ -24,18 +32,24 @@ export default function useAddress(errors, setError) {
         setDistricts(currProvince.districts);
       }
     }
+    setDistrictValue("");
   };
   const handleChangeDistricts = (e) => {
     const districtName = e.target.value;
     if (districtName) {
-      setError("districtAddress", { message: "" });
-      delete errors.districtAddress;
+      clearErrors("districtAddress");
+      setDistrictValue(districtName);
     }
   };
   return {
     handleChangeProvinces,
     handleChangeDistricts,
+    provinceValue,
+    districtValue,
     districts,
+    setDistrictValue,
+    setProvinceValue,
     provicesData,
+    setDistricts,
   };
 }

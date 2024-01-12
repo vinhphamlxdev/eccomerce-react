@@ -9,12 +9,43 @@ import { categoryData } from "../../../Data";
 import { AiOutlineThunderbolt } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 import Button from "../../../Button";
+import * as Yup from "yup";
+import { EMAIL_REG_EXP, REGEX_PASSWORD } from "../../../../common/constants";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import Error from "../../../Error";
+import { Input } from "../../../Input";
+import { Field } from "../../../Field";
 
+const schemaValidate = Yup.object({
+  email: Yup.string()
+    .matches(EMAIL_REG_EXP, "Email không đúng định dạng!")
+    .required("Vui lòng nhập email!"),
+  password: Yup.string()
+    .required("Vui lòng nhập mật khẩu!")
+    .matches(
+      REGEX_PASSWORD,
+      "Mật khẩu phải có ít nhất 8 ký tự, ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt!"
+    ),
+});
 export default function Header() {
   const [showCategory, setShowCategory] = React.useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
   const [activeSubMenu, setActiveSubMenu] = useState(null);
-
+  const {
+    control,
+    handleSubmit,
+    register,
+    setValue: setFormValue,
+    clearErrors,
+    formState: { errors, isValid, isSubmitting },
+  } = useForm({
+    mode: "onChange",
+    resolver: yupResolver(schemaValidate),
+  });
+  const handleSignin = async (data) => {
+    console.log(data);
+  };
   const handleMenuClick = (index) => {
     activeMenu === index ? setActiveMenu(null) : setActiveMenu(index);
   };
@@ -98,18 +129,29 @@ export default function Header() {
               </div>
             </div>
           </div>
-          <div className="p-2 bg-[#DBDBDB] header-signin col-span-3 rounded-sm flex flex-col gap-y-2">
+          <form
+            onSubmit={handleSubmit(handleSignin)}
+            className="p-2 bg-[#DBDBDB] header-signin col-span-3 rounded-sm flex flex-col gap-y-2"
+          >
             <div className="flex  justify-between items-center">
               <div className="flex w-[135px] flex-shrink-0 gap-x-2   items-center">
                 <i className="bi text-[#003B4F] text-lg bi-person"></i>
                 <span className="text-sm text-red-800">Tài khoản</span>
               </div>
               <div className="relative flex-1">
-                <input
-                  className="text-sm border w-full focus:border-gray-800 bg-white border-gray-500 outline-none py-2 px-3"
-                  placeholder="Email hoặc điện thoại"
-                  type="text"
+                <Input
+                  style={{
+                    paddingTop: "8px",
+                    paddingBottom: "8px",
+                    backgroundColor: "#fff",
+                  }}
+                  control={control}
+                  name="email"
+                  type="email"
+                  placeholder="Email hoặc số điện thoại"
                 />
+
+                <Error isRequired={false} error={errors?.email?.message} />
               </div>
             </div>
             <div className="flex  justify-between items-center">
@@ -118,11 +160,18 @@ export default function Header() {
                 <span className="text-sm text-red-800">Mật khẩu</span>
               </div>
               <div className="relative flex-1">
-                <input
-                  className="text-sm border focus:border-gray-800 w-full bg-white border-gray-500 outline-none py-2 px-3"
+                <Input
+                  style={{
+                    paddingTop: "8px",
+                    paddingBottom: "8px",
+                    backgroundColor: "#fff",
+                  }}
+                  control={control}
+                  name="password"
+                  type="password"
                   placeholder="Mật khẩu"
-                  type="text"
                 />
+                <Error isRequired={false} error={errors?.password?.message} />
               </div>
             </div>
             <div className="flex items-center ">
@@ -132,7 +181,11 @@ export default function Header() {
                 </span>
               </div>
               <div className="relative flex flex-1 justify-start">
-                <Button className=" bg-primaryBtn btn-login" title="Đăng Nhập">
+                <Button
+                  type="submit"
+                  className=" bg-primaryBtn btn-login"
+                  title="Đăng Nhập"
+                >
                   <TbLock className="text-secondary text-lg" />
                 </Button>
                 {/* <button className="flex transition-all hover:opacity-80 gap-x-2 items-center text-white rounded-sm bg-[#1C8DD9] px-2 py-2">
@@ -141,7 +194,7 @@ export default function Header() {
                 </button> */}
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
       <div className="relative z-[200]">

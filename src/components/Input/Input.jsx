@@ -6,6 +6,7 @@ const Input = ({
   type = "text",
   control,
   placeholder = "",
+  style = {},
   ...props
 }) => {
   const { field } = useController({
@@ -17,6 +18,7 @@ const Input = ({
   return (
     <InputStyles className="field-input">
       <input
+        style={style}
         className="px-3 py-1"
         placeholder={placeholder}
         id={name}
@@ -37,7 +39,7 @@ const InputStyles = styled.div`
     width: 100%;
     outline: none;
     background-color: transparent;
-    border: 1px solid #e4e4e4;
+    border: 1px solid #888181;
     border-radius: 2px;
     transition: all 0.2s linear;
     color: #aaaaaa;

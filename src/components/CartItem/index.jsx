@@ -14,17 +14,17 @@ export default function CartItem() {
           alt=""
         />
       </div>
-      <div className="header-item ">
+      <div className="header-item product-item-code">
         <span>WHD35_GY</span>
       </div>
       <div className="header-item ">
         <span>Isolator 2P 35A 440V IP66</span>
       </div>
-      <div className="header-item">
-        <span>Nhãn hiệu</span>
+      <div className="header-item header-item-brand ">
+        <span>MBA</span>
       </div>
       <div className="header-item__list cart-grid__item">
-        <div className="flex p-[2px] justify-center cart-item__quantity header-item">
+        <div className="flex p-[2px] header-quantity justify-center cart-item__quantity header-item">
           {/* <span>1</span> */}
           <input
             type="number"
@@ -35,10 +35,10 @@ export default function CartItem() {
             className="text-center quantity-input  text-base bg-white"
           />
         </div>
-        <div className="flex justify-center header-item">
+        <div className="flex justify-center header-unit header-item">
           <span>Cái</span>
         </div>
-        <div className="flex justify-center header-item sale-price">
+        <div className="flex justify-center header-saleprice header-item sale-price">
           <span> 1.316.700</span>
         </div>
         <div className="flex justify-center toltal-price header-item">

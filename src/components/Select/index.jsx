@@ -38,7 +38,7 @@ const SelectStyles = styled.div`
   select {
     outline: none;
     background-color: transparent;
-    border: 1px solid #e4e4e4;
+    border: 1px solid #888181;
     border-radius: 2px;
     transition: all 0.2s linear;
     color: #aaaaaa;

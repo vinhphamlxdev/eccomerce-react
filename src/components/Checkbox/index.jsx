@@ -6,9 +6,14 @@ export default function CheckBox({
   name = "",
   label = "",
   register,
+  className = "",
+  style = {},
 }) {
   return (
-    <StyledCheckBox className="form-checkbox flex items-center gap-x-3">
+    <StyledCheckBox
+      style={style}
+      className={`form-checkbox flex items-center gap-x-3 ${className}`}
+    >
       <input
         {...register(name)}
         name={name}

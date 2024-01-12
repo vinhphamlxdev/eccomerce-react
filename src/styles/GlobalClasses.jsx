@@ -116,4 +116,32 @@ export const GlobalClasses = css`
   select:focus {
     border: 1px solid #000;
   }
+  @media screen and (max-width: 1200px) {
+    .product-logo__list {
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+    }
+    .product-list {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .viewmore-button {
+      display: flex;
+    }
+    .viewmore-btn {
+      text-decoration: none;
+      background-color: #b21e02;
+      background-image: linear-gradient(
+        to bottom,
+        #b21e02,
+        #b21e02,
+        #b93016,
+        #b21e02,
+        #b21e02
+      );
+      border-radius: 3px;
+      color: #ededed;
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 0.7rem;
+    }
+  }
 `;

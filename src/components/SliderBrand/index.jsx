@@ -10,7 +10,7 @@ export default function SliderBrand() {
     infinite: true,
     speed: 500,
     arrows: false,
-    autoplay: true,
+    autoplay: false,
     autoplaySpeed: 1500,
     slidesToShow: 7,
     slidesToScroll: 1,

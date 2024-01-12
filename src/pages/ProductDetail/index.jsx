@@ -15,18 +15,18 @@ import { FaBarsStaggered } from "react-icons/fa6";
 import ProductItem from "../../components/ProductItem";
 import BreadCrumb from "../../components/BreadCrumb";
 import { NavLink } from "react-router-dom";
+import ProductList from "../../components/ProductList";
+import { EMAIL_REG_EXP } from "../../common/constants";
+import Error from "../../components/Error";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Sản phẩm", url: "/cart" },
 ];
-const REGEX_PASSWORD =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-const PHONE_REG_EXP = /^[0-9]{10}$/;
 const schemaValidate = Yup.object({
-  fullName: Yup.string().required("Vui lòng nhập họ tên!!"),
+  fullName: Yup.string().required("Vui lòng nhập họ tên!"),
   email: Yup.string()
-    .email("Email không đúng định dạng!")
-    .required("Vui lòng nhập email!!"),
+    .matches(EMAIL_REG_EXP, "Email không đúng định dạng!")
+    .required("Vui lòng nhập email!"),
   content: Yup.string().required("Vui lòng nhập nội dung!"),
 });
 export default function ProductDeatail() {
@@ -440,20 +440,16 @@ export default function ProductDeatail() {
                     control={control}
                   />
                 </div>
-                <span className="text-sm font-normal text-red-600">
-                  * {errors?.email?.message}
-                </span>
+                <Error error={errors?.email?.message} />
               </div>
             </div>
-            <div className="form-field flex items-center gap-x-2">
+            <div className="form-field field-textarea flex items-center gap-x-2">
               <TextArea
                 control={control}
                 placeholder="Nội dung..."
                 name="content"
               />
-              <span className="text-sm font-normal text-red-600">
-                * {errors?.content?.message}
-              </span>
+              <Error error={errors?.content?.message} />
             </div>
             <div className="btn-send__comment">
               <Button
@@ -479,16 +475,7 @@ export default function ProductDeatail() {
             </div>
           </div>
           <div className="product-similar-container p-3">
-            <div className="grid grid-cols-6 gap-x-3 gap-y-5">
-              <ProductItem />
-              <ProductItem />
-              <ProductItem />
-              <ProductItem />
-              <ProductItem />
-              <ProductItem />
-              <ProductItem />
-              <ProductItem />
-            </div>
+            <ProductList />
           </div>
         </div>
       </div>
@@ -553,6 +540,13 @@ const StyledProductDeatail = styled.div`
       background-color: #f2d9d4;
       background-image: linear-gradient(to bottom, #f2d9d4, #fff);
       border-top: 1px solid #b21e02;
+    }
+  }
+  @media screen and (max-width: 1040px) {
+    .form-field {
+      flex-direction: column;
+      align-items: flex-start;
+      align-items: baseline;
     }
   }
   @media screen and (max-width: 1200px) {

@@ -17,15 +17,19 @@ import HeadingSession from "../../components/HeadingSession";
 import useAddress from "../../Hooks/useAddress";
 import ReCAPTCHA from "react-google-recaptcha";
 import CheckBox from "../../components/Checkbox";
-const RE_CAPCHA_KEY = `6Ld8RE4pAAAAAGWSlk1jelWHB36syF4tGRYkHPHm`;
+import useRecaptcha from "../../Hooks/useRecapcha";
+import {
+  EMAIL_REG_EXP,
+  PHONE_REG_EXP,
+  REGEX_PASSWORD,
+} from "../../common/constants";
+import Error from "../../components/Error";
+const RE_CAPCHA_KEY = import.meta.env.VITE_RE_CAPCHA_KEY;
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Đăng ký", url: "/signup" },
 ];
-const REGEX_PASSWORD =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-const PHONE_REG_EXP = /^[0-9]{10}$/;
-const EMAIL_REG_EXP = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+
 const schemaValidate = Yup.object({
   fullName: Yup.string().required("Vui lòng nhập họ tên!!"),
   phoneNumber: Yup.string()
@@ -33,7 +37,7 @@ const schemaValidate = Yup.object({
     .required("Vùi lòng nhập số điện thoại!"),
   email: Yup.string()
     .matches(EMAIL_REG_EXP, "Email không đúng định dạng!")
-    .required("Vui lòng nhập email!!"),
+    .required("Vui lòng nhập email!"),
   password: Yup.string()
     .required("Vui lòng nhập mật khẩu!")
     .matches(
@@ -50,11 +54,6 @@ const schemaValidate = Yup.object({
 });
 export default function SignUp() {
   const navigate = useNavigate();
-  const [districts, setDistricts] = React.useState([]);
-  const [provinceValue, setProvinceValue] = React.useState("");
-  const [districtValue, setDistrictValue] = React.useState("");
-  const [reCapchaValue, setReCapchaValue] = React.useState("");
-  const [recaptchaExpired, setRecaptchaExpired] = React.useState(true);
   const [isChecked, setIsChecked] = React.useState({
     agreeTerms: false,
     promoInfo: false,
@@ -71,14 +70,12 @@ export default function SignUp() {
     resolver: yupResolver(schemaValidate),
   });
 
-  const { data: provicesData } = useQuery({
-    queryKey: ["provices"],
-    onSuccess: () => {},
-    queryFn: () => getAllAddress(),
-    onError: (err) => {
-      console.log(err);
-    },
-  });
+  const {
+    reCapchaValue,
+    recaptchaExpired,
+    handleRecapchaChange,
+    handleExpiredRecapcha,
+  } = useRecaptcha();
   const handleSignUp = async (data) => {
     if (recaptchaExpired) {
       // Xử lý khi reCAPTCHA hết hạn
@@ -92,50 +89,17 @@ export default function SignUp() {
 
     console.log(requestData);
   };
-
-  const handleChangeProvinces = (e) => {
-    const provinceName = e.target.value;
-    setFormValue("districtAddress", "");
-    if (!provinceName) {
-      setProvinceValue("");
-      setDistricts([]);
-    }
-    setProvinceValue(provinceName);
-    if (provinceName) {
-      clearErrors("cityAddress");
-      const currProvince = provicesData.find(
-        (province) => province.name === provinceName
-      );
-      if (currProvince) {
-        setDistricts(currProvince.districts);
-      }
-    }
-    setDistrictValue("");
-  };
-  const handleChangeDistricts = (e) => {
-    const districtName = e.target.value;
-    if (districtName) {
-      clearErrors("districtAddress");
-      setDistrictValue(districtName);
-    }
-  };
-  const handleChangeRecapcha = (value) => {
-    setReCapchaValue(value);
-    if (!value) {
-      setRecaptchaExpired(true);
-      setReCapchaValue("");
-    } else {
-      setRecaptchaExpired(false);
-    }
-  };
-  const handleExpiredRecapcha = () => {
-    setRecaptchaExpired(true);
-    setReCapchaValue("");
-    console.log(
-      "reCAPTCHA expired. Please refresh and try again.",
-      recaptchaExpired
-    );
-  };
+  const {
+    districtValue,
+    districts,
+    handleChangeDistricts,
+    handleChangeProvinces,
+    provicesData,
+    provinceValue,
+    setDistrictValue,
+    setDistricts,
+    setProvinceValue,
+  } = useAddress(setFormValue, clearErrors);
   const handleAgreeTerms = (e) => {
     const checked = e.target.checked;
     setIsChecked((prev) => ({ ...prev, agreeTerms: checked }));
@@ -171,9 +135,7 @@ export default function SignUp() {
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input name="fullName" control={control} />
-                  <span className="text-xs form-error font-normal text-errBg">
-                    * {errors?.fullName?.message}
-                  </span>
+                  <Error error={errors?.fullName?.message} />
                 </div>
               </Field>
               <Field className="flex">
@@ -182,9 +144,7 @@ export default function SignUp() {
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input name="phoneNumber" control={control} />
-                  <span className="text-xs form-error font-normal text-errBg">
-                    * {errors?.phoneNumber?.message}
-                  </span>
+                  <Error error={errors?.phoneNumber?.message} />
                 </div>
               </Field>
               <Field className="flex">
@@ -193,9 +153,7 @@ export default function SignUp() {
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input name="email" control={control} />
-                  <span className="text-xs form-error font-normal text-errBg">
-                    * {errors?.email?.message}
-                  </span>
+                  <Error error={errors?.email?.message} />
                 </div>
               </Field>
               <Field className="flex">
@@ -204,9 +162,7 @@ export default function SignUp() {
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input name="password" control={control} />
-                  <span className="text-xs form-error font-normal text-errBg">
-                    * {errors?.password?.message}
-                  </span>
+                  <Error error={errors?.password?.message} />
                 </div>
               </Field>
               <Field className="flex">
@@ -215,9 +171,7 @@ export default function SignUp() {
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input name="passwordConfirm" control={control} />
-                  <span className="text-xs form-error font-normal text-errBg">
-                    * {errors?.passwordConfirm?.message}
-                  </span>
+                  <Error error={errors?.passwordConfirm?.message} />
                 </div>
               </Field>
               <Field className="flex">
@@ -226,9 +180,7 @@ export default function SignUp() {
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input name="address" control={control} />
-                  <span className="text-xs form-error font-normal text-errBg">
-                    * {errors?.address?.message}
-                  </span>
+                  <Error error={errors?.address?.message} />
                 </div>
               </Field>
               <Field className="flex">
@@ -245,9 +197,7 @@ export default function SignUp() {
                     label="Chọn tỉnh thành"
                     value={provinceValue}
                   />
-                  <span className="text-xs form-error font-normal text-errBg">
-                    * {errors?.cityAddress?.message}
-                  </span>
+                  <Error error={errors?.cityAddress?.message} />
                 </div>
               </Field>
               <Field className="flex">
@@ -264,9 +214,7 @@ export default function SignUp() {
                     label="Chọn quận huyện"
                     value={districtValue}
                   />
-                  <span className="text-xs form-error font-normal text-errBg">
-                    * {errors?.districtAddress?.message}
-                  </span>
+                  <Error error={errors?.districtAddress?.message} />
                 </div>
               </Field>
               <Field className="flex field-recapcha">
@@ -275,7 +223,7 @@ export default function SignUp() {
                   <div className="recapcha">
                     <ReCAPTCHA
                       sitekey={RE_CAPCHA_KEY}
-                      onChange={handleChangeRecapcha}
+                      onChange={handleRecapchaChange}
                       onExpired={handleExpiredRecapcha}
                     />
                   </div>
@@ -299,14 +247,14 @@ export default function SignUp() {
                   <span className="text-xs form-error font-normal text-errBg"></span>
                 </div>
               </Field>
-              <Field className="flex field-recapcha field-agreeTerms">
+              <Field className="flex field-recapcha field-agreeTerms field-promoinfo">
                 <div className="text-sm form-label__recapchar  text-right form-label  w-[450px] text-[#3B3B3B]"></div>
                 <div className="flex items-center form-control__input form-recapcha relative gap-x-2">
                   <div className="flex flex-col gap-y-1 justify-start">
                     <CheckBox
                       name="promoInfo"
                       register={register}
-                      label="Tôi đồng ý với các điều khoản và quy định sử dụng tại thegioidien.com"
+                      label="Nhận thông tin khuyến mãi qua email"
                       onChange={handleReceivePromoInfo}
                     />
                   </div>
@@ -414,6 +362,12 @@ const StyledSignUp = styled.div`
     }
   }
   @media screen and (max-width: 768px) {
+    .form-control__input.form-recapcha {
+      width: 100%;
+    }
+    .field-control.field-promoinfo {
+      margin-top: 14px;
+    }
     .field-input,
     .field-select {
       width: 100%;

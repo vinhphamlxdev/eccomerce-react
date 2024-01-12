@@ -3,6 +3,7 @@ import styled from "styled-components";
 import productlogo from "../../assets/productlogo.jpg";
 import ProductItem from "../ProductItem";
 import Button from "../Button";
+import ProductList from "../ProductList";
 export default function Product() {
   return (
     <StyledProduct className="product-session pt-session pb-session">
@@ -27,16 +28,7 @@ export default function Product() {
           </div>
         </div>
         <div className="px-3 pt-3 product-container">
-          <div className="grid grid-cols-6 gap-x-3 gap-y-5 product-list">
-            <ProductItem />
-            <ProductItem />
-            <ProductItem />
-            <ProductItem />
-            <ProductItem />
-            <ProductItem />
-            <ProductItem />
-            <ProductItem />
-          </div>
+          <ProductList />
           <div className="viewmore-button mt-3 hidden justify-end items-center p-3">
             <Button title="Xem thêm" className="viewmore-btn ">
               <i className="bi text-secondary text-base bi-chevron-double-right"></i>

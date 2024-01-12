@@ -84,26 +84,26 @@ export default function Cart() {
             <div className="header-item text-[#3E0B00]">
               <span>Hình</span>
             </div>
-            <div className="header-item text-[#3E0B00]">
+            <div className="header-item product-item-code text-[#3E0B00]">
               <span>Mã sản phẩm</span>
             </div>
             <div className="header-item text-[#3E0B00]">
               <span>Tên sản phẩm</span>
             </div>
-            <div className="header-item text-[#3E0B00]">
+            <div className="header-item header-item-brand text-[#3E0B00]">
               <span>Nhãn hiệu</span>
             </div>
             <div className="header-item__list cart-grid__item text-[#3E0B00]">
-              <div className="flex justify-center header-item text-[#3E0B00]">
+              <div className="flex justify-center header-quantity header-item product-quantity text-[#3E0B00]">
                 <span> Số lượng</span>
               </div>
-              <div className="flex justify-center header-item text-[#3E0B00]">
+              <div className="flex justify-center header-quantity header-item product-unit text-[#3E0B00]">
                 <span> ĐVT</span>
               </div>
-              <div className="flex justify-center header-item text-[#3E0B00]">
+              <div className="flex justify-center header-item header-saleprice text-[#3E0B00]">
                 <span> Đơn giá</span>
               </div>
-              <div className="flex justify-center header-item text-[#3E0B00]">
+              <div className="flex justify-center header-item toltal-price text-[#3E0B00]">
                 <span>Thành tiền</span>
               </div>
               <div className="flex justify-center header-item text-[#3E0B00]">
@@ -209,5 +209,39 @@ const StyledCart = styled.div`
     display: grid;
     grid-template-columns: minmax(60px, 1fr) 136px 200px;
     border-bottom: 1px solid #cbcbcb;
+  }
+  @media screen and (max-width: 1400px) {
+    .cart-grid__header {
+      grid-template-columns: 40px 50px 2fr minmax(60px, 5fr) 600px;
+    }
+    .header-item.header-item-brand {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 990px) {
+    .cart-grid__header {
+      grid-template-columns: 40px 50px minmax(50px, 1fr) 600px;
+    }
+    .header-item.product-item-code {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .cart-grid__item {
+      display: block;
+    }
+    .cart-grid__header {
+      grid-template-columns: 40px 50px minmax(60px, 1fr) 200px;
+    }
+    .brand-option,
+    .category-option {
+      width: 100%;
+    }
+    .header-item.header-saleprice,
+    .header-item.toltal-price,
+    .header-item.header-unit,
+    .header-item.header-quantity {
+      display: none;
+    }
   }
 `;
