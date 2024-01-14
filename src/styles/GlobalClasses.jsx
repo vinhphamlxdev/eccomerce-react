@@ -3,6 +3,10 @@ export const GlobalClasses = css`
   .wrapper-layout {
     max-width: 1300px;
     margin: auto;
+    background-color: #faedcd;
+  }
+  .app {
+    background-color: #fff;
   }
   .grid {
     display: grid;
@@ -76,7 +80,9 @@ export const GlobalClasses = css`
     transition: all 0.4s ease-in-out 0s;
     background-color: #f5f5f5;
   }
-
+  .slick-list .slick-slide > div {
+    display: flex;
+  }
   .swal2-container.swal2-center > .swal2-popup {
     user-select: none;
   }
@@ -120,9 +126,7 @@ export const GlobalClasses = css`
     .product-logo__list {
       grid-template-columns: repeat(10, minmax(0, 1fr));
     }
-    .product-list {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
+
     .viewmore-button {
       display: flex;
     }

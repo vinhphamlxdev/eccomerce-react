@@ -7,17 +7,20 @@ import { TbMessageCircle } from "react-icons/tb";
 import { Field } from "../../components/Field";
 import { Input } from "../../components/Input";
 import * as Yup from "yup";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import TextArea from "../../components/TextArea";
 import Button from "../../components/Button";
 import { FaBarsStaggered } from "react-icons/fa6";
 import ProductItem from "../../components/ProductItem";
 import BreadCrumb from "../../components/BreadCrumb";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import ProductList from "../../components/ProductList";
 import { EMAIL_REG_EXP } from "../../common/constants";
 import Error from "../../components/Error";
+import Quantity from "../../Quantity";
+import { useDispatch } from "react-redux";
+import handleAddToCart from "../../utils/handleAddToCart";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Sản phẩm", url: "/cart" },
@@ -30,6 +33,9 @@ const schemaValidate = Yup.object({
   content: Yup.string().required("Vui lòng nhập nội dung!"),
 });
 export default function ProductDeatail() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [quantity, setQuantity] = React.useState(1);
   const {
     control,
     handleSubmit,
@@ -43,6 +49,19 @@ export default function ProductDeatail() {
   const handlePostComment = async (data) => {
     console.log(errors);
     console.log(data);
+  };
+  const handleChangeQuantity = (e) => {
+    const value = +e.target.value;
+    value < 1 ? 1 : setQuantity(value);
+  };
+  const handleIncreaseQuantity = () => {
+    setQuantity((prev) => prev + 1);
+  };
+  const handleDecreaseQuantity = () => {
+    quantity === 1 ? 1 : setQuantity(quantity - 1);
+  };
+  const handleAddProductToCart = () => {
+    navigate("/cart");
   };
   return (
     <StyledProductDeatail className="product-detail">
@@ -97,33 +116,21 @@ export default function ProductDeatail() {
                 <div className="flex items-center gap-x-3 cart-buy">
                   <div className="flex gap-x-2 items-center">
                     <span className="text-[#430B01] text-sm">Số lượng</span>
-                    <div className="quantity-btn py-[2px] overflow-hidden flex bg-[#B5B5B4] rounded-sm">
-                      <button className="btn-incre px-3 py-2 bg-[#B5B5B4] text-[#003B4F]">
-                        <i className="bi text-[#003B4F] leading-[0px] text-base bi-dash-lg"></i>
-                      </button>
-                      <div className="bg-white">
-                        <input
-                          type="number"
-                          min={1}
-                          pattern="[0-9]*"
-                          defaultValue={1}
-                          inputMode="numeric"
-                          className="w-20 flex justify-center  text-center text-5 p-2 bg-white"
-                        />
-                      </div>
-                      <button className="btn-incre px-3 py-2 bg-[#B5B5B4] text-[#003B4F]">
-                        <i className="bi text-[#003B4F] leading-[0px] text-base bi-plus-lg"></i>
-                      </button>
-                    </div>
+                    <Quantity
+                      handleDecrease={handleDecreaseQuantity}
+                      handleIncrease={handleIncreaseQuantity}
+                      setQuantity={handleChangeQuantity}
+                      quantity={quantity}
+                    />
                     <span className="text-[#430B01] text-sm">Cái</span>
                   </div>
-                  <NavLink
-                    to={"/cart"}
+                  <button
+                    onClick={handleAddProductToCart}
                     className="bg-bgbtn hover:opacity-75 transition-all text-white py-2 rounded-sm flex items-center px-3 gap-x-2"
                   >
                     <i className="bi text-base text-secondary bi-cart"></i>
                     <span className="text-sm">Mua hàng</span>
-                  </NavLink>
+                  </button>
                 </div>
               </div>
             </div>
@@ -415,7 +422,7 @@ export default function ProductDeatail() {
             onSubmit={handleSubmit(handlePostComment)}
             className="flex flex-col gap-y-3"
           >
-            <div className="flex gap-x-3 items-center">
+            <div className="flex gap-x-3 items-baseline">
               <div className="flex items-center form-field gap-x-2">
                 <div className="w-[320px]">
                   <Input

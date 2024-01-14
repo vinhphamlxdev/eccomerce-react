@@ -36,7 +36,6 @@ export default function Header() {
     control,
     handleSubmit,
     register,
-    setValue: setFormValue,
     clearErrors,
     formState: { errors, isValid, isSubmitting },
   } = useForm({
@@ -56,7 +55,7 @@ export default function Header() {
     <StyledHeader className="header w-full flex flex-col">
       <div className="flex bg-[#6A1300] items-center justify-between">
         <div className="flex items-center">
-          <div className="px-2 gap-x-2 py-1 flex items-center">
+          <div className="px-2 gap-x-2 py-1 flex items-center h-full">
             <button className="flex text-white items-center rounded-sm gap-x-1 bg-blue-500 px-1 py-1">
               <i className="bi bi-hand-thumbs-up-fill"></i>
               <span>Theo dõi 333</span>

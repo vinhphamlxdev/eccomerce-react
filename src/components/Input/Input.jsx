@@ -19,7 +19,7 @@ const Input = ({
     <InputStyles className="field-input">
       <input
         style={style}
-        className="px-3 py-1"
+        className="px-3 py-2"
         placeholder={placeholder}
         id={name}
         type={type}

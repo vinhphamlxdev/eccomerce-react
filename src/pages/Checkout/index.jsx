@@ -139,7 +139,7 @@ export default function Checkout() {
                     <Field>
                       <div className="flex gap-x-1 items-center">
                         <Input
-                          placeholder="Họ tên"
+                          placeholder="Số điện thoại"
                           name="phoneNumber"
                           control={control}
                         />
@@ -375,7 +375,7 @@ export default function Checkout() {
                 <i className="bi text-base text-secondary bi-chevron-double-left"></i>
               </Button>
               <Button
-                title="Xóa đon hàng"
+                title="Xóa đơn hàng"
                 type="submit"
                 className="bg-primaryBtn"
               >

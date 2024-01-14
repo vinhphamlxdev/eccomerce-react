@@ -5,11 +5,13 @@ import Header from "./Header";
 const DefaultLayout = ({ children }) => {
   return (
     <div className="wrapper-layout">
-      <Header />
-      <>{children}</>
-      <SliderBrand />
-      <Post />
-      <Footer />
+      <div className="app">
+        <Header />
+        <>{children}</>
+        <SliderBrand />
+        <Post />
+        <Footer />
+      </div>
     </div>
   );
 };

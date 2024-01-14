@@ -6,11 +6,12 @@ import { publicRoutes } from "./routes";
 import { Route, Routes } from "react-router-dom";
 import { DefaultLayout } from "./components/layout";
 import { GlobalStyles } from "./styles/GlobalStyles";
-
+import { ToastContainer } from "react-toastify";
 function App() {
   return (
     <Fragment>
       <GlobalStyles />
+      <ToastContainer />
       <Routes>
         {publicRoutes.map((route, index) => {
           const Layout = route.layout === null ? Fragment : DefaultLayout;

@@ -19,6 +19,7 @@ export default function Select({
         {...register(name)}
         onChange={onChange}
         className="px-3 py-1"
+        defaultValue={""}
       >
         <option value="">-- {label}</option>
         {data?.length > 0 &&
