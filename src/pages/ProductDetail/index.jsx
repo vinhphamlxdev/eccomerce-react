@@ -18,9 +18,9 @@ import { NavLink, useNavigate, useParams } from "react-router-dom";
 import ProductList from "../../components/ProductList";
 import { EMAIL_REG_EXP } from "../../common/constants";
 import Error from "../../components/Error";
-import Quantity from "../../Quantity";
 import { useDispatch } from "react-redux";
 import handleAddToCart from "../../utils/handleAddToCart";
+import Quantity from "../../components/Quantity";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Sản phẩm", url: "/cart" },
@@ -33,6 +33,8 @@ const schemaValidate = Yup.object({
   content: Yup.string().required("Vui lòng nhập nội dung!"),
 });
 export default function ProductDeatail() {
+  const { id } = useParams();
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [quantity, setQuantity] = React.useState(1);
@@ -61,6 +63,14 @@ export default function ProductDeatail() {
     quantity === 1 ? 1 : setQuantity(quantity - 1);
   };
   const handleAddProductToCart = () => {
+    const product = {
+      id: 1,
+      name: "Công tắc 1 chiều 16A 250VAC",
+      price: 9500,
+      quantity: quantity,
+      image: "https://thegioidien.com/PrdGallery/WNG5001701-W1600334684.jpg",
+    };
+    handleAddToCart(product, quantity, dispatch);
     navigate("/cart");
   };
   return (
@@ -422,8 +432,8 @@ export default function ProductDeatail() {
             onSubmit={handleSubmit(handlePostComment)}
             className="flex flex-col gap-y-3"
           >
-            <div className="flex gap-x-3 items-baseline">
-              <div className="flex items-center form-field gap-x-2">
+            <div className="flex gap-x-3 field-container items-baseline">
+              <div className="flex items-center form-field form-field__input gap-x-2">
                 <div className="w-[320px]">
                   <Input
                     placeholder="Họ tên..."
@@ -439,7 +449,7 @@ export default function ProductDeatail() {
                   </span>
                 </div>
               </div>
-              <div className="flex items-center form-field gap-x-2">
+              <div className="flex items-center form-field form-field__input  gap-x-2">
                 <div className="w-[320px]">
                   <Input
                     placeholder="Email..."
@@ -580,6 +590,14 @@ const StyledProductDeatail = styled.div`
 
     .cart-buy {
       justify-content: center;
+    }
+    .field-container {
+      flex-direction: column;
+    }
+    .form-field,
+    .form-field__input > div,
+    .form-field__input {
+      width: 100%;
     }
   }
 `;

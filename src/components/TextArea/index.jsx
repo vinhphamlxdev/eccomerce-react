@@ -43,4 +43,7 @@ const StyledTextArea = styled.div`
   textarea::-moz-textarea-placeholder {
     color: #b2b3bd;
   }
+  @media screen and (max-width: 840px) {
+    width: 100%;
+  }
 `;

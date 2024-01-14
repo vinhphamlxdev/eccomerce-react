@@ -16,11 +16,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Error from "../../../Error";
 import { Input } from "../../../Input";
 import { Field } from "../../../Field";
-
+const EMAIL_AND_PHONE_REG_EXP =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$|^\d{10,11}$/;
 const schemaValidate = Yup.object({
-  email: Yup.string()
-    .matches(EMAIL_REG_EXP, "Email không đúng định dạng!")
-    .required("Vui lòng nhập email!"),
+  emailAndPhone: Yup.string()
+    .matches(
+      EMAIL_AND_PHONE_REG_EXP,
+      "Email hoặc số điện thoại không đúng định dạng!"
+    )
+    .required("Vui lòng nhập email hoặc số điện thoại!"),
   password: Yup.string()
     .required("Vui lòng nhập mật khẩu!")
     .matches(
@@ -145,12 +149,15 @@ export default function Header() {
                     backgroundColor: "#fff",
                   }}
                   control={control}
-                  name="email"
-                  type="email"
+                  name="emailAndPhone"
+                  type="text"
                   placeholder="Email hoặc số điện thoại"
                 />
 
-                <Error isRequired={false} error={errors?.email?.message} />
+                <Error
+                  isRequired={false}
+                  error={errors?.emailAndPhone?.message}
+                />
               </div>
             </div>
             <div className="flex  justify-between items-center">

@@ -4,11 +4,14 @@ import styled from "styled-components";
 import { FaFileInvoiceDollar } from "react-icons/fa";
 import CartItem from "../../components/CartItem";
 import Button from "../../components/Button";
+import { useSelector } from "react-redux";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Dự toán đơn hàng", url: "/cart" },
 ];
 export default function Cart() {
+  const carts = useSelector((state) => state.cart.cartItems);
+  console.log(carts);
   const handleChangeCategory = (e) => {
     const value = e.target.value;
   };
@@ -111,7 +114,10 @@ export default function Cart() {
               </div>
             </div>
           </div>
-          <CartItem />
+          {carts?.length > 0 &&
+            carts.map((cart, index) => {
+              return <CartItem product={cart} key={cart.id} />;
+            })}
           <div className="cart-toltal">
             <div className="flex items-center justify-end py-3">
               <span className="mr-4 text-lg font-medium text-[#430B01]">
