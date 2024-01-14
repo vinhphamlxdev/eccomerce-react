@@ -1,8 +1,9 @@
 import Cart from "../pages/Cart";
 import Checkout from "../pages/Checkout";
+import ForgotPassword from "../pages/ForgotPassword";
 import Home from "../pages/Home";
 import ProductDeatail from "../pages/ProductDetail";
-import SignUp from "../pages/SignUp";
+import SignUpPage from "../pages/SignUp";
 export const publicRoutes = [
   {
     path: "/",
@@ -11,7 +12,7 @@ export const publicRoutes = [
 
   {
     path: "/signup",
-    component: SignUp,
+    component: SignUpPage,
   },
   {
     path: "/product/:id",
@@ -24,5 +25,9 @@ export const publicRoutes = [
   {
     path: "/checkout",
     component: Checkout,
+  },
+  {
+    path: "/forgot-password",
+    component: ForgotPassword,
   },
 ];

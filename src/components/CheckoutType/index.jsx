@@ -1,11 +1,24 @@
 import React from "react";
 import styled from "styled-components";
-export default function CheckoutType() {
+export default function CheckoutType({
+  checked,
+  handleChecked,
+  type = 1,
+  label = "",
+}) {
   return (
-    <CheckoutTypeStyled className="radio-check gap-x-3 flex px-2 items-center">
-      <input type="radio" id="checkout-type" />
-      <label className="cursor-pointer checkout-label" htmlFor="checkout-type">
-        Đã là thành viên - Đăng nhập
+    <CheckoutTypeStyled className="radio-check cursor-pointer select-none gap-x-3 flex px-2 items-center">
+      <input
+        onChange={() => handleChecked(type)}
+        type="radio"
+        id={`checked-type-${type}`}
+        checked={checked}
+      />
+      <label
+        className="cursor-pointer checkout-label"
+        htmlFor={`checked-type-${type}`}
+      >
+        {label}
       </label>
       <i className="bi bi-chevron-right absolute top-2/4 right-2 pointer-events-none -translate-y-2/4"></i>
     </CheckoutTypeStyled>

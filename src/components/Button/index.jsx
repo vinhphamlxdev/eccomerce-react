@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Button({
   children,
@@ -8,9 +9,10 @@ export default function Button({
   style = {},
   onClick,
   type = "button",
+  to = "",
   ...props
 }) {
-  return (
+  const ButtonContent = (
     <button
       style={style}
       disabled={isDisabled}
@@ -23,4 +25,6 @@ export default function Button({
       <span className="text-sm whitespace-nowrap">{title}</span>
     </button>
   );
+
+  return to ? <Link to={to}>{ButtonContent}</Link> : ButtonContent;
 }

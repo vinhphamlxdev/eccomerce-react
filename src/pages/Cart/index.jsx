@@ -135,6 +135,7 @@ export default function Cart() {
             <i className="bi text-secondary text-base bi-chevron-double-left"></i>
           </Button>
           <Button
+            to="/checkout"
             title="Tiếp tục đặt hàng"
             className="bg-primaryBtn flex-row-reverse"
           >

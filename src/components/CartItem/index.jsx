@@ -4,6 +4,7 @@ import ActionButton from "./ActionButton";
 import { removeFromCart, updateQuantity } from "../../store/cart/cartSlice";
 import { useDispatch } from "react-redux";
 import { RxUpdate } from "react-icons/rx";
+import formatVnd from "../../utils/formatVnd";
 export default function CartItem({ product = {} }) {
   const dispatch = useDispatch();
   const { name, price, quantity } = product;
@@ -11,7 +12,7 @@ export default function CartItem({ product = {} }) {
   const [isEdit, setIsEdit] = React.useState(false);
   const handleChangeQuantity = (event) => {
     const value = +event.target.value;
-    setQuantityValue(value);
+    value < 1 ? setQuantityValue(1) : setQuantityValue(value);
   };
   const handleUpdateQuantity = () => {
     setIsEdit(false);
@@ -56,7 +57,7 @@ export default function CartItem({ product = {} }) {
               onChange={handleChangeQuantity}
               type="number"
               value={quantityValue}
-              inputMode="numeric"
+              min={1}
               className="text-center quantity-input  text-base bg-white"
             />
           ) : (
@@ -67,10 +68,10 @@ export default function CartItem({ product = {} }) {
           <span>Cái</span>
         </div>
         <div className="flex justify-center header-saleprice header-item sale-price">
-          <span> 1.316.700</span>
+          <span> {formatVnd(price)}</span>
         </div>
         <div className="flex justify-center toltal-price header-item">
-          <span>1.316.700</span>
+          <span>{formatVnd(price * quantityValue)}</span>
         </div>
         <div className="flex justify-center header-item">
           <div className="flex items-center justify-center">

@@ -16,6 +16,10 @@ import Button from "../../components/Button";
 import useRecaptcha from "../../Hooks/useRecapcha";
 import CheckBox from "../../components/Checkbox";
 import ReCAPTCHA from "react-google-recaptcha";
+import { NavLink } from "react-router-dom";
+import { LuLogIn } from "react-icons/lu";
+import Register from "./Register";
+import Login from "./Login";
 const RE_CAPCHA_KEY = import.meta.env.VITE_RE_CAPCHA_KEY;
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
@@ -51,6 +55,11 @@ export default function Checkout() {
   const [isChecked, setIsChecked] = React.useState({
     agreeTerms: false,
     promoInfo: false,
+  });
+  const [showType, setShowType] = React.useState({
+    isLogin: true,
+    isBuyNow: false,
+    isRegister: false,
   });
   const {
     control,
@@ -94,7 +103,32 @@ export default function Checkout() {
     const checked = e.target.checked;
     setIsChecked((prev) => ({ ...prev, agreeTerms: checked }));
   };
-
+  const handleChangeType = (type) => {
+    if (type === 1) {
+      setShowType((prev) => ({
+        ...prev,
+        isLogin: true,
+        isBuyNow: false,
+        isRegister: false,
+      }));
+    }
+    if (type === 2) {
+      setShowType((prev) => ({
+        ...prev,
+        isLogin: false,
+        isBuyNow: true,
+        isRegister: false,
+      }));
+    }
+    if (type === 3) {
+      setShowType((prev) => ({
+        ...prev,
+        isLogin: false,
+        isBuyNow: false,
+        isRegister: true,
+      }));
+    }
+  };
   return (
     <CheckoutStyled className="checkout-page">
       <BreadCrumb paths={breadcrumbPaths} />
@@ -104,204 +138,24 @@ export default function Checkout() {
           icon="bi-card-heading"
         />
         <div className="p-3 grid grid-cols-2 gap-x-4 checkout-layout">
-          <div className="checkout-form flex flex-col">
-            <CheckoutType />
-            <div className="mt-4">
-              <CheckoutType />
-              <div>
-                <div className="checkout-form__control">
-                  <div className="flex justify-end items-center">
-                    <span className="text-[#FF6600]  text-sm">*</span>
-                    <span className="text-[#8D8D8D]  text-sm">
-                      là thông tin bắt buộc
-                    </span>
-                  </div>
-                  <form
-                    onSubmit={handleSubmit(handleOrder)}
-                    action=""
-                    className="flex flex-col mt-10 form-layout"
-                  >
-                    <Field>
-                      <div className="flex gap-x-1 items-center">
-                        <Input
-                          name="fullName"
-                          placeholder="Họ tên"
-                          control={control}
-                        />
-                        <span className="text-xs font-normal text-red-600">
-                          *
-                        </span>
-                      </div>
-                      <span className="text-xs font-normal text-red-600">
-                        {errors?.fullName?.message}
-                      </span>
-                    </Field>
-                    <Field>
-                      <div className="flex gap-x-1 items-center">
-                        <Input
-                          placeholder="Số điện thoại"
-                          name="phoneNumber"
-                          control={control}
-                        />
-                        <span className="text-xs font-normal text-red-600">
-                          *
-                        </span>
-                      </div>
-                      <span className="text-xs font-normal text-red-600">
-                        {errors?.phoneNumber?.message}
-                      </span>
-                    </Field>
-                    <Field>
-                      <div className="flex gap-x-1 items-center">
-                        <Input
-                          placeholder="Email"
-                          name="email"
-                          control={control}
-                        />
-                        <span className="text-xs font-normal text-red-600">
-                          *
-                        </span>
-                      </div>
-                      <span className="text-xs font-normal text-red-600">
-                        {errors?.email?.message}
-                      </span>
-                    </Field>
-                    <Field>
-                      <div className="flex gap-x-1 items-center">
-                        <Input
-                          placeholder="Mật khẩu"
-                          name="password"
-                          type="password"
-                          control={control}
-                        />
-                        <span className="text-xs font-normal text-red-600">
-                          *
-                        </span>
-                      </div>
-                      <span className="text-xs font-normal text-red-600">
-                        {errors?.password?.message}
-                      </span>
-                    </Field>
-                    <Field>
-                      <div className="flex gap-x-1 items-center">
-                        <Input
-                          placeholder="Xác nhận mật khẩu"
-                          name="passwordConfirm"
-                          type="password"
-                          control={control}
-                        />
-                        <span className="text-xs font-normal text-red-600">
-                          *
-                        </span>
-                      </div>
-                      <span className="text-xs font-normal text-red-600">
-                        {errors?.passwordConfirm?.message}
-                      </span>
-                    </Field>
-                    <Field>
-                      <div className="flex gap-x-1 items-center">
-                        <Input
-                          placeholder="Địa chỉ (số nhà, tên đường, phường/xã)"
-                          name="address"
-                          control={control}
-                        />
-                        <span className="text-xs font-normal text-red-600">
-                          *
-                        </span>
-                      </div>
-                      <span className="text-xs font-normal text-red-600">
-                        {errors?.address?.message}
-                      </span>
-                    </Field>
-                    <Field>
-                      <div className="flex gap-x-1 items-center">
-                        <Select
-                          data={provicesData}
-                          control={control}
-                          onChange={handleChangeProvinces}
-                          name="cityAddress"
-                          register={register}
-                          label="Chọn tỉnh thành"
-                          value={provinceValue}
-                        />
-                        <span className="text-xs font-normal text-red-600">
-                          *
-                        </span>
-                      </div>
-                      <span className="text-xs font-normal text-red-600">
-                        {errors?.cityAddress?.message}
-                      </span>
-                    </Field>
-                    <Field>
-                      <div className="flex gap-x-1 items-center">
-                        <Select
-                          data={districts}
-                          control={control}
-                          onChange={handleChangeDistricts}
-                          name="districtAddress"
-                          register={register}
-                          label="Chọn quận huyện"
-                          value={districtValue}
-                        />
-                        <span className="text-xs font-normal text-red-600">
-                          *
-                        </span>
-                      </div>
-
-                      <span className="text-xs font-normal text-red-600">
-                        {errors?.districtAddress?.message}
-                      </span>
-                    </Field>
-                    <Field>
-                      <div className="flex gap-x-1 items-center">
-                        <div className="recapcha">
-                          <ReCAPTCHA
-                            sitekey={RE_CAPCHA_KEY}
-                            onChange={handleRecapchaChange}
-                            onExpired={handleExpiredRecapcha}
-                          />
-                        </div>
-                        <span className="text-xs font-normal text-red-600">
-                          *
-                        </span>
-                      </div>
-
-                      <span className="text-xs font-normal text-red-600">
-                        {errors?.districtAddress?.message}
-                      </span>
-                    </Field>
-                    <Field>
-                      <div className="flex gap-x-1 items-center">
-                        <CheckBox
-                          name="agreeTerms"
-                          register={register}
-                          label="Tôi đồng ý với các điều khoản và quy định sử dụng tại thegioidien.com"
-                          onChange={handleAgreeTerms}
-                        />
-                        <span className="text-xs font-normal text-red-600">
-                          *
-                        </span>
-                      </div>
-
-                      <span className="text-xs font-normal text-red-600">
-                        {errors?.agreeTerms?.message}
-                      </span>
-                    </Field>
-                    <div className="grid grid-cols-3 gap-x-2">
-                      <span></span>
-                      <div className="btn-checkout">
-                        <Button
-                          title="Tiếp tục"
-                          type="submit"
-                          className="bg-primaryBtn flex-row-reverse"
-                        >
-                          <i className="bi text-base text-secondary bi-chevron-double-right"></i>
-                        </Button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
+          <div className="checkout-form gap-y-4 flex flex-col">
+            <div className="form-container">
+              <CheckoutType
+                type={1}
+                checked={showType.isLogin}
+                handleChecked={handleChangeType}
+                label="  Đã là thành viên - Đăng nhập"
+              />
+              {showType.isLogin && <Login />}
+            </div>
+            <div className="form-conainer">
+              <CheckoutType
+                checked={showType.isRegister}
+                type={3}
+                handleChecked={handleChangeType}
+                label="Chưa là thành viên - Đăng ký"
+              />
+              {showType.isRegister && <Register />}
             </div>
           </div>
           <div className="checkout-invoice flex flex-col gap-y-4">

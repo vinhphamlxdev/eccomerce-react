@@ -52,7 +52,7 @@ const schemaValidate = Yup.object({
   districtAddress: Yup.string().required("Vui lòng chọn quận huyện!"),
   agreeTerms: Yup.boolean().oneOf([true], "Vui lòng đồng ý để tiếp tục!"),
 });
-export default function SignUp() {
+export default function SignUpPage() {
   const navigate = useNavigate();
   const [isChecked, setIsChecked] = React.useState({
     agreeTerms: false,
