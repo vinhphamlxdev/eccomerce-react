@@ -22,36 +22,15 @@ import {
   EMAIL_REG_EXP,
   PHONE_REG_EXP,
   REGEX_PASSWORD,
+  RE_CAPCHA_KEY,
 } from "../../common/constants";
 import Error from "../../components/Error";
-const RE_CAPCHA_KEY = import.meta.env.VITE_RE_CAPCHA_KEY;
+import { registerValidate } from "../../common/validateSchema";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Đăng ký", url: "/signup" },
 ];
 
-const schemaValidate = Yup.object({
-  fullName: Yup.string().required("Vui lòng nhập họ tên!!"),
-  phoneNumber: Yup.string()
-    .matches(PHONE_REG_EXP, "Vui lòng nhập đúng định dạng số điện thoại!")
-    .required("Vùi lòng nhập số điện thoại!"),
-  email: Yup.string()
-    .matches(EMAIL_REG_EXP, "Email không đúng định dạng!")
-    .required("Vui lòng nhập email!"),
-  password: Yup.string()
-    .required("Vui lòng nhập mật khẩu!")
-    .matches(
-      REGEX_PASSWORD,
-      "Mật khẩu phải có ít nhất 8 ký tự, ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt!"
-    ),
-  passwordConfirm: Yup.string()
-    .required("Vui lòng xác nhận mật khẩu!!")
-    .oneOf([Yup.ref("password")], "Mật khẩu xác nhận không đúng!"),
-  address: Yup.string().required("Vui lòng nhập địa chỉ!"),
-  cityAddress: Yup.string().required("Vui lòng chọn tỉnh thành!"),
-  districtAddress: Yup.string().required("Vui lòng chọn quận huyện!"),
-  agreeTerms: Yup.boolean().oneOf([true], "Vui lòng đồng ý để tiếp tục!"),
-});
 export default function SignUpPage() {
   const navigate = useNavigate();
   const [isChecked, setIsChecked] = React.useState({
@@ -67,7 +46,7 @@ export default function SignUpPage() {
     formState: { errors, isValid, isSubmitting },
   } = useForm({
     mode: "onChange",
-    resolver: yupResolver(schemaValidate),
+    resolver: yupResolver(registerValidate),
   });
 
   const {

@@ -4,6 +4,7 @@ import ForgotPassword from "../pages/ForgotPassword";
 import Home from "../pages/Home";
 import ProductDeatail from "../pages/ProductDetail";
 import SignUpPage from "../pages/SignUp";
+import SignInPage from "../pages/SignIn";
 export const publicRoutes = [
   {
     path: "/",
@@ -13,6 +14,10 @@ export const publicRoutes = [
   {
     path: "/signup",
     component: SignUpPage,
+  },
+  {
+    path: "/signin",
+    component: SignInPage,
   },
   {
     path: "/product/:id",

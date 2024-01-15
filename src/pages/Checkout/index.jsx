@@ -20,89 +20,23 @@ import { NavLink } from "react-router-dom";
 import { LuLogIn } from "react-icons/lu";
 import Register from "./Register";
 import Login from "./Login";
-const RE_CAPCHA_KEY = import.meta.env.VITE_RE_CAPCHA_KEY;
+import BuyNow from "./BuyNow";
+import { useSelector } from "react-redux";
+import OrderItem from "../../components/OrderItem";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Điền Thông Tin", url: "/checkout" },
 ];
-const EMAIL_REG_EXP = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-const REGEX_PASSWORD =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-const PHONE_REG_EXP = /^[0-9]{10}$/;
-const schemaValidate = Yup.object({
-  fullName: Yup.string().required("Vui lòng nhập họ tên!!"),
-  phoneNumber: Yup.string()
-    .matches(PHONE_REG_EXP, "Vui lòng nhập đúng định dạng số điện thoại!")
-    .required("Vùi lòng nhập số điện thoại!"),
-  email: Yup.string()
-    .matches(EMAIL_REG_EXP, "Email không đúng định dạng!")
-    .required("Vui lòng nhập email!"),
-  password: Yup.string()
-    .required("Vui lòng nhập mật khẩu!")
-    .matches(
-      REGEX_PASSWORD,
-      "Mật khẩu phải có ít nhất 8 ký tự, ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt!"
-    ),
-  passwordConfirm: Yup.string()
-    .required("Vui lòng xác nhận mật khẩu!!")
-    .oneOf([Yup.ref("password")], "Mật khẩu xác nhận không đúng!"),
-  address: Yup.string().required("Vui lòng nhập địa chỉ!"),
-  cityAddress: Yup.string().required("Vui lòng chọn tỉnh thành!"),
-  districtAddress: Yup.string().required("Vui lòng chọn quận huyện!"),
-  agreeTerms: Yup.boolean().oneOf([true], "Vui lòng đồng ý để tiếp tục!"),
-});
+
 export default function Checkout() {
-  const [isChecked, setIsChecked] = React.useState({
-    agreeTerms: false,
-    promoInfo: false,
-  });
+  const carts = useSelector((state) => state.cart.cartItems);
+  console.log("carts", carts);
   const [showType, setShowType] = React.useState({
     isLogin: true,
     isBuyNow: false,
     isRegister: false,
   });
-  const {
-    control,
-    handleSubmit,
-    register,
-    setValue: setFormValue,
-    clearErrors,
-    formState: { errors, isValid, isSubmitting },
-  } = useForm({
-    mode: "onChange",
-    resolver: yupResolver(schemaValidate),
-  });
 
-  const {
-    reCapchaValue,
-    recaptchaExpired,
-    handleRecapchaChange,
-    handleExpiredRecapcha,
-  } = useRecaptcha();
-  const handleOrder = async (data) => {
-    if (recaptchaExpired) {
-      // Xử lý khi reCAPTCHA hết hạn
-      console.log("reCAPTCHA expired. Please refresh and try again.");
-      return;
-    }
-
-    console.log(data);
-  };
-  const {
-    districtValue,
-    districts,
-    handleChangeDistricts,
-    handleChangeProvinces,
-    provicesData,
-    provinceValue,
-    setDistrictValue,
-    setDistricts,
-    setProvinceValue,
-  } = useAddress(setFormValue, clearErrors);
-  const handleAgreeTerms = (e) => {
-    const checked = e.target.checked;
-    setIsChecked((prev) => ({ ...prev, agreeTerms: checked }));
-  };
   const handleChangeType = (type) => {
     if (type === 1) {
       setShowType((prev) => ({
@@ -129,6 +63,7 @@ export default function Checkout() {
       }));
     }
   };
+
   return (
     <CheckoutStyled className="checkout-page">
       <BreadCrumb paths={breadcrumbPaths} />
@@ -147,6 +82,15 @@ export default function Checkout() {
                 label="  Đã là thành viên - Đăng nhập"
               />
               {showType.isLogin && <Login />}
+            </div>
+            <div className="form-container">
+              <CheckoutType
+                type={2}
+                checked={showType.isBuyNow}
+                handleChecked={handleChangeType}
+                label="Mua hàng ngay - Không cần đăng ký"
+              />
+              {showType.isBuyNow && <BuyNow />}
             </div>
             <div className="form-conainer">
               <CheckoutType
@@ -175,41 +119,12 @@ export default function Checkout() {
                   <span>Thành tiền</span>
                 </div>
               </div>
-              <div className="invoice-grid">
-                <div className="invoice-item__header">
-                  <span>1</span>
-                </div>
-                <div className="invoice-item__header">
-                  <img
-                    src="https://thegioidien.com/hmhB/E8332RJS5_WG_G19714880800.jpg"
-                    alt=""
-                  />
-                </div>
-                <div className="invoice-item__header">
-                  <span>Bộ 2 ổ cắm mạng cat5e</span>
-                </div>
-                <div className="invoice-item__header caculate-total">
-                  <div className="flex flex-col w-full gap-y-2">
-                    <div className="flex items-center w-full justify-between">
-                      <span>ĐVT: Cái</span>
-                      <div className="flex gap-x-[3px] items-center">
-                        <span className="text-red-500 text-sm">X</span>
-                        <span className="mb-1">2</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center w-full justify-between">
-                      <span>Đơn giá</span>
-                      <div className="flex gap-x-[3px] items-center">
-                        <span className="text-gray-700 text-sm">445.700</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center w-full justify-end gap-x-2">
-                      <span className="text-red-500">=</span>
-                      <span className="text-gray-700 text-sm">891.400</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {carts?.length > 0 &&
+                carts?.map((cart, index) => {
+                  return (
+                    <OrderItem product={cart} key={cart.id} index={index} />
+                  );
+                })}
               <div className="invoice-grid">
                 <div className="invoice-item__header invoice-flexend">
                   <span>Tạm tính:</span>

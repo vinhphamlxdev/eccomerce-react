@@ -4,17 +4,23 @@ import styled from "styled-components";
 import { FaFileInvoiceDollar } from "react-icons/fa";
 import CartItem from "../../components/CartItem";
 import Button from "../../components/Button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { removeAllCart } from "../../store/cart/cartSlice";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Dự toán đơn hàng", url: "/cart" },
 ];
 export default function Cart() {
+  const dispatch = useDispatch();
   const carts = useSelector((state) => state.cart.cartItems);
   console.log(carts);
   const handleChangeCategory = (e) => {
     const value = e.target.value;
   };
+  const handleDeleteAllCart = () => {
+    dispatch(removeAllCart());
+  };
+
   return (
     <StyledCart className="cart-page">
       <BreadCrumb paths={breadcrumbPaths} />
@@ -26,7 +32,10 @@ export default function Cart() {
               Chi tiết đơn hàng, dự án
             </span>
           </div>
-          <button className="text-[#002F3F] text-xs px-2 rounded-sm transition-all hover:opacity-80 bg-[#DBDBDB] flex gap-x-1 items-center py-1">
+          <button
+            onClick={handleDeleteAllCart}
+            className="text-[#002F3F] text-xs px-2 rounded-sm transition-all hover:opacity-80 bg-[#DBDBDB] flex gap-x-1 items-center py-1"
+          >
             <i className="bi  bi-trash text-red-500 text-xs" />
             <span>Xóa đơn hàng</span>
           </button>

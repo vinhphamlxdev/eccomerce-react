@@ -14,19 +14,8 @@ import useAddress from "../../../Hooks/useAddress";
 import useRecaptcha from "../../../Hooks/useRecapcha";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { loginValidate } from "../../../common/validateSchema";
 
-const schemaValidate = Yup.object({
-  email: Yup.string()
-    .matches(EMAIL_REG_EXP, "Email không đúng định dạng!")
-    .required("Vui lòng nhập email!"),
-  password: Yup.string()
-    .required("Vui lòng nhập mật khẩu!")
-    .matches(
-      REGEX_PASSWORD,
-      "Mật khẩu phải có ít nhất 8 ký tự, ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt!"
-    ),
-  agreeTerms: Yup.boolean().oneOf([true], "Vui lòng đồng ý để tiếp tục!"),
-});
 export default function Login() {
   const {
     control,
@@ -37,7 +26,7 @@ export default function Login() {
     formState: { errors, isValid, isSubmitting },
   } = useForm({
     mode: "onChange",
-    resolver: yupResolver(schemaValidate),
+    resolver: yupResolver(loginValidate),
   });
 
   const {
@@ -78,11 +67,13 @@ export default function Login() {
       <Field>
         <div className="flex flex-col gap-y-1 items-start">
           <span className="text-[#3B3B3B] text-sm">Tài khoản</span>
-          <Input
-            name="email"
-            control={control}
-            placeholder="Nhập email hoặc điện thoại"
-          />
+          <div className="relative w-full">
+            <Input
+              name="email"
+              control={control}
+              placeholder="Nhập email hoặc điện thoại"
+            />
+          </div>
         </div>
         <span className="text-xs font-normal text-red-600">
           {errors?.email?.message}
@@ -91,11 +82,16 @@ export default function Login() {
       <Field>
         <div className="flex flex-col gap-y-1 items-start">
           <span className="text-[#3B3B3B] text-sm">Mật khẩu</span>
-          <Input
-            name="password"
-            control={control}
-            placeholder="Nhập mật khẩu"
-          />
+          <div className="relative w-full">
+            <Input
+              name="password"
+              control={control}
+              placeholder="Nhập mật khẩu"
+            />
+            <span className="absolute text-errBg text-sm right-[-10px] top-0">
+              *
+            </span>
+          </div>
         </div>
         <span className="text-xs font-normal text-red-600">
           {errors?.password?.message}
@@ -109,7 +105,7 @@ export default function Login() {
         <span className="text-sm text-[#003B4F]">Quên mật khẩu?</span>
       </NavLink>
       <div className="flex justify-center">
-        <Button title="Đăng nhập" className="bg-bgbtn">
+        <Button type="submit" title="Đăng nhập" className="bg-bgbtn">
           <LuLogIn className="text-base text-secondary" />
         </Button>
       </div>

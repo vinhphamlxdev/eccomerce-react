@@ -19,7 +19,6 @@ export default function Select({
         {...register(name)}
         onChange={onChange}
         className="px-3 py-1"
-        defaultValue=""
       >
         <option value="">-- {label}</option>
         {data?.length > 0 &&
@@ -44,6 +43,8 @@ const SelectStyles = styled.div`
     transition: all 0.2s linear;
     color: #aaaaaa;
     font-size: 14px;
+    padding: 0.5rem;
+    font-size: 16px;
   }
   select:focus {
     border: 1px solid #fb8500;

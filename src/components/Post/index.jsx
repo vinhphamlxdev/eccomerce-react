@@ -56,7 +56,7 @@ export default function Post() {
             Tài liệu kỹ thuật
           </span>
         </div>
-        <div className="grid grid-cols-2 py-4 px-2 gap-x-2 gap-y-3">
+        <div className="grid grid-cols-2 py-4 px-2 gap-x-2 gap-y-3 post-list__item">
           <div className="flex flex-col gap-y-2">
             <img
               src="https://thegioidien.com/hmhNews/OBO856733101777067034.jpg"
@@ -102,7 +102,7 @@ export default function Post() {
             Tài liệu kỹ thuật
           </span>
         </div>
-        <div className="grid grid-cols-2 py-4 px-2 gap-x-2 gap-y-3">
+        <div className="grid grid-cols-2 py-4 px-2 gap-x-2 gap-y-3 post-list__item">
           <div className="flex flex-col gap-y-2">
             <img
               src="https://thegioidien.com/hmhNews/Mennekes181728460066052280268475215.jpg"

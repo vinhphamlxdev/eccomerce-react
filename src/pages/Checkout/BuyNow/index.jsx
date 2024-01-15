@@ -16,17 +16,14 @@ import CheckBox from "../../../components/Checkbox";
 import ReCAPTCHA from "react-google-recaptcha";
 import Button from "../../../components/Button";
 import Select from "../../../components/Select";
-import { registerValidate } from "../../../common/validateSchema";
-export default function Register() {
+import { buynowValidate } from "../../../common/validateSchema";
+
+export default function BuyNow() {
   const [isChecked, setIsChecked] = React.useState({
     agreeTerms: false,
     promoInfo: false,
   });
-  const [showType, setShowType] = React.useState({
-    isLogin: true,
-    isBuyNow: false,
-    isRegister: false,
-  });
+
   const {
     control,
     handleSubmit,
@@ -36,7 +33,7 @@ export default function Register() {
     formState: { errors, isValid, isSubmitting },
   } = useForm({
     mode: "onChange",
-    resolver: yupResolver(registerValidate),
+    resolver: yupResolver(buynowValidate),
   });
 
   const {
@@ -109,34 +106,6 @@ export default function Register() {
           </div>
           <span className="text-xs font-normal text-red-600">
             {errors?.email?.message}
-          </span>
-        </Field>
-        <Field>
-          <div className="flex gap-x-1 items-center">
-            <Input
-              placeholder="Mật khẩu"
-              name="password"
-              type="password"
-              control={control}
-            />
-            <span className="text-xs font-normal text-red-600">*</span>
-          </div>
-          <span className="text-xs font-normal text-red-600">
-            {errors?.password?.message}
-          </span>
-        </Field>
-        <Field>
-          <div className="flex gap-x-1 items-center">
-            <Input
-              placeholder="Xác nhận mật khẩu"
-              name="passwordConfirm"
-              type="password"
-              control={control}
-            />
-            <span className="text-xs font-normal text-red-600">*</span>
-          </div>
-          <span className="text-xs font-normal text-red-600">
-            {errors?.passwordConfirm?.message}
           </span>
         </Field>
         <Field>

@@ -21,7 +21,6 @@ const Input = ({
         style={style}
         className="px-3 py-2"
         placeholder={placeholder}
-        id={name}
         type={type}
         {...field}
       />
@@ -53,6 +52,12 @@ const InputStyles = styled.div`
   }
   input::-moz-input-placeholder {
     color: #b2b3bd;
+  }
+  input[type="text"],
+  input[type="password"],
+  input[type="email"] {
+    padding: 0.5rem;
+    font-size: 16px;
   }
   .input-icon {
     position: absolute;

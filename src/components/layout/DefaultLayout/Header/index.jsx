@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { IoIosShareAlt } from "react-icons/io";
 import logo from "../../../../assets/logo.jpg";
-import { TbLock } from "react-icons/tb";
 import { FaBars } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import styled from "styled-components";
@@ -16,45 +15,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Error from "../../../Error";
 import { Input } from "../../../Input";
 import { Field } from "../../../Field";
-const EMAIL_AND_PHONE_REG_EXP =
-  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$|^\d{10,11}$/;
-const schemaValidate = Yup.object({
-  emailAndPhone: Yup.string()
-    .matches(
-      EMAIL_AND_PHONE_REG_EXP,
-      "Email hoặc số điện thoại không đúng định dạng!"
-    )
-    .required("Vui lòng nhập email hoặc số điện thoại!"),
-  password: Yup.string()
-    .required("Vui lòng nhập mật khẩu!")
-    .matches(
-      REGEX_PASSWORD,
-      "Mật khẩu phải có ít nhất 8 ký tự, ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt!"
-    ),
-});
+import HeaderLogin from "./HeaderLogin";
+import CategoryMenu from "./CategoryMenu";
+
 export default function Header() {
   const [showCategory, setShowCategory] = React.useState(false);
-  const [activeMenu, setActiveMenu] = useState(null);
-  const [activeSubMenu, setActiveSubMenu] = useState(null);
-  const {
-    control,
-    handleSubmit,
-    register,
-    clearErrors,
-    formState: { errors, isValid, isSubmitting },
-  } = useForm({
-    mode: "onChange",
-    resolver: yupResolver(schemaValidate),
-  });
-  const handleSignin = async (data) => {
-    console.log(data);
-  };
-  const handleMenuClick = (index) => {
-    activeMenu === index ? setActiveMenu(null) : setActiveMenu(index);
-  };
-  const handleSubMenuClick = (index) => {
-    activeSubMenu === index ? setActiveSubMenu(null) : setActiveSubMenu(index);
-  };
+
   return (
     <StyledHeader className="header w-full flex flex-col">
       <div className="flex bg-[#6A1300] items-center justify-between">
@@ -132,75 +98,7 @@ export default function Header() {
               </div>
             </div>
           </div>
-          <form
-            onSubmit={handleSubmit(handleSignin)}
-            className="p-2 bg-[#DBDBDB] header-signin col-span-3 rounded-sm flex flex-col gap-y-2"
-          >
-            <div className="flex  justify-between items-center">
-              <div className="flex w-[135px] flex-shrink-0 gap-x-2   items-center">
-                <i className="bi text-[#003B4F] text-lg bi-person"></i>
-                <span className="text-sm text-red-800">Tài khoản</span>
-              </div>
-              <div className="relative flex-1">
-                <Input
-                  style={{
-                    paddingTop: "8px",
-                    paddingBottom: "8px",
-                    backgroundColor: "#fff",
-                  }}
-                  control={control}
-                  name="emailAndPhone"
-                  type="text"
-                  placeholder="Email hoặc số điện thoại"
-                />
-
-                <Error
-                  isRequired={false}
-                  error={errors?.emailAndPhone?.message}
-                />
-              </div>
-            </div>
-            <div className="flex  justify-between items-center">
-              <div className="flex w-[135px] gap-x-2  items-center">
-                <i className="bi text-[#003B4F] text-lg bi-key"></i>
-                <span className="text-sm text-red-800">Mật khẩu</span>
-              </div>
-              <div className="relative flex-1">
-                <Input
-                  style={{
-                    paddingTop: "8px",
-                    paddingBottom: "8px",
-                    backgroundColor: "#fff",
-                  }}
-                  control={control}
-                  name="password"
-                  type="password"
-                  placeholder="Mật khẩu"
-                />
-                <Error isRequired={false} error={errors?.password?.message} />
-              </div>
-            </div>
-            <div className="flex items-center ">
-              <div className="w-[135px] flex-shrink-0">
-                <span className="text-gray-500 transition-all hover:opacity-75 cursor-pointer">
-                  Quên mật khẩu?
-                </span>
-              </div>
-              <div className="relative flex flex-1 justify-start">
-                <Button
-                  type="submit"
-                  className=" bg-primaryBtn btn-login"
-                  title="Đăng Nhập"
-                >
-                  <TbLock className="text-secondary text-lg" />
-                </Button>
-                {/* <button className="flex transition-all hover:opacity-80 gap-x-2 items-center text-white rounded-sm bg-[#1C8DD9] px-2 py-2">
-                  <TbLock className="text-secondary text-lg" />
-                  <span>Đăng Nhập</span>
-                </button> */}
-              </div>
-            </div>
-          </form>
+          <HeaderLogin />
         </div>
       </div>
       <div className="relative z-[200]">
@@ -241,71 +139,13 @@ export default function Header() {
             </NavLink>
           </div>
         </div>
-        {showCategory && (
-          <div className="category-menu absolute top-full w-full flex flex-col bg-[#CBCBCB]">
-            {categoryData.map((item, index) => {
-              return (
-                <div key={item.id} className="relative category-menu__item">
-                  <div
-                    onClick={() => handleMenuClick(index)}
-                    className="py-[2px] px-3 cursor-pointer transition-all hover:bg-[#B82F15] text-white bg-bgCategoryItem mb-[1px] flex justify-between items-center"
-                  >
-                    <div className="flex items-center gap-x-3">
-                      <i className="bi pointer-events-none text-base text-white cursor-pointer bi-caret-right-fill"></i>
-                      <div className="text-white hover:bg-[#0000CC] inline-block px-2 py-2 text-base">
-                        {item.name}
-                      </div>
-                    </div>
-                    <i className="bi text-white text-xl cursor-pointer pointer-events-none bi-plus"></i>
-                  </div>
-                  {activeMenu === index && (
-                    <div className="caterory-panel  bg-[#CBCBCB]  flex-col">
-                      {item?.children?.map((child, index) => {
-                        return (
-                          <div key={child.name} className="">
-                            <div
-                              onClick={() => handleSubMenuClick(index)}
-                              className="py-[2px] pl-7 pr-3 cursor-pointer transition-all  text-white bg-[#646461] border-b border-[#F1FAFE] flex justify-between items-center"
-                            >
-                              <div className="flex justify-between items-center w-full caterory-panel__content">
-                                <div className="flex items-center gap-x-3">
-                                  <i className="bi pointer-events-none text-base text-white cursor-pointer bi-chevron-right"></i>
-                                  <div className="text-white hover:bg-[#0000CC] inline-block px-2 py-2 text-base">
-                                    {child.name}
-                                  </div>
-                                </div>
-                                <i
-                                  className={`bi text-white text-xl cursor-pointer pointer-events-none bi-plus`}
-                                ></i>
-                              </div>
-                            </div>
-                            {activeSubMenu === index && (
-                              <div className="category-panel__submenu pb-2 flex-wrap gap-y-[2px] pl-3 pr-7 flex items-center gap-x-[2px]">
-                                {child?.lastMenu?.map((last, index) => {
-                                  return (
-                                    <button
-                                      key={index}
-                                      className="bg-[#ECECEC] hover:bg-white transition-all border-solid  text-[##002343] py-1 rounded-sm flex items-center pr-3 pl-7 gap-x-1"
-                                    >
-                                      <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
-                                      <span className="text-sm">
-                                        {last.name}
-                                      </span>
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              );
+
+        <div className="category-menu absolute top-full w-full flex flex-col bg-[#CBCBCB]">
+          {showCategory &&
+            categoryData.map((item, index) => {
+              return <CategoryMenu key={index} data={item} />;
             })}
-          </div>
-        )}
+        </div>
       </div>
     </StyledHeader>
   );

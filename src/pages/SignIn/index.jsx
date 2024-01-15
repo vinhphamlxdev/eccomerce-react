@@ -7,21 +7,33 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { Field } from "../../components/Field";
-import { EMAIL_REG_EXP, RE_CAPCHA_KEY } from "../../common/constants";
+import { IoLogInOutline } from "react-icons/io5";
+import {
+  EMAIL_REG_EXP,
+  REGEX_PASSWORD,
+  RE_CAPCHA_KEY,
+} from "../../common/constants";
 import ReCAPTCHA from "react-google-recaptcha";
 import useRecaptcha from "../../Hooks/useRecapcha";
 import Button from "../../components/Button";
 import Error from "../../components/Error";
+import { Link } from "react-router-dom";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
-  { label: "Quên mật khẩu", url: "/forgot-password" },
+  { label: "Tài khoản", url: "/signin" },
 ];
 const schemaValidate = Yup.object({
   email: Yup.string()
-    .matches(EMAIL_REG_EXP, "Email không đúng định dạng!")
-    .required("Vui lòng nhập email!"),
+    .required("Vui lòng nhập email!")
+    .matches(EMAIL_REG_EXP, "Email không đúng định dạng!"),
+  signinPassword: Yup.string()
+    .required("Vui lòng nhập mật khẩu!")
+    .matches(
+      REGEX_PASSWORD,
+      "Mật khẩu phải có ít nhất 8 ký tự, ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt!"
+    ),
 });
-export default function ForgotPassword() {
+export default function SignInPage() {
   const {
     control,
     handleSubmit,
@@ -33,7 +45,7 @@ export default function ForgotPassword() {
     mode: "onChange",
     resolver: yupResolver(schemaValidate),
   });
-  const handleGetPassword = async (data) => {
+  const handleSignIn = async (data) => {
     if (recaptchaExpired) {
       // Xử lý khi reCAPTCHA hết hạn
       console.log("reCAPTCHA expired. Please refresh and try again.");
@@ -52,7 +64,19 @@ export default function ForgotPassword() {
     <StyledForgotPassword className="forgot-password">
       <BreadCrumb paths={breadcrumbPaths} />
       <div className="border-session forgot-passwork-layout">
-        <HeadingSession title="Cấp lại mật khẩu" icon="bi-key" />
+        <HeadingSession
+          title="Đăng nhập"
+          icon="bi-person"
+          leftContent={
+            <Link
+              to={"/signup"}
+              className="text-[#002F3F] text-xs px-2 rounded-sm transition-all hover:opacity-80 bg-[#DBDBDB] flex gap-x-1 items-center py-1"
+            >
+              <i className="bi  bi-person-fill-add text-[#8D1802] text-base" />
+              <span>Đăng ký thành viên</span>
+            </Link>
+          }
+        />
         <div className="p-3">
           <div className="flex text-sm mb-5 justify-end gap-x-2">
             <span className="text-errBg">*</span>
@@ -61,16 +85,32 @@ export default function ForgotPassword() {
             </span>
           </div>
           <form
-            onSubmit={handleSubmit(handleGetPassword)}
+            onSubmit={handleSubmit(handleSignIn)}
             className="flex flex-col gap-y-3 justify-center"
           >
             <div className="flex gap-x-3 form-field items-center">
               <div className="w-[450px] mb-7 form-label text-base text-[#3B3B3B] flex justify-end">
-                Email
+                Tài khoản
               </div>
               <div className="relative flex flex-col gap-y-2 form-field__input">
-                <Input name="email" control={control} />
+                <Input
+                  name="email"
+                  placeholder="Email hoặc số điện thoại"
+                  control={control}
+                />
                 <Error error={errors?.email?.message} isRequired={false} />
+                <span className="absolute text-errBg text-sm right-[-10px] top-0">
+                  *
+                </span>
+              </div>
+            </div>
+            <div className="flex gap-x-3 form-field items-center">
+              <div className="w-[450px] mb-7 form-label text-base text-[#3B3B3B] flex justify-end">
+                Mật khẩu
+              </div>
+              <div className="relative flex flex-col gap-y-2 form-field__input">
+                <Input name="signinPassword" control={control} />
+                <Error error={errors?.password?.message} isRequired={false} />
                 <span className="absolute text-errBg text-sm right-[-10px] top-0">
                   *
                 </span>
@@ -86,12 +126,8 @@ export default function ForgotPassword() {
             </div>
             <div className="flex gap-x-3 items-center">
               <div className="w-[450px] form-label form-label__capcha text-base text-[#3B3B3B] flex justify-end"></div>
-              <Button
-                type="submit"
-                className="bg-bgbtn"
-                title="Yêu cầu cấp lại mật khẩu"
-              >
-                <i className="bi text-secondary text-base bi-cursor-fill"></i>
+              <Button type="submit" className="bg-bgbtn" title="Đăng nhập">
+                <IoLogInOutline className="text-secondary text-base " />
               </Button>
             </div>
           </form>

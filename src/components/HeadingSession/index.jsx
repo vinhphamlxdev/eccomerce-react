@@ -5,7 +5,7 @@ export default function HeadingSession({
   title = "",
   className = "",
   icon = "",
-  leftContent = "",
+  leftContent,
   style = {},
   ...props
 }) {
