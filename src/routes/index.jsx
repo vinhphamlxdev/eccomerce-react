@@ -5,6 +5,7 @@ import Home from "../pages/Home";
 import ProductDeatail from "../pages/ProductDetail";
 import SignUpPage from "../pages/SignUp";
 import SignInPage from "../pages/SignIn";
+import Profile from "../pages/Profile";
 export const publicRoutes = [
   {
     path: "/",
@@ -34,5 +35,9 @@ export const publicRoutes = [
   {
     path: "/forgot-password",
     component: ForgotPassword,
+  },
+  {
+    path: "/profile",
+    component: Profile,
   },
 ];

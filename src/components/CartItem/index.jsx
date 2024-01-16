@@ -12,7 +12,7 @@ export default function CartItem({ product = {} }) {
   const [isEdit, setIsEdit] = React.useState(false);
   const handleChangeQuantity = (event) => {
     const value = +event.target.value;
-    value < 1 ? setQuantityValue(1) : setQuantityValue(value);
+    value < 1 ? setQuantityValue(1) : setQuantityValue(Math.floor(value));
   };
   const handleUpdateQuantity = () => {
     setIsEdit(false);
@@ -104,7 +104,7 @@ const StyledCartItem = styled.div`
   & .header-item.sale-price {
     justify-content: flex-end;
   }
-  &.edit-status {
+  &.cart-item.edit-status {
     background-color: #ffffcc;
 
     .action-btn {

@@ -3,7 +3,6 @@ import { AiOutlineThunderbolt } from "react-icons/ai";
 import Submenu from "./Submenu";
 
 export default function CategoryMenu({ data }) {
-  console.log(data);
   const [showSubmenu, setShowSubmenu] = useState(false);
   return (
     <div className="relative category-menu__item">

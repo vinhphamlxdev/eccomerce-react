@@ -17,10 +17,17 @@ import { Input } from "../../../Input";
 import { Field } from "../../../Field";
 import HeaderLogin from "./HeaderLogin";
 import CategoryMenu from "./CategoryMenu";
+import { useDispatch, useSelector } from "react-redux";
+import { setToggleMenu } from "../../../../store/global/globalSlice";
+import HeaderUser from "./HeaderUser";
 
 export default function Header() {
-  const [showCategory, setShowCategory] = React.useState(false);
-
+  const carts = useSelector((state) => state.cart.cartItems);
+  const dispatch = useDispatch();
+  const showCategoryMenu = useSelector(
+    (state) => state.global.showCategoryMenu
+  );
+  let isAuthenticated = true;
   return (
     <StyledHeader className="header w-full flex flex-col">
       <div className="flex bg-[#6A1300] items-center justify-between">
@@ -61,10 +68,17 @@ export default function Header() {
           <i className="bi text-[#FFFF00] text-base bi-person-plus-fill"></i>
           <span>Đăng ký</span>
         </NavLink>
-        <button className="acount-btn hidden items-center  gap-x-2 bg-[#B21E02] text-[#F1F3E4] py-2 px-2 text-sm">
+        <NavLink
+          to={"/"}
+          className="acount-btn hidden items-center  gap-x-2 bg-[#B21E02] text-[#F1F3E4] py-2 px-2 text-sm"
+        >
           <i className="bi text-[#FFFF00] text-base bi-person-fill"></i>
           <span>Tài khoản</span>
-        </button>
+        </NavLink>
+      </div>
+      <div className="mt-[1px] bg-primary flex justify-center gap-x-2 py-2 px-3">
+        <i className="bi bi-person-circle text-base text-secondary"></i>
+        <span className="text-white text-sm leading-[22px]">Vinh Pham</span>
       </div>
       <div className="flex flex-col py-3">
         <div className="bg-white   justify-between header-grid items-center grid gap-x-3 grid-cols-12">
@@ -98,20 +112,20 @@ export default function Header() {
               </div>
             </div>
           </div>
-          <HeaderLogin />
+          {isAuthenticated ? <HeaderUser /> : <HeaderLogin />}
         </div>
       </div>
       <div className="relative z-[200]">
         <div className="grid grid-cols-12 gap-x-3 grid-search">
           <div
-            onClick={() => setShowCategory(!showCategory)}
+            onClick={() => dispatch(setToggleMenu(!showCategoryMenu))}
             className="col-span-3 category-accordion cursor-pointer select-none transition-all hover:opacity-75 flex items-center  bg-primary justify-between text-white px-3 py-2"
           >
             <FaBars className="text-lg" />
             <span className="uppercase text-lg font-semibold">
               DANH MỤC SẢN PHẨM
             </span>
-            {showCategory ? (
+            {showCategoryMenu ? (
               <i className="bi text-lg bi-chevron-up"></i>
             ) : (
               <FaPlus className="text-lg" />
@@ -135,13 +149,15 @@ export default function Header() {
               className="flex btn gap-x-3 justify-center items-center"
             >
               <i className="bi bi-cart text-secondary text-xl hover:opacity-75 transition-all"></i>
-              <span className="text-lg font-semibold">0 Sản phẩm</span>
+              <span className="text-lg font-semibold">
+                {carts?.length || 0} Sản phẩm
+              </span>
             </NavLink>
           </div>
         </div>
 
         <div className="category-menu absolute top-full w-full flex flex-col bg-[#CBCBCB]">
-          {showCategory &&
+          {showCategoryMenu &&
             categoryData.map((item, index) => {
               return <CategoryMenu key={index} data={item} />;
             })}
@@ -258,6 +274,12 @@ const StyledHeader = styled.div`
   @media screen and (max-width: 768px) {
     .header-contact {
       flex-direction: column-reverse;
+    }
+    .header-logo {
+      grid-column: span 5 / span 5;
+    }
+    .header-signin {
+      grid-column: span 7 / span 7;
     }
   }
   @media screen and (max-width: 628px) {

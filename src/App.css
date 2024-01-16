@@ -40,6 +40,7 @@ body {
   line-height: 1;
   overflow: hidden;
   overflow-y: scroll;
+  scroll-behavior: smooth;
 }
 i {
   cursor: pointer;

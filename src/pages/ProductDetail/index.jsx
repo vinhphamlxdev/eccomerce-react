@@ -64,8 +64,8 @@ export default function ProductDeatail() {
   };
   const handleAddProductToCart = () => {
     const product = {
-      id: 1,
-      name: "Công tắc 1 chiều 16A 250VAC",
+      id: 2,
+      name: "Công tắc 1 chiều 16A ",
       price: 9500,
       quantity: quantity,
       image: "https://thegioidien.com/PrdGallery/WNG5001701-W1600334684.jpg",
