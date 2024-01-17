@@ -89,7 +89,7 @@ export default function SignInPage() {
             className="flex flex-col gap-y-3 justify-center"
           >
             <div className="flex gap-x-3 form-field items-center">
-              <div className="w-[450px] mb-7 form-label text-base text-[#3B3B3B] flex justify-end">
+              <div className="w-[450px] label mb-7 form-label text-[#3B3B3B] flex justify-end">
                 Tài khoản
               </div>
               <div className="relative flex flex-col gap-y-2 form-field__input">
@@ -105,7 +105,7 @@ export default function SignInPage() {
               </div>
             </div>
             <div className="flex gap-x-3 form-field items-center">
-              <div className="w-[450px] mb-7 form-label text-base text-[#3B3B3B] flex justify-end">
+              <div className="w-[450px] label mb-7 form-label text-[#3B3B3B] flex justify-end">
                 Mật khẩu
               </div>
               <div className="relative flex flex-col gap-y-2 form-field__input">
@@ -117,7 +117,7 @@ export default function SignInPage() {
               </div>
             </div>
             <div className="flex gap-x-3 items-center">
-              <div className="w-[450px] form-label form-label__capcha  text-base text-[#3B3B3B] flex justify-end"></div>
+              <div className="w-[450px] label form-label form-label__capcha  text-[#3B3B3B] flex justify-end"></div>
               <ReCAPTCHA
                 sitekey={RE_CAPCHA_KEY}
                 onChange={handleRecapchaChange}
@@ -125,7 +125,7 @@ export default function SignInPage() {
               />
             </div>
             <div className="flex gap-x-3 items-center">
-              <div className="w-[450px] form-label form-label__capcha text-base text-[#3B3B3B] flex justify-end"></div>
+              <div className="w-[450px] label form-label form-label__capcha text-[#3B3B3B] flex justify-end"></div>
               <Button type="submit" className="bg-bgbtn" title="Đăng nhập">
                 <IoLogInOutline className="text-secondary text-base " />
               </Button>

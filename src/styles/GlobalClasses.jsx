@@ -5,6 +5,11 @@ export const GlobalClasses = css`
     margin: auto;
     background-color: #faedcd;
   }
+  .label {
+    color: #3b3b3b;
+    line-height: 1.4;
+    font-size: 1rem;
+  }
   .app {
     background-color: #fff;
   }

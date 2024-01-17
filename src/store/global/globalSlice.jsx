@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  showCategoryMenu: false,
   test: false,
 };
 
@@ -9,12 +8,12 @@ export const globalSlice = createSlice({
   name: "global",
   initialState,
   reducers: {
-    setToggleMenu: (state, action) => {
+    setTest: (state, action) => {
       state.showCategoryMenu = action.payload;
     },
   },
 });
 
-export const { setToggleMenu } = globalSlice.actions;
+export const { setTest } = globalSlice.actions;
 
 export default globalSlice.reducer;

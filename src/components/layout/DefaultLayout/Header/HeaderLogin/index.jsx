@@ -1,7 +1,7 @@
 import React from "react";
 import { TbLock } from "react-icons/tb";
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -84,9 +84,12 @@ export default function HeaderLogin() {
       </div>
       <div className="flex items-center ">
         <div className="w-[128px] flex-shrink-0">
-          <span className="text-gray-500 transition-all hover:opacity-75 cursor-pointer">
+          <Link
+            to={"/forgot-password"}
+            className="text-gray-500 transition-all hover:opacity-75 cursor-pointer"
+          >
             Quên mật khẩu?
-          </span>
+          </Link>
         </div>
         <div className="relative flex flex-1 justify-start">
           <Button
@@ -96,10 +99,6 @@ export default function HeaderLogin() {
           >
             <TbLock className="text-secondary text-lg" />
           </Button>
-          {/* <button className="flex transition-all hover:opacity-80 gap-x-2 items-center text-white rounded-sm bg-[#1C8DD9] px-2 py-2">
-        <TbLock className="text-secondary text-lg" />
-        <span>Đăng Nhập</span>
-      </button> */}
         </div>
       </div>
     </form>

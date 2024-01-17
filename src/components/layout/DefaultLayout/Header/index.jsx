@@ -6,7 +6,7 @@ import { FaPlus } from "react-icons/fa6";
 import styled from "styled-components";
 import { categoryData } from "../../../Data";
 import { AiOutlineThunderbolt } from "react-icons/ai";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Button from "../../../Button";
 import * as Yup from "yup";
 import { EMAIL_REG_EXP, REGEX_PASSWORD } from "../../../../common/constants";
@@ -18,16 +18,17 @@ import { Field } from "../../../Field";
 import HeaderLogin from "./HeaderLogin";
 import CategoryMenu from "./CategoryMenu";
 import { useDispatch, useSelector } from "react-redux";
-import { setToggleMenu } from "../../../../store/global/globalSlice";
 import HeaderUser from "./HeaderUser";
 
-export default function Header() {
+export default function Header({
+  showCategoryMenu = false,
+  setShowCategoryMenu,
+  categoryRef,
+  categoryPopupRef,
+}) {
   const carts = useSelector((state) => state.cart.cartItems);
-  const dispatch = useDispatch();
-  const showCategoryMenu = useSelector(
-    (state) => state.global.showCategoryMenu
-  );
-  let isAuthenticated = true;
+
+  let isAuthenticated = false;
   return (
     <StyledHeader className="header w-full flex flex-col">
       <div className="flex bg-[#6A1300] items-center justify-between">
@@ -76,10 +77,13 @@ export default function Header() {
           <span>Tài khoản</span>
         </NavLink>
       </div>
-      <div className="mt-[1px] bg-primary flex justify-center gap-x-2 py-2 px-3">
+      <Link
+        to={"/profile"}
+        className="mt-[1px] bg-primary flex justify-center gap-x-2 py-2 px-3"
+      >
         <i className="bi bi-person-circle text-base text-secondary"></i>
         <span className="text-white text-sm leading-[22px]">Vinh Pham</span>
-      </div>
+      </Link>
       <div className="flex flex-col py-3">
         <div className="bg-white   justify-between header-grid items-center grid gap-x-3 grid-cols-12">
           <NavLink
@@ -118,7 +122,8 @@ export default function Header() {
       <div className="relative z-[200]">
         <div className="grid grid-cols-12 gap-x-3 grid-search">
           <div
-            onClick={() => dispatch(setToggleMenu(!showCategoryMenu))}
+            ref={categoryRef}
+            onClick={() => setShowCategoryMenu(!showCategoryMenu)}
             className="col-span-3 category-accordion cursor-pointer select-none transition-all hover:opacity-75 flex items-center  bg-primary justify-between text-white px-3 py-2"
           >
             <FaBars className="text-lg" />
@@ -156,7 +161,10 @@ export default function Header() {
           </div>
         </div>
 
-        <div className="category-menu absolute top-full w-full flex flex-col bg-[#CBCBCB]">
+        <div
+          ref={categoryPopupRef}
+          className="category-menu absolute top-full w-full flex flex-col bg-[#CBCBCB]"
+        >
           {showCategoryMenu &&
             categoryData.map((item, index) => {
               return <CategoryMenu key={index} data={item} />;

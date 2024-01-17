@@ -18,8 +18,8 @@ const breadcrumbPaths = [
 ];
 const schemaValidate = Yup.object({
   email: Yup.string()
-    .matches(EMAIL_REG_EXP, "Email không đúng định dạng!")
-    .required("Vui lòng nhập email!"),
+    .required("Vui lòng nhập email!")
+    .matches(EMAIL_REG_EXP, "Email không đúng định dạng!"),
 });
 export default function ForgotPassword() {
   const {

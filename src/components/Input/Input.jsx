@@ -7,22 +7,27 @@ const Input = ({
   control,
   placeholder = "",
   style = {},
+  value = "",
+  onChange,
+  className = "",
+  onBlur,
   ...props
 }) => {
   const { field } = useController({
-    control,
-    name,
-    defaultValue: "",
+    control: control,
+    name: name,
+    onChange,
   });
-
   return (
-    <InputStyles className="field-input">
+    <InputStyles className={`field-input ${className}`}>
       <input
         style={style}
         className="px-3 py-2"
         placeholder={placeholder}
         type={type}
         {...field}
+        value={field.value || ""}
+        onBlur={onBlur}
       />
     </InputStyles>
   );

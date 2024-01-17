@@ -19,7 +19,7 @@ export default function CheckBox({
         name={name}
         className=""
         onChange={onChange}
-        checked={checked}
+        checked={checked ? checked : false}
         type="checkbox"
         id={name}
       />

@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import BreadCrumb from "../../components/BreadCrumb";
 import styled from "styled-components";
 import HeadingSession from "../../components/HeadingSession";
 import Button from "../../components/Button";
+import Field from "../../components/Field/Field";
+import Input from "../../components/Input/Input";
+import Error from "../../components/Error";
+import {
+  EMAIL_REG_EXP,
+  REGEX_New_PASSWORD,
+  REGEX_PASSWORD,
+} from "../../common/constants";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { RxUpdate } from "react-icons/rx";
+import { IoClose } from "react-icons/io5";
+import { changePasswordValidate } from "../../common/validateSchema";
+import ChangePassword from "./ChangePassword";
+import ChangeInfo from "./ChangeInfo";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Thành viên", url: "/profile" },
@@ -21,6 +37,11 @@ const navLink = [
 ];
 
 export default function Profile() {
+  const [isEdit, setIsEdit] = useState({
+    isChangePassword: false,
+    isEditContactInfo: false,
+  });
+
   return (
     <StyledProfile className="profile-page">
       <BreadCrumb paths={breadcrumbPaths} />
@@ -58,22 +79,38 @@ export default function Profile() {
             </div>
             <div className="p-4 flex flex-col gap-y-1">
               <div className="flex items-center">
-                <span className="text-[#3B3B3B] text-sm w-[110px]">Email</span>
+                <span className="text-[#3B3B3B] w-[110px] label">Email</span>
                 <span className="text-[#000] text-base">
                   Vinhpham@gmail.com
                 </span>
               </div>
-              <div className="flex  items-center">
-                <span className="text-[#3B3B3B] text-sm w-[110px]">
-                  Mật khẩu
-                </span>
-                <span className="text-[#000] text-base">*****************</span>
-              </div>
-              <div className="flex justify-center">
-                <Button title="Đổi mật khẩu" className="bg-bgbtn mt-2">
-                  <i className="bi text-secondary text-sm bi-pencil-square"></i>
-                </Button>
-              </div>
+              {!isEdit.isChangePassword && (
+                <div className="flex  items-center">
+                  <span className="label w-[110px]">Mật khẩu</span>
+                  <span className="text-[#000] text-base">
+                    *****************
+                  </span>
+                </div>
+              )}
+              {isEdit.isChangePassword && (
+                <ChangePassword setIsEdit={setIsEdit} />
+              )}
+              {!isEdit.isChangePassword && (
+                <div className="flex justify-center">
+                  <Button
+                    onClick={() =>
+                      setIsEdit((prev) => ({
+                        ...prev,
+                        isChangePassword: true,
+                      }))
+                    }
+                    title="Đổi mật khẩu"
+                    className="bg-bgbtn mt-2"
+                  >
+                    <i className="bi text-secondary text-sm bi-pencil-square"></i>
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
           <div className="flex flex-col bg-[#EDEDED] border border-[#CBCBCB]">
@@ -81,29 +118,43 @@ export default function Profile() {
               <i className="bi bi-key text-[#0D427A] text-lg"></i>
               <span className="text-primary">Thông tin liên hệ</span>
             </div>
-            <div className="p-4 flex flex-col gap-y-1">
-              <div className="flex items-center">
-                <span className="text-[#3B3B3B] text-sm w-[110px]">Họ tên</span>
-                <span className="text-[#000] text-base">Vinh Pham</span>
+            {!isEdit?.isEditContactInfo && (
+              <div className="p-4 flex flex-col gap-y-1">
+                <div className="flex items-center">
+                  <span className="text-[#3B3B3B] text-sm w-[110px]">
+                    Họ tên
+                  </span>
+                  <span className="text-[#000] text-base">Vinh Pham</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-[#3B3B3B] text-sm w-[110px]">
+                    Điện thoại
+                  </span>
+                  <span className="text-[#000] text-base">0364216354</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-[#3B3B3B] text-sm w-[110px]">
+                    Địa chỉ
+                  </span>
+                  <span className="text-[#000] text-base">HCM Viet Nam</span>
+                </div>
+                <div className="flex justify-center">
+                  <Button
+                    onClick={() =>
+                      setIsEdit((prev) => ({
+                        ...prev,
+                        isEditContactInfo: true,
+                      }))
+                    }
+                    title="Sửa"
+                    className="bg-bgbtn mt-2"
+                  >
+                    <i className="bi text-secondary text-sm bi-pencil-square"></i>
+                  </Button>
+                </div>
               </div>
-              <div className="flex items-center">
-                <span className="text-[#3B3B3B] text-sm w-[110px]">
-                  Điện thoại
-                </span>
-                <span className="text-[#000] text-base">0364216354</span>
-              </div>
-              <div className="flex items-center">
-                <span className="text-[#3B3B3B] text-sm w-[110px]">
-                  Địa chỉ
-                </span>
-                <span className="text-[#000] text-base">HCM Viet Nam</span>
-              </div>
-              <div className="flex justify-center">
-                <Button title="Sửa" className="bg-bgbtn mt-2">
-                  <i className="bi text-secondary text-sm bi-pencil-square"></i>
-                </Button>
-              </div>
-            </div>
+            )}
+            {isEdit.isEditContactInfo && <ChangeInfo setIsEdit={setIsEdit} />}
           </div>
         </div>
       </div>

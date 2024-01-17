@@ -36,11 +36,11 @@ export default function Login() {
     handleExpiredRecapcha,
   } = useRecaptcha();
   const handleLogin = async (data) => {
-    // if (recaptchaExpired) {
-    //   // Xử lý khi reCAPTCHA hết hạn
-    //   console.log("reCAPTCHA expired. Please refresh and try again.");
-    //   return;
-    // }
+    if (recaptchaExpired) {
+      // Xử lý khi reCAPTCHA hết hạn
+      console.log("reCAPTCHA expired. Please refresh and try again.");
+      return;
+    }
 
     console.log(data);
   };
@@ -73,6 +73,9 @@ export default function Login() {
               control={control}
               placeholder="Nhập email hoặc điện thoại"
             />
+            <span className="absolute text-errBg text-sm right-[-10px] top-0">
+              *
+            </span>
           </div>
         </div>
         <span className="text-xs font-normal text-red-600">

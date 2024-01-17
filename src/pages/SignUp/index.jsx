@@ -33,20 +33,23 @@ const breadcrumbPaths = [
 
 export default function SignUpPage() {
   const navigate = useNavigate();
-  const [isChecked, setIsChecked] = React.useState({
-    agreeTerms: false,
-    promoInfo: false,
-  });
   const {
     control,
     handleSubmit,
     register,
     setValue: setFormValue,
     clearErrors,
+    getValues,
+    setError,
     formState: { errors, isValid, isSubmitting },
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(registerValidate),
+  });
+
+  const [isChecked, setIsChecked] = React.useState({
+    agreeTerms: false,
+    promoInfo: false,
   });
 
   const {
@@ -87,6 +90,21 @@ export default function SignUpPage() {
     const checked = e.target.checked;
     setIsChecked((prev) => ({ ...prev, promoInfo: checked }));
   };
+  const handleChangeInput = (e, keyName) => {
+    const value = e.target.value;
+    setFormValue(keyName, value);
+  };
+
+  console.log("render", errors);
+  const handleOnBlur = (e, keyName) => {
+    const value = e.target.value;
+    if (!value.trim()) {
+      console.log(errors);
+      // setError(keyName, {
+      //   message: errors[keyName]?.message,
+      // });
+    }
+  };
   return (
     <StyledSignUp className="signup-page">
       <BreadCrumb paths={breadcrumbPaths} />
@@ -113,7 +131,12 @@ export default function SignUpPage() {
                   Họ tên
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
-                  <Input name="fullName" control={control} />
+                  <Input
+                    onChange={(e) => handleChangeInput(e, "fullName")}
+                    name="fullName"
+                    control={control}
+                    onBlur={(e) => handleOnBlur(e, "fullName")}
+                  />
                   <Error error={errors?.fullName?.message} />
                 </div>
               </Field>
@@ -122,7 +145,11 @@ export default function SignUpPage() {
                   Điện thoại
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
-                  <Input name="phoneNumber" control={control} />
+                  <Input
+                    onChange={(e) => handleChangeInput(e, "phoneNumber")}
+                    name="phoneNumber"
+                    control={control}
+                  />
                   <Error error={errors?.phoneNumber?.message} />
                 </div>
               </Field>
@@ -131,7 +158,11 @@ export default function SignUpPage() {
                   Email
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
-                  <Input name="email" control={control} />
+                  <Input
+                    onChange={(e) => handleChangeInput(e, "email")}
+                    name="email"
+                    control={control}
+                  />
                   <Error error={errors?.email?.message} />
                 </div>
               </Field>
@@ -140,7 +171,11 @@ export default function SignUpPage() {
                   Mật khẩu
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
-                  <Input name="password" control={control} />
+                  <Input
+                    onChange={(e) => handleChangeInput(e, "password")}
+                    name="password"
+                    control={control}
+                  />
                   <Error error={errors?.password?.message} />
                 </div>
               </Field>
@@ -149,7 +184,11 @@ export default function SignUpPage() {
                   Xác nhận mật khẩu
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
-                  <Input name="passwordConfirm" control={control} />
+                  <Input
+                    onChange={(e) => handleChangeInput(e, "passwordConfirm")}
+                    name="passwordConfirm"
+                    control={control}
+                  />
                   <Error error={errors?.passwordConfirm?.message} />
                 </div>
               </Field>
@@ -158,7 +197,11 @@ export default function SignUpPage() {
                   Địa chỉ
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
-                  <Input name="address" control={control} />
+                  <Input
+                    onChange={(e) => handleChangeInput(e, "address")}
+                    name="address"
+                    control={control}
+                  />
                   <Error error={errors?.address?.message} />
                 </div>
               </Field>
@@ -214,6 +257,7 @@ export default function SignUpPage() {
                 <div className="flex items-center form-control__input form-recapcha relative gap-x-2">
                   <div className="flex flex-col gap-y-1 justify-start">
                     <CheckBox
+                      checked={isChecked?.agreeTerms}
                       name="agreeTerms"
                       register={register}
                       label="Tôi đồng ý với các điều khoản và quy định sử dụng tại thegioidien.com"
@@ -231,6 +275,7 @@ export default function SignUpPage() {
                 <div className="flex items-center form-control__input form-recapcha relative gap-x-2">
                   <div className="flex flex-col gap-y-1 justify-start">
                     <CheckBox
+                      checked={isChecked?.promoInfo}
                       name="promoInfo"
                       register={register}
                       label="Nhận thông tin khuyến mãi qua email"

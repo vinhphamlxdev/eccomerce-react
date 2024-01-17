@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllAddress } from "../services/AddressApi";
 
@@ -15,6 +15,7 @@ export default function useAddress(setFormValue, clearErrors) {
       console.log(err);
     },
   });
+
   const handleChangeProvinces = (e) => {
     const provinceName = e.target.value;
     setFormValue("districtAddress", "");

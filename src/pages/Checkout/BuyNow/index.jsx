@@ -179,6 +179,7 @@ export default function BuyNow() {
               register={register}
               label="Tôi đồng ý với các điều khoản và quy định sử dụng tại thegioidien.com"
               onChange={handleAgreeTerms}
+              checked={isChecked?.agreeTerms}
             />
             <span className="text-xs font-normal text-red-600">*</span>
           </div>

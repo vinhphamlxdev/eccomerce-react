@@ -41,6 +41,7 @@ export default function Product() {
 }
 const StyledProduct = styled.div`
   .product-logo__list {
+    grid-gap: 0.5rem !important;
     background-color: #dbdbdb;
     background-image: linear-gradient(
       to bottom,
