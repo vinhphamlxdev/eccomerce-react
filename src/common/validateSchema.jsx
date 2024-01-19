@@ -81,3 +81,11 @@ export const infoValidate = Yup.object({
   cityAddress: Yup.string().required("Vui lòng chọn tỉnh thành!"),
   districtAddress: Yup.string().required("Vui lòng chọn quận huyện!"),
 });
+//comment validate
+export const commentValidate = Yup.object({
+  fullName: Yup.string().required("Vui lòng nhập họ tên!"),
+  email: Yup.string()
+    .matches(EMAIL_REG_EXP, "Email không đúng định dạng!")
+    .required("Vui lòng nhập email!"),
+  content: Yup.string().required("Vui lòng nhập nội dung!"),
+});

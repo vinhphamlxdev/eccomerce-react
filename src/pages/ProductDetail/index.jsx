@@ -4,54 +4,26 @@ import zalo from "../../assets/zalo.png";
 import messeger from "../../assets/mesenger.png";
 import telegram from "../../assets/telegram.png";
 import { TbMessageCircle } from "react-icons/tb";
-import { Field } from "../../components/Field";
-import { Input } from "../../components/Input";
-import * as Yup from "yup";
-import { set, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import TextArea from "../../components/TextArea";
-import Button from "../../components/Button";
 import { FaBarsStaggered } from "react-icons/fa6";
-import ProductItem from "../../components/ProductItem";
 import BreadCrumb from "../../components/BreadCrumb";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import ProductList from "../../components/ProductList";
-import { EMAIL_REG_EXP } from "../../common/constants";
-import Error from "../../components/Error";
 import { useDispatch } from "react-redux";
 import handleAddToCart from "../../utils/handleAddToCart";
 import Quantity from "../../components/Quantity";
+import Comment from "../../components/Comment";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Sản phẩm", url: "/cart" },
 ];
-const schemaValidate = Yup.object({
-  fullName: Yup.string().required("Vui lòng nhập họ tên!"),
-  email: Yup.string()
-    .matches(EMAIL_REG_EXP, "Email không đúng định dạng!")
-    .required("Vui lòng nhập email!"),
-  content: Yup.string().required("Vui lòng nhập nội dung!"),
-});
+
 export default function ProductDeatail() {
   const { id } = useParams();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [quantity, setQuantity] = React.useState(1);
-  const {
-    control,
-    handleSubmit,
-    register,
-    setError,
-    formState: { errors, isValid, isSubmitting },
-  } = useForm({
-    mode: "onChange",
-    resolver: yupResolver(schemaValidate),
-  });
-  const handlePostComment = async (data) => {
-    console.log(errors);
-    console.log(data);
-  };
+
   const handleChangeQuantity = (e) => {
     const value = +e.target.value;
     value < 1 ? 1 : setQuantity(value);
@@ -72,6 +44,10 @@ export default function ProductDeatail() {
     };
     handleAddToCart(product, quantity, dispatch);
     navigate("/cart");
+  };
+  const handleInputChange = (e, keyName) => {
+    const value = e.target.value;
+    setFormValue(keyName, value);
   };
   return (
     <StyledProductDeatail className="product-detail">
@@ -428,57 +404,7 @@ export default function ProductDeatail() {
               <span>Đánh Giá Sản Phẩm (0)</span>
             </button>
           </div>
-          <form
-            onSubmit={handleSubmit(handlePostComment)}
-            className="flex flex-col gap-y-3"
-          >
-            <div className="flex gap-x-3 field-container items-baseline">
-              <div className="flex items-center form-field form-field__input gap-x-2">
-                <div className="w-[320px]">
-                  <Input
-                    placeholder="Họ tên..."
-                    name="fullName"
-                    control={control}
-                  />
-                </div>
-                <div
-                  className={`${errors?.fullName?.message ? "w-[166px]" : ""}`}
-                >
-                  <span className="text-sm font-normal text-red-600">
-                    * {errors?.fullName?.message}
-                  </span>
-                </div>
-              </div>
-              <div className="flex items-center form-field form-field__input  gap-x-2">
-                <div className="w-[320px]">
-                  <Input
-                    placeholder="Email..."
-                    name="email"
-                    control={control}
-                  />
-                </div>
-                <Error error={errors?.email?.message} />
-              </div>
-            </div>
-            <div className="form-field field-textarea flex items-center gap-x-2">
-              <TextArea
-                control={control}
-                placeholder="Nội dung..."
-                name="content"
-              />
-              <Error error={errors?.content?.message} />
-            </div>
-            <div className="btn-send__comment">
-              <Button
-                isDisabled={isSubmitting}
-                type="submit"
-                title="Gửi đánh giá"
-                className="bg-[#646461]"
-              >
-                <i className="bi text-secondary text-base bi-send-fill"></i>
-              </Button>
-            </div>
-          </form>
+          <Comment />
         </div>
         {/*  */}
         {/* similar product */}

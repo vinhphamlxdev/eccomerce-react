@@ -90,21 +90,11 @@ export default function SignUpPage() {
     const checked = e.target.checked;
     setIsChecked((prev) => ({ ...prev, promoInfo: checked }));
   };
-  const handleChangeInput = (e, keyName) => {
+  const handleInputChange = (e, keyName) => {
     const value = e.target.value;
     setFormValue(keyName, value);
   };
 
-  console.log("render", errors);
-  const handleOnBlur = (e, keyName) => {
-    const value = e.target.value;
-    if (!value.trim()) {
-      console.log(errors);
-      // setError(keyName, {
-      //   message: errors[keyName]?.message,
-      // });
-    }
-  };
   return (
     <StyledSignUp className="signup-page">
       <BreadCrumb paths={breadcrumbPaths} />
@@ -132,10 +122,9 @@ export default function SignUpPage() {
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input
-                    onChange={(e) => handleChangeInput(e, "fullName")}
+                    onChange={(e) => handleInputChange(e, "fullName")}
                     name="fullName"
                     control={control}
-                    onBlur={(e) => handleOnBlur(e, "fullName")}
                   />
                   <Error error={errors?.fullName?.message} />
                 </div>
@@ -146,7 +135,7 @@ export default function SignUpPage() {
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input
-                    onChange={(e) => handleChangeInput(e, "phoneNumber")}
+                    onChange={(e) => handleInputChange(e, "phoneNumber")}
                     name="phoneNumber"
                     control={control}
                   />
@@ -159,7 +148,7 @@ export default function SignUpPage() {
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input
-                    onChange={(e) => handleChangeInput(e, "email")}
+                    onChange={(e) => handleInputChange(e, "email")}
                     name="email"
                     control={control}
                   />
@@ -172,7 +161,7 @@ export default function SignUpPage() {
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input
-                    onChange={(e) => handleChangeInput(e, "password")}
+                    onChange={(e) => handleInputChange(e, "password")}
                     name="password"
                     control={control}
                   />
@@ -185,7 +174,7 @@ export default function SignUpPage() {
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input
-                    onChange={(e) => handleChangeInput(e, "passwordConfirm")}
+                    onChange={(e) => handleInputChange(e, "passwordConfirm")}
                     name="passwordConfirm"
                     control={control}
                   />
@@ -198,7 +187,7 @@ export default function SignUpPage() {
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Input
-                    onChange={(e) => handleChangeInput(e, "address")}
+                    onChange={(e) => handleInputChange(e, "address")}
                     name="address"
                     control={control}
                   />

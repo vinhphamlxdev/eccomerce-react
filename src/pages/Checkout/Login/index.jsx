@@ -59,6 +59,10 @@ export default function Login() {
     const checked = e.target.checked;
     setIsChecked((prev) => ({ ...prev, agreeTerms: checked }));
   };
+  const handleInputChange = (e, keyName) => {
+    const value = e.target.value;
+    setFormValue(keyName, value);
+  };
   return (
     <form
       onSubmit={handleSubmit(handleLogin)}
@@ -72,6 +76,7 @@ export default function Login() {
               name="email"
               control={control}
               placeholder="Nhập email hoặc điện thoại"
+              onChange={(e) => handleInputChange(e, "email")}
             />
             <span className="absolute text-errBg text-sm right-[-10px] top-0">
               *
@@ -90,6 +95,7 @@ export default function Login() {
               name="password"
               control={control}
               placeholder="Nhập mật khẩu"
+              onChange={(e) => handleInputChange(e, "password")}
             />
             <span className="absolute text-errBg text-sm right-[-10px] top-0">
               *

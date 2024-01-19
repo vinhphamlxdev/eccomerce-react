@@ -66,6 +66,10 @@ export default function BuyNow() {
     const checked = e.target.checked;
     setIsChecked((prev) => ({ ...prev, agreeTerms: checked }));
   };
+  const handleInputChange = (e, keyName) => {
+    const value = e.target.value;
+    setFormValue(keyName, value);
+  };
   return (
     <div className="checkout-form__control">
       <div className="flex justify-end items-center">
@@ -79,7 +83,12 @@ export default function BuyNow() {
       >
         <Field>
           <div className="flex gap-x-1 items-center">
-            <Input name="fullName" placeholder="Họ tên" control={control} />
+            <Input
+              name="fullName"
+              placeholder="Họ tên"
+              control={control}
+              onChange={(e) => handleInputChange(e, "fullName")}
+            />
             <span className="text-xs font-normal text-red-600">*</span>
           </div>
           <span className="text-xs font-normal text-red-600">
@@ -92,6 +101,7 @@ export default function BuyNow() {
               placeholder="Điện thoại"
               name="phoneNumber"
               control={control}
+              onChange={(e) => handleInputChange(e, "phoneNumber")}
             />
             <span className="text-xs font-normal text-red-600">*</span>
           </div>
@@ -101,7 +111,12 @@ export default function BuyNow() {
         </Field>
         <Field>
           <div className="flex gap-x-1 items-center">
-            <Input placeholder="Email" name="email" control={control} />
+            <Input
+              placeholder="Email"
+              name="email"
+              control={control}
+              onChange={(e) => handleInputChange(e, "email")}
+            />
             <span className="text-xs font-normal text-red-600">*</span>
           </div>
           <span className="text-xs font-normal text-red-600">
@@ -114,6 +129,7 @@ export default function BuyNow() {
               placeholder="Địa chỉ (số nhà, tên đường, phường/xã)"
               name="address"
               control={control}
+              onChange={(e) => handleInputChange(e, "address")}
             />
             <span className="text-xs font-normal text-red-600">*</span>
           </div>

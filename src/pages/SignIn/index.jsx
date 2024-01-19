@@ -60,6 +60,11 @@ export default function SignInPage() {
     handleRecapchaChange,
     handleExpiredRecapcha,
   } = useRecaptcha();
+  const handleInputChange = (e, keyName) => {
+    const value = e.target.value;
+    setFormValue(keyName, value);
+  };
+
   return (
     <StyledForgotPassword className="forgot-password">
       <BreadCrumb paths={breadcrumbPaths} />
@@ -97,6 +102,7 @@ export default function SignInPage() {
                   name="email"
                   placeholder="Email hoặc số điện thoại"
                   control={control}
+                  onChange={(e) => handleInputChange(e, "email")}
                 />
                 <Error error={errors?.email?.message} isRequired={false} />
                 <span className="absolute text-errBg text-sm right-[-10px] top-0">
@@ -109,7 +115,11 @@ export default function SignInPage() {
                 Mật khẩu
               </div>
               <div className="relative flex flex-col gap-y-2 form-field__input">
-                <Input name="signinPassword" control={control} />
+                <Input
+                  name="signinPassword"
+                  control={control}
+                  onChange={(e) => handleInputChange(e, "signinPassword")}
+                />
                 <Error error={errors?.password?.message} isRequired={false} />
                 <span className="absolute text-errBg text-sm right-[-10px] top-0">
                   *
