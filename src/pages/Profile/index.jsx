@@ -14,11 +14,10 @@ import {
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { RxUpdate } from "react-icons/rx";
-import { IoClose } from "react-icons/io5";
 import { changePasswordValidate } from "../../common/validateSchema";
 import ChangePassword from "./ChangePassword";
 import ChangeInfo from "./ChangeInfo";
+import { useSelector } from "react-redux";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Thành viên", url: "/profile" },
@@ -37,10 +36,14 @@ const navLink = [
 ];
 
 export default function Profile() {
+  const userInfo = useSelector((state) => state.auth.userInfo);
   const [isEdit, setIsEdit] = useState({
     isChangePassword: false,
     isEditContactInfo: false,
   });
+  const addressUser = userInfo?.address?.split(",");
+  const [address, district, province] = addressUser;
+  console.log(address);
 
   return (
     <StyledProfile className="profile-page">
@@ -80,9 +83,7 @@ export default function Profile() {
             <div className="p-4 flex flex-col gap-y-1">
               <div className="flex items-center">
                 <span className="text-[#3B3B3B] w-[110px] label">Email</span>
-                <span className="text-[#000] text-base">
-                  Vinhpham@gmail.com
-                </span>
+                <span className="text-[#000] text-base">{userInfo?.email}</span>
               </div>
               {!isEdit.isChangePassword && (
                 <div className="flex  items-center">
@@ -124,19 +125,23 @@ export default function Profile() {
                   <span className="text-[#3B3B3B] text-sm w-[110px]">
                     Họ tên
                   </span>
-                  <span className="text-[#000] text-base">Vinh Pham</span>
+                  <span className="text-[#000] text-base">
+                    {userInfo?.fullName}
+                  </span>
                 </div>
                 <div className="flex items-center">
                   <span className="text-[#3B3B3B] text-sm w-[110px]">
                     Điện thoại
                   </span>
-                  <span className="text-[#000] text-base">0364216354</span>
+                  <span className="text-[#000] text-base">
+                    {userInfo?.phoneNumber}
+                  </span>
                 </div>
                 <div className="flex items-center">
                   <span className="text-[#3B3B3B] text-sm w-[110px]">
                     Địa chỉ
                   </span>
-                  <span className="text-[#000] text-base">HCM Viet Nam</span>
+                  <span className="text-[#000] text-base">{address}</span>
                 </div>
                 <div className="flex justify-center">
                   <Button

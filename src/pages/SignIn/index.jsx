@@ -1,31 +1,36 @@
-import React from "react";
-import BreadCrumb from "../../components/BreadCrumb";
-import HeadingSession from "../../components/HeadingSession";
-import styled from "styled-components";
-import { Input } from "../../components/Input";
 import { yupResolver } from "@hookform/resolvers/yup";
+import React from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { useForm } from "react-hook-form";
-import * as Yup from "yup";
-import { Field } from "../../components/Field";
 import { IoLogInOutline } from "react-icons/io5";
+import { useMutation } from "react-query";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import styled from "styled-components";
+import * as Yup from "yup";
+import useDisabled from "../../Hooks/useDisabled";
+import useRecaptcha from "../../Hooks/useRecapcha";
 import {
   EMAIL_REG_EXP,
   REGEX_PASSWORD,
   RE_CAPCHA_KEY,
 } from "../../common/constants";
-import ReCAPTCHA from "react-google-recaptcha";
-import useRecaptcha from "../../Hooks/useRecapcha";
+import BreadCrumb from "../../components/BreadCrumb";
 import Button from "../../components/Button";
 import Error from "../../components/Error";
-import { Link } from "react-router-dom";
+import HeadingSession from "../../components/HeadingSession";
+import { Input } from "../../components/Input";
+import { loginUser } from "../../services/AuthApi";
+import { setAccessTokenAndRefreshToken } from "../../store/auth/authSlice";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Tài khoản", url: "/signin" },
 ];
 const schemaValidate = Yup.object({
-  email: Yup.string()
-    .required("Vui lòng nhập email!")
-    .matches(EMAIL_REG_EXP, "Email không đúng định dạng!"),
+  emailOrPhone: Yup.string().required(
+    "Vui lòng nhập email hoặc số điện thoại!"
+  ),
   signinPassword: Yup.string()
     .required("Vui lòng nhập mật khẩu!")
     .matches(
@@ -34,25 +39,49 @@ const schemaValidate = Yup.object({
     ),
 });
 export default function SignInPage() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
     register,
     setValue: setFormValue,
     clearErrors,
+    reset,
     formState: { errors, isValid, isSubmitting },
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(schemaValidate),
   });
-  const handleSignIn = async (data) => {
+  const { mutate: signinMutation, isPending } = useMutation({
+    mutationFn: (user) => loginUser(user),
+    onSuccess: (data) => {
+      console.log("success:", data);
+      const { accessToken, refreshToken } = data;
+      dispatch(setAccessTokenAndRefreshToken({ accessToken, refreshToken }));
+      reset();
+      navigate("/");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Đăng nhập thất bại!");
+    },
+  });
+  const handleSignIn = (data) => {
     if (recaptchaExpired) {
-      // Xử lý khi reCAPTCHA hết hạn
       console.log("reCAPTCHA expired. Please refresh and try again.");
       return;
     }
+    const { emailOrPhone, signinPassword } = data;
+    const key = EMAIL_REG_EXP.test(emailOrPhone) ? "email" : "phone";
 
-    console.log(data);
+    const formData = {
+      [key]: emailOrPhone,
+      password: signinPassword,
+      mfaCode: "",
+    };
+
+    signinMutation(formData);
   };
   const {
     reCapchaValue,
@@ -64,7 +93,7 @@ export default function SignInPage() {
     const value = e.target.value;
     setFormValue(keyName, value);
   };
-
+  const { disabledStyle, isDisabled } = useDisabled(isSubmitting);
   return (
     <StyledForgotPassword className="forgot-password">
       <BreadCrumb paths={breadcrumbPaths} />
@@ -99,17 +128,21 @@ export default function SignInPage() {
               </div>
               <div className="relative flex flex-col gap-y-2 form-field__input">
                 <Input
-                  name="email"
+                  name="emailOrPhone"
                   placeholder="Email hoặc số điện thoại"
                   control={control}
-                  onChange={(e) => handleInputChange(e, "email")}
+                  onChange={(e) => handleInputChange(e, "emailOrPhone")}
                 />
-                <Error error={errors?.email?.message} isRequired={false} />
+                <Error
+                  error={errors?.emailOrPhone?.message}
+                  isRequired={false}
+                />
                 <span className="absolute text-errBg text-sm right-[-10px] top-0">
                   *
                 </span>
               </div>
             </div>
+
             <div className="flex gap-x-3 form-field items-center">
               <div className="w-[450px] label mb-7 form-label text-[#3B3B3B] flex justify-end">
                 Mật khẩu
@@ -120,7 +153,10 @@ export default function SignInPage() {
                   control={control}
                   onChange={(e) => handleInputChange(e, "signinPassword")}
                 />
-                <Error error={errors?.password?.message} isRequired={false} />
+                <Error
+                  error={errors?.signinPassword?.message}
+                  isRequired={false}
+                />
                 <span className="absolute text-errBg text-sm right-[-10px] top-0">
                   *
                 </span>
@@ -136,7 +172,13 @@ export default function SignInPage() {
             </div>
             <div className="flex gap-x-3 items-center">
               <div className="w-[450px] label form-label form-label__capcha text-[#3B3B3B] flex justify-end"></div>
-              <Button type="submit" className="bg-bgbtn" title="Đăng nhập">
+              <Button
+                style={disabledStyle}
+                isDisabled={isDisabled}
+                type="submit"
+                className="bg-bgbtn"
+                title="Đăng nhập"
+              >
                 <IoLogInOutline className="text-secondary text-base " />
               </Button>
             </div>

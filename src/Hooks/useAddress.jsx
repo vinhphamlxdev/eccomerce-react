@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "react-query";
 import { getAllAddress } from "../services/AddressApi";
 
 export default function useAddress(setFormValue, clearErrors) {

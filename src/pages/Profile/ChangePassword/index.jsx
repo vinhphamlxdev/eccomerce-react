@@ -2,6 +2,11 @@ import React from "react";
 import Button from "../../../components/Button";
 import { changePasswordValidate } from "../../../common/validateSchema";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Field } from "../../../components/Field";
+import { Input } from "../../../components/Input";
+import { RxUpdate } from "react-icons/rx";
+import { IoClose } from "react-icons/io5";
 
 export default function ChangePassword({ setIsEdit }) {
   const {

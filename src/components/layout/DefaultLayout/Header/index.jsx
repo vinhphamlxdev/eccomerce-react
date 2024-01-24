@@ -1,34 +1,51 @@
-import React, { useState } from "react";
-import { IoIosShareAlt } from "react-icons/io";
-import logo from "../../../../assets/logo.jpg";
+import React from "react";
 import { FaBars } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
-import styled from "styled-components";
-import { categoryData } from "../../../Data";
-import { AiOutlineThunderbolt } from "react-icons/ai";
+import { IoIosShareAlt } from "react-icons/io";
 import { Link, NavLink } from "react-router-dom";
-import Button from "../../../Button";
-import * as Yup from "yup";
-import { EMAIL_REG_EXP, REGEX_PASSWORD } from "../../../../common/constants";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import Error from "../../../Error";
-import { Input } from "../../../Input";
-import { Field } from "../../../Field";
-import HeaderLogin from "./HeaderLogin";
-import CategoryMenu from "./CategoryMenu";
+import styled from "styled-components";
+import logo from "../../../../assets/logo.jpg";
+import { categoryData } from "../../../Data";
+import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../../../common/constants";
+import { getUserInfo } from "../../../../services/AuthApi";
+import { setUserInfo } from "../../../../store/auth/authSlice";
+import { isTokenExpired } from "../../../../utils/isTokenExpired";
+import CategoryMenu from "./CategoryMenu";
+import HeaderLogin from "./HeaderLogin";
 import HeaderUser from "./HeaderUser";
-
+import LogoutButton from "./LogoutButton";
+import { isRefreshTokenExpired } from "../../../../utils/isRefreshTokenExpired";
 export default function Header({
   showCategoryMenu = false,
   setShowCategoryMenu,
   categoryRef,
   categoryPopupRef,
 }) {
+  const dispatch = useDispatch();
   const carts = useSelector((state) => state.cart.cartItems);
-
-  let isAuthenticated = false;
+  const [userInfo, setUserInfo] = React.useState(null);
+  const [render, setRender] = React.useState(false);
+  const token = localStorage.getItem(ACCESS_TOKEN);
+  const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+  console.log("isTokenExpired:", isTokenExpired(token));
+  console.log("isExpiredRefresh:", isRefreshTokenExpired(refreshToken));
+  const query = useQuery({
+    queryKey: ["user", render],
+    enabled: !!refreshToken,
+    queryFn: () => getUserInfo(token),
+    onSuccess: (data) => {
+      // dispatch(setUserInfo(data.data));
+      setUserInfo(data.data);
+      console.log("get user info success");
+    },
+    onError: (err) => {
+      console.log(err);
+      // dispatch(setUserInfo(null));
+    },
+  });
+  console.log(userInfo);
   return (
     <StyledHeader className="header w-full flex flex-col">
       <div className="flex bg-[#6A1300] items-center justify-between">
@@ -62,13 +79,18 @@ export default function Header({
             </button>
           </div>
         </div>
-        <NavLink
-          to={"/signup"}
-          className="signup-btn items-center flex gap-x-2 bg-[#B21E02] text-[#F1F3E4] py-2 px-2 text-sm"
-        >
-          <i className="bi text-[#FFFF00] text-base bi-person-plus-fill"></i>
-          <span>Đăng ký</span>
-        </NavLink>
+        {!userInfo && (
+          <NavLink
+            to={"/signup"}
+            className="signup-btn items-center flex gap-x-2 bg-[#B21E02] text-[#F1F3E4] py-2 px-2 text-sm"
+          >
+            <i className="bi text-[#FFFF00] text-base bi-person-plus-fill"></i>
+            <span>Đăng ký</span>
+          </NavLink>
+        )}
+        {userInfo && (
+          <LogoutButton setRender={setRender} setUserInfo={setUserInfo} />
+        )}
         <NavLink
           to={"/"}
           className="acount-btn hidden items-center  gap-x-2 bg-[#B21E02] text-[#F1F3E4] py-2 px-2 text-sm"
@@ -77,13 +99,17 @@ export default function Header({
           <span>Tài khoản</span>
         </NavLink>
       </div>
-      <Link
-        to={"/profile"}
-        className="mt-[1px] bg-primary flex justify-center gap-x-2 py-2 px-3"
-      >
-        <i className="bi bi-person-circle text-base text-secondary"></i>
-        <span className="text-white text-sm leading-[22px]">Vinh Pham</span>
-      </Link>
+      {userInfo && (
+        <Link
+          to={"/profile"}
+          className="mt-[1px] bg-primary flex justify-center gap-x-2 py-2 px-3"
+        >
+          <i className="bi bi-person-circle text-base text-secondary"></i>
+          <span className="text-white text-sm leading-[22px]">
+            {userInfo?.fullName}
+          </span>
+        </Link>
+      )}
       <div className="flex flex-col py-3">
         <div className="bg-white   justify-between header-grid items-center grid gap-x-3 grid-cols-12">
           <NavLink
@@ -116,7 +142,11 @@ export default function Header({
               </div>
             </div>
           </div>
-          {isAuthenticated ? <HeaderUser /> : <HeaderLogin />}
+          {userInfo ? (
+            <HeaderUser userInfo={userInfo} />
+          ) : (
+            <HeaderLogin setRender={setRender} />
+          )}
         </div>
       </div>
       <div className="relative z-[200]">

@@ -11,13 +11,14 @@ import axios from "axios";
 import { LoadingButton } from "../../components/Loading";
 import Select from "../../components/Select";
 import { getAllAddress } from "../../services/AddressApi";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "react-query";
 import BreadCrumb from "../../components/BreadCrumb";
 import HeadingSession from "../../components/HeadingSession";
 import useAddress from "../../Hooks/useAddress";
 import ReCAPTCHA from "react-google-recaptcha";
 import CheckBox from "../../components/Checkbox";
 import useRecaptcha from "../../Hooks/useRecapcha";
+import { toast } from "react-toastify";
 import {
   EMAIL_REG_EXP,
   PHONE_REG_EXP,
@@ -26,6 +27,7 @@ import {
 } from "../../common/constants";
 import Error from "../../components/Error";
 import { registerValidate } from "../../common/validateSchema";
+import { registerUser } from "../../services/AuthApi";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Đăng ký", url: "/signup" },
@@ -58,18 +60,41 @@ export default function SignUpPage() {
     handleRecapchaChange,
     handleExpiredRecapcha,
   } = useRecaptcha();
+  const { mutate: signUpMutation } = useMutation({
+    mutationFn: (user) => registerUser(user),
+    onSuccess: (data) => {
+      console.log("success:", data);
+      toast.success("Đăng ký tài khoản thành công");
+      navigate("/signin");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
   const handleSignUp = async (data) => {
     if (recaptchaExpired) {
-      // Xử lý khi reCAPTCHA hết hạn
       console.log("reCAPTCHA expired. Please refresh and try again.");
       return;
     }
-    const requestData = {
-      ...data,
-      promoInfo: isChecked.promoInfo,
+    const {
+      fullName,
+      email,
+      districtAddress,
+      cityAddress,
+      address,
+      phoneNumber,
+      password,
+    } = data;
+    const phone = phoneNumber.slice(1);
+    const formData = {
+      email: email,
+      password: password,
+      phone: `+84${phone}`,
+      name: fullName,
+      address: `${address}, ${districtAddress}, ${cityAddress}`,
     };
-
-    console.log(requestData);
+    console.log(formData);
+    signUpMutation(formData);
   };
   const {
     districtValue,
@@ -78,9 +103,6 @@ export default function SignUpPage() {
     handleChangeProvinces,
     provicesData,
     provinceValue,
-    setDistrictValue,
-    setDistricts,
-    setProvinceValue,
   } = useAddress(setFormValue, clearErrors);
   const handleAgreeTerms = (e) => {
     const checked = e.target.checked;

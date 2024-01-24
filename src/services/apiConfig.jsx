@@ -1,8 +1,15 @@
 import axios from "axios";
-import refreshAccessToken from "./AuthApi";
-
-const BASE_API = `http://localhost:3001`;
-
+import { logoutUser, refreshAccessToken } from "./AuthApi";
+import { ACCESS_TOKEN, REFRESH_TOKEN, USER } from "../common/constants";
+import { isTokenExpired } from "../utils/isTokenExpired";
+import { isRefreshTokenExpired } from "../utils/isRefreshTokenExpired";
+import { toast } from "react-toastify";
+const BASE_API = `http://localhost:8080/api/v1`;
+const objKeys = {
+  ACCESS_TOKEN,
+  REFRESH_TOKEN,
+  USER,
+};
 const axiosInstance = axios.create({
   baseURL: BASE_API,
   headers: {
@@ -12,7 +19,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem(ACCESS_TOKEN);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -26,19 +33,36 @@ axiosInstance.interceptors.request.use(
 // Add a response interceptor
 axiosInstance.interceptors.response.use(
   (response) => {
-    // If the response is successful, just return the response
+    // console.log("success:", response);
     return response;
   },
-  async (error) => {
+
+  async function (error) {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      const access_token = await refreshAccessToken(); // Function that refreshes token
-      localStorage.setItem("access_token", access_token);
-      // Update the authorization header
-      originalRequest.headers["Authorization"] = "Bearer " + access_token;
-      return axiosInstance(originalRequest);
+    const token = localStorage.getItem(ACCESS_TOKEN);
+    const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+    //If refresh token expired call api to logout
+    if (isRefreshTokenExpired(refreshToken)) {
+      const logoutRes = await logoutUser(token);
+      toast.error("Phiên đăng nhập đã hết hạn!");
+      for (const key in objKeys) {
+        localStorage.removeItem(objKeys[key]);
+      }
+      return Promise.reject(error);
+    } else {
+      //If token expired call api to refresh token
+      if (isTokenExpired(token)) {
+        originalRequest._retry = true;
+        const newToken = await refreshAccessToken(token, refreshToken);
+        if (newToken) {
+          localStorage.setItem(ACCESS_TOKEN, newToken);
+          axiosInstance.defaults.headers.common["Authorization"] =
+            "Bearer " + newToken;
+          return axiosInstance(originalRequest);
+        }
+      }
     }
+
     return Promise.reject(error);
   }
 );
