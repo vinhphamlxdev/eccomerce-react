@@ -19,6 +19,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
+    // Do something before request is sent
     const token = localStorage.getItem(ACCESS_TOKEN);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -30,7 +31,7 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Add a response interceptor
+// // Do something with response data
 axiosInstance.interceptors.response.use(
   (response) => {
     // console.log("success:", response);
@@ -38,17 +39,22 @@ axiosInstance.interceptors.response.use(
   },
 
   async function (error) {
+    // Do something with response data
     const originalRequest = error.config;
     const token = localStorage.getItem(ACCESS_TOKEN);
     const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+    const userInfo = localStorage.getItem(USER);
+    console.log("error:", error);
     //If refresh token expired call api to logout
     if (isRefreshTokenExpired(refreshToken)) {
-      const logoutRes = await logoutUser(token);
-      toast.error("Phiên đăng nhập đã hết hạn!");
-      for (const key in objKeys) {
-        localStorage.removeItem(objKeys[key]);
+      console.log("refreshToken expired!!!", userInfo);
+      if (refreshToken) {
+        await logoutUser(token);
+        for (const key in objKeys) {
+          localStorage.removeItem(objKeys[key]);
+        }
       }
-      return Promise.reject(error);
+      return;
     } else {
       //If token expired call api to refresh token
       if (isTokenExpired(token)) {

@@ -2,23 +2,21 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "../common/constants";
 import axiosConfig from "./apiConfig";
 const USER_ACCESS_TOKEN_HEADER = "x-user-access-token";
 const USER_REFRESH_TOKEN_HEADER = "x-user-refresh-token";
+//REGISTER USER
 export const registerUser = async (user) => {
   const response = await axiosConfig.post("/register", user);
   return response.data;
 };
+//LOGIN USER
 export const loginUser = async (user) => {
   const response = await axiosConfig.post("/login", user);
   return response.data;
 };
-export const getUserInfo = async (token) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  const response = await axiosConfig.get("/user-info", config);
+export const getUserInfo = async () => {
+  const response = await axiosConfig.get("/user-info");
   return response;
 };
+//LOGOUT USER
 export const logoutUser = async (accessToken) => {
   const config = {
     headers: {
@@ -28,6 +26,7 @@ export const logoutUser = async (accessToken) => {
   const response = await axiosConfig.delete("/users/logout", config);
   return response;
 };
+//REFRESH TOKEN
 export const refreshAccessToken = async (
   accessToken = "",
   refreshToken = ""
@@ -52,4 +51,9 @@ export const refreshAccessToken = async (
     console.error("Failed to refresh access token: ", error);
     throw error;
   }
+};
+//CHANGE PASSWORD
+export const changePassword = async (data) => {
+  const response = await axiosConfig.patch("/users/change-password", data);
+  return response;
 };

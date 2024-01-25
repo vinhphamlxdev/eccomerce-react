@@ -1,22 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaBars } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import { IoIosShareAlt } from "react-icons/io";
+import { useQuery } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../../../../assets/logo.jpg";
-import { categoryData } from "../../../Data";
-import { useQuery } from "react-query";
-import { useDispatch, useSelector } from "react-redux";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../../../common/constants";
+import {
+  ACCESS_TOKEN,
+  REFRESH_TOKEN,
+  USER,
+} from "../../../../common/constants";
 import { getUserInfo } from "../../../../services/AuthApi";
-import { setUserInfo } from "../../../../store/auth/authSlice";
+import { isRefreshTokenExpired } from "../../../../utils/isRefreshTokenExpired";
 import { isTokenExpired } from "../../../../utils/isTokenExpired";
+import { categoryData } from "../../../Data";
 import CategoryMenu from "./CategoryMenu";
 import HeaderLogin from "./HeaderLogin";
 import HeaderUser from "./HeaderUser";
 import LogoutButton from "./LogoutButton";
-import { isRefreshTokenExpired } from "../../../../utils/isRefreshTokenExpired";
+import { setClearUser, setUserInfo } from "../../../../store/auth/authSlice";
+import LoadingSpinner from "../../../Loading/LoadingSreen";
 export default function Header({
   showCategoryMenu = false,
   setShowCategoryMenu,
@@ -25,29 +30,32 @@ export default function Header({
 }) {
   const dispatch = useDispatch();
   const carts = useSelector((state) => state.cart.cartItems);
-  const [userInfo, setUserInfo] = React.useState(null);
+  const userInfo = useSelector((state) => state.auth.userInfo);
   const [render, setRender] = React.useState(false);
   const token = localStorage.getItem(ACCESS_TOKEN);
   const refreshToken = localStorage.getItem(REFRESH_TOKEN);
-  console.log("isTokenExpired:", isTokenExpired(token));
   console.log("isExpiredRefresh:", isRefreshTokenExpired(refreshToken));
   const query = useQuery({
-    queryKey: ["user", render],
     enabled: !!refreshToken,
+    queryKey: ["userInfo", render],
     queryFn: () => getUserInfo(token),
     onSuccess: (data) => {
-      // dispatch(setUserInfo(data.data));
-      setUserInfo(data.data);
-      console.log("get user info success");
+      data?.data && dispatch(setUserInfo(data?.data));
+      console.log("get user info success:");
     },
     onError: (err) => {
-      console.log(err);
-      // dispatch(setUserInfo(null));
+      console.log("header error:", err);
     },
   });
-  console.log(userInfo);
+
+  useEffect(() => {
+    if (isRefreshTokenExpired(refreshToken)) {
+      dispatch(setClearUser());
+    }
+  }, [refreshToken]);
   return (
     <StyledHeader className="header w-full flex flex-col">
+      {query.isLoading && <LoadingSpinner />}
       <div className="flex bg-[#6A1300] items-center justify-between">
         <div className="flex items-center">
           <div className="px-2 gap-x-2 py-1 flex items-center h-full">
@@ -88,9 +96,7 @@ export default function Header({
             <span>Đăng ký</span>
           </NavLink>
         )}
-        {userInfo && (
-          <LogoutButton setRender={setRender} setUserInfo={setUserInfo} />
-        )}
+        {userInfo && <LogoutButton />}
         <NavLink
           to={"/"}
           className="acount-btn hidden items-center  gap-x-2 bg-[#B21E02] text-[#F1F3E4] py-2 px-2 text-sm"

@@ -24,12 +24,7 @@ const schemaValidate = Yup.object({
   emailOrPhone: Yup.string().required(
     "Vui lòng nhập email hoặc số điện thoại!"
   ),
-  password: Yup.string()
-    .required("Vui lòng nhập mật khẩu!")
-    .matches(
-      REGEX_PASSWORD,
-      "Mật khẩu phải có ít nhất 8 ký tự, ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt!"
-    ),
+  password: Yup.string().required("Vui lòng nhập mật khẩu!"),
 });
 export default function HeaderLogin({ setRender }) {
   const queryClient = new QueryClient();
@@ -52,15 +47,14 @@ export default function HeaderLogin({ setRender }) {
     isPending,
     isLoading,
   } = useMutation({
-    mutationFn: (user) => loginUser(user),
+    mutationFn: (reqest) => loginUser(reqest),
     onSuccess: (data) => {
       console.log("success:", data);
       const { accessToken, refreshToken } = data;
       dispatch(setAccessTokenAndRefreshToken({ accessToken, refreshToken }));
-      queryClient.invalidateQueries([USER, accessToken]);
       reset();
       toast.success("Đăng  nhập thành công!");
-      setRender((prev) => !prev);
+      setRender((prevRender) => !prevRender);
     },
     onError: (error) => {
       console.log(error);

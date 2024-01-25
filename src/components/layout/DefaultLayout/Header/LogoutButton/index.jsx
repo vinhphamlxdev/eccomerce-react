@@ -1,25 +1,34 @@
 import React from "react";
-import { ACCESS_TOKEN } from "../../../../../common/constants";
+import {
+  ACCESS_TOKEN,
+  REFRESH_TOKEN,
+  USER,
+} from "../../../../../common/constants";
 import { useMutation, useQueryClient } from "react-query";
 import { logoutUser } from "../../../../../services/AuthApi";
 import { useDispatch } from "react-redux";
-import { clearUser, setUserInfo } from "../../../../../store/auth/authSlice";
+import { setClearUser, setUserInfo } from "../../../../../store/auth/authSlice";
 import { IoIosLogOut } from "react-icons/io";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../../../../Loading/LoadingSreen";
-
-export default function LogoutButton({ setRender, setUserInfo }) {
+const objKeys = {
+  ACCESS_TOKEN,
+  REFRESH_TOKEN,
+  USER,
+};
+export default function LogoutButton() {
   const dispatch = useDispatch();
   const token = localStorage.getItem(ACCESS_TOKEN);
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (tokenUser) => logoutUser(tokenUser),
     onSuccess: () => {
-      dispatch(clearUser());
+      dispatch(setClearUser());
       console.log("logout success");
       toast.success("Đăng xuất thành công!");
-      setRender((prev) => !prev);
-      setUserInfo(null);
+      for (const key in objKeys) {
+        localStorage.removeItem(objKeys[key]);
+      }
     },
     onError: (err) => {
       console.log(err);

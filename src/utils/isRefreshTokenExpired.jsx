@@ -6,5 +6,5 @@ export const isRefreshTokenExpired = (refreshToken = "") => {
   const decodedrefreshToken = jwtDecode(refreshToken);
   const currentTime = Math.floor(Date.now() / 1000);
   const tokenTime = decodedrefreshToken?.exp;
-  return tokenTime <= currentTime;
+  return tokenTime < currentTime;
 };

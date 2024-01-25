@@ -31,12 +31,7 @@ const schemaValidate = Yup.object({
   emailOrPhone: Yup.string().required(
     "Vui lòng nhập email hoặc số điện thoại!"
   ),
-  signinPassword: Yup.string()
-    .required("Vui lòng nhập mật khẩu!")
-    .matches(
-      REGEX_PASSWORD,
-      "Mật khẩu phải có ít nhất 8 ký tự, ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt!"
-    ),
+  signinPassword: Yup.string().required("Vui lòng nhập mật khẩu!"),
 });
 export default function SignInPage() {
   const dispatch = useDispatch();

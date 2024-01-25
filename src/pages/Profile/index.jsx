@@ -1,23 +1,11 @@
 import React, { useState } from "react";
-import BreadCrumb from "../../components/BreadCrumb";
-import styled from "styled-components";
-import HeadingSession from "../../components/HeadingSession";
-import Button from "../../components/Button";
-import Field from "../../components/Field/Field";
-import Input from "../../components/Input/Input";
-import Error from "../../components/Error";
-import {
-  EMAIL_REG_EXP,
-  REGEX_New_PASSWORD,
-  REGEX_PASSWORD,
-} from "../../common/constants";
-import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import { changePasswordValidate } from "../../common/validateSchema";
-import ChangePassword from "./ChangePassword";
-import ChangeInfo from "./ChangeInfo";
 import { useSelector } from "react-redux";
+import styled from "styled-components";
+import BreadCrumb from "../../components/BreadCrumb";
+import Button from "../../components/Button";
+import HeadingSession from "../../components/HeadingSession";
+import ChangeInfo from "./ChangeInfo";
+import ChangePassword from "./ChangePassword";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Thành viên", url: "/profile" },
@@ -42,8 +30,7 @@ export default function Profile() {
     isEditContactInfo: false,
   });
   const addressUser = userInfo?.address?.split(",");
-  const [address, district, province] = addressUser;
-  console.log(address);
+  // const [address, district, province] = addressUser;
 
   return (
     <StyledProfile className="profile-page">
@@ -141,7 +128,7 @@ export default function Profile() {
                   <span className="text-[#3B3B3B] text-sm w-[110px]">
                     Địa chỉ
                   </span>
-                  <span className="text-[#000] text-base">{address}</span>
+                  <span className="text-[#000] text-base">HCM</span>
                 </div>
                 <div className="flex justify-center">
                   <Button
