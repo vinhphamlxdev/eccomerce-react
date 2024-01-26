@@ -8,3 +8,5 @@ export const RE_CAPCHA_KEY = import.meta.env.VITE_RE_CAPCHA_KEY;
 export const USER = "user";
 export const ACCESS_TOKEN = "access_token";
 export const REFRESH_TOKEN = "refresh_token";
+export const USER_ACCESS_TOKEN_HEADER = "x-user-access-token";
+export const USER_REFRESH_TOKEN_HEADER = "x-user-refresh-token";

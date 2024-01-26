@@ -10,8 +10,14 @@ import { IoClose } from "react-icons/io5";
 import { useMutation } from "react-query";
 import { changePassword } from "../../../services/AuthApi";
 import LoadingSpinner from "../../../components/Loading/LoadingSreen";
-
+import { toast } from "react-toastify";
+import clearAllLocal from "../../../utils/clearAllLocal";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setClearUser } from "../../../store/auth/authSlice";
 export default function ChangePassword({ setIsEdit }) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
@@ -26,9 +32,16 @@ export default function ChangePassword({ setIsEdit }) {
     mutationFn: (reqestData) => changePassword(reqestData),
     onSuccess: (data) => {
       console.log("changle password success:", data);
+      toast.success("Đổi mật khẩu thành công, đăng nhập lại để tiếp tục!");
+      reset();
+      setIsEdit(false);
+      dispatch(setClearUser());
+      clearAllLocal();
+
+      navigate("/signin");
     },
     onError: (error) => {
-      console.log(error);
+      toast.error("Mật khẩu cũ không đúng!");
     },
   });
   const handleChangePassword = (data) => {
@@ -37,9 +50,7 @@ export default function ChangePassword({ setIsEdit }) {
       oldPassword,
       newPassword,
     };
-    console.log(requestData);
     mutation.mutate(requestData);
-    reset();
   };
   return (
     <Fragment>

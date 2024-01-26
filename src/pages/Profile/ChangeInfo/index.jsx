@@ -12,6 +12,7 @@ import useAddress from "../../../Hooks/useAddress";
 import Select from "../../../components/Select";
 import { getAllAddress } from "../../../services/AddressApi";
 import { RxUpdate } from "react-icons/rx";
+import { useSelector } from "react-redux";
 
 const objUser = {
   fullName: "vinhpham",
@@ -21,6 +22,8 @@ const objUser = {
   districtAddress: "Quận 12",
 };
 export default function ChangeInfo({ setIsEdit }) {
+  const userInfo = useSelector((state) => state.auth.userInfo);
+  console.log(userInfo);
   const {
     control,
     handleSubmit,
@@ -51,7 +54,7 @@ export default function ChangeInfo({ setIsEdit }) {
   };
 
   useEffect(() => {
-    const newArrInfo = Object.entries(objUser);
+    const newArrInfo = Object.entries(userInfo);
     for (const arrVal of newArrInfo) {
       const [key, value] = arrVal;
       setFormValue(key, value);

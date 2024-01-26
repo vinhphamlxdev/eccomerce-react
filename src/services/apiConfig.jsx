@@ -3,6 +3,7 @@ import { logoutUser, refreshAccessToken } from "./AuthApi";
 import { ACCESS_TOKEN, REFRESH_TOKEN, USER } from "../common/constants";
 import { isTokenExpired } from "../utils/isTokenExpired";
 import { isRefreshTokenExpired } from "../utils/isRefreshTokenExpired";
+import { USER_ACCESS_TOKEN_HEADER } from "../common/constants";
 import { toast } from "react-toastify";
 const BASE_API = `http://localhost:8080/api/v1`;
 const objKeys = {
@@ -22,7 +23,7 @@ axiosInstance.interceptors.request.use(
     // Do something before request is sent
     const token = localStorage.getItem(ACCESS_TOKEN);
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers[USER_ACCESS_TOKEN_HEADER] = token;
     }
     return config;
   },
@@ -47,9 +48,7 @@ axiosInstance.interceptors.response.use(
     console.log("error:", error);
     //If refresh token expired call api to logout
     if (isRefreshTokenExpired(refreshToken)) {
-      console.log("refreshToken expired!!!", userInfo);
       if (refreshToken) {
-        await logoutUser(token);
         for (const key in objKeys) {
           localStorage.removeItem(objKeys[key]);
         }
@@ -59,11 +58,11 @@ axiosInstance.interceptors.response.use(
       //If token expired call api to refresh token
       if (isTokenExpired(token)) {
         originalRequest._retry = true;
-        const newToken = await refreshAccessToken(token, refreshToken);
+        const newToken = await refreshAccessToken(refreshToken);
         if (newToken) {
           localStorage.setItem(ACCESS_TOKEN, newToken);
-          axiosInstance.defaults.headers.common["Authorization"] =
-            "Bearer " + newToken;
+          axiosInstance.defaults.headers.common[USER_ACCESS_TOKEN_HEADER] =
+            newToken;
           return axiosInstance(originalRequest);
         }
       }

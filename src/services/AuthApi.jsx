@@ -1,7 +1,11 @@
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../common/constants";
+import {
+  ACCESS_TOKEN,
+  REFRESH_TOKEN,
+  USER_ACCESS_TOKEN_HEADER,
+  USER_REFRESH_TOKEN_HEADER,
+} from "../common/constants";
 import axiosConfig from "./apiConfig";
-const USER_ACCESS_TOKEN_HEADER = "x-user-access-token";
-const USER_REFRESH_TOKEN_HEADER = "x-user-refresh-token";
+
 //REGISTER USER
 export const registerUser = async (user) => {
   const response = await axiosConfig.post("/register", user);
@@ -13,7 +17,7 @@ export const loginUser = async (user) => {
   return response.data;
 };
 export const getUserInfo = async () => {
-  const response = await axiosConfig.get("/user-info");
+  const response = await axiosConfig.get("/users/user-info");
   return response;
 };
 //LOGOUT USER
@@ -27,14 +31,10 @@ export const logoutUser = async (accessToken) => {
   return response;
 };
 //REFRESH TOKEN
-export const refreshAccessToken = async (
-  accessToken = "",
-  refreshToken = ""
-) => {
+export const refreshAccessToken = async (refreshToken = "") => {
   try {
     const config = {
       headers: {
-        [USER_ACCESS_TOKEN_HEADER]: accessToken,
         [USER_REFRESH_TOKEN_HEADER]: refreshToken,
       },
     };

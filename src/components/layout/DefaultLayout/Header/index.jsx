@@ -4,7 +4,7 @@ import { FaPlus } from "react-icons/fa6";
 import { IoIosShareAlt } from "react-icons/io";
 import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../../../../assets/logo.jpg";
 import {
@@ -22,35 +22,39 @@ import HeaderUser from "./HeaderUser";
 import LogoutButton from "./LogoutButton";
 import { setClearUser, setUserInfo } from "../../../../store/auth/authSlice";
 import LoadingSpinner from "../../../Loading/LoadingSreen";
+import { toast } from "react-toastify";
 export default function Header({
   showCategoryMenu = false,
   setShowCategoryMenu,
   categoryRef,
   categoryPopupRef,
 }) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const carts = useSelector((state) => state.cart.cartItems);
   const userInfo = useSelector((state) => state.auth.userInfo);
   const [render, setRender] = React.useState(false);
   const token = localStorage.getItem(ACCESS_TOKEN);
   const refreshToken = localStorage.getItem(REFRESH_TOKEN);
-  console.log("isExpiredRefresh:", isRefreshTokenExpired(refreshToken));
   const query = useQuery({
     enabled: !!refreshToken,
     queryKey: ["userInfo", render],
     queryFn: () => getUserInfo(token),
     onSuccess: (data) => {
       data?.data && dispatch(setUserInfo(data?.data));
-      console.log("get user info success:");
+      // console.log("get user info success:");
     },
     onError: (err) => {
       console.log("header error:", err);
     },
   });
 
+  console.log("render");
+
   useEffect(() => {
-    if (isRefreshTokenExpired(refreshToken)) {
+    if (refreshToken && isRefreshTokenExpired(refreshToken)) {
       dispatch(setClearUser());
+      navigate("/signin");
     }
   }, [refreshToken]);
   return (
@@ -112,7 +116,7 @@ export default function Header({
         >
           <i className="bi bi-person-circle text-base text-secondary"></i>
           <span className="text-white text-sm leading-[22px]">
-            {userInfo?.fullName}
+            {userInfo?.name}
           </span>
         </Link>
       )}
