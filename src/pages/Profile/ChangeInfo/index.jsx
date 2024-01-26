@@ -1,28 +1,31 @@
-import React, { useEffect, useState } from "react";
-import Button from "../../../components/Button";
-import { set, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  changePasswordValidate,
-  infoValidate,
-} from "../../../common/validateSchema";
+import React, { useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
+import { RxUpdate } from "react-icons/rx";
+import { useMutation } from "react-query";
+import { useSelector } from "react-redux";
+import useAddress from "../../../Hooks/useAddress";
+import Button from "../../../components/Button";
 import Field from "../../../components/Field/Field";
 import Input from "../../../components/Input/Input";
-import useAddress from "../../../Hooks/useAddress";
 import Select from "../../../components/Select";
-import { getAllAddress } from "../../../services/AddressApi";
-import { RxUpdate } from "react-icons/rx";
-import { useSelector } from "react-redux";
+import { updateContactInfo } from "../../../services/AuthApi";
+import { PHONE_REG_EXP } from "../../../common/constants";
+import * as Yup from "yup";
 
-const objUser = {
-  fullName: "vinhpham",
-  phoneNumber: "0345678978",
-  address: "Tran Hung Dao",
-  cityAddress: "Thành phố Hồ Chí Minh",
-  districtAddress: "Quận 12",
-};
+//change info validate
+export const infoValidate = Yup.object({
+  fullName: Yup.string().required("Vui lòng nhập họ tên!"),
+  phoneNumber: Yup.string()
+    .matches(PHONE_REG_EXP, "Vui lòng nhập đúng định dạng số điện thoại!")
+    .required("Vùi lòng nhập số điện thoại!"),
+  address: Yup.string().required("Vui lòng nhập địa chỉ!"),
+  provinceAddress: Yup.string().required("Vui lòng chọn tỉnh thành!"),
+  districtAddress: Yup.string().required("Vui lòng chọn quận huyện!"),
+});
 export default function ChangeInfo({ setIsEdit }) {
   const userInfo = useSelector((state) => state.auth.userInfo);
+  const countRef = useRef(null);
   console.log(userInfo);
   const {
     control,
@@ -44,29 +47,46 @@ export default function ChangeInfo({ setIsEdit }) {
     handleChangeProvinces,
     provicesData,
     provinceValue,
+    setProvinceValue,
     setDistrictValue,
     setDistricts,
-
-    setProvinceValue,
   } = useAddress(setFormValue, clearErrors);
-  const handleChangeInfo = async (data) => {
+  const mutation = useMutation({
+    mutationFn: (updateData) => updateContactInfo(updateData),
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (err) => {},
+  });
+  const handleChangeInfo = (data) => {
     console.log(data);
-  };
 
+    const { fullName } = data;
+    // mutation.mutate(data);
+  };
   useEffect(() => {
-    const newArrInfo = Object.entries(userInfo);
-    for (const arrVal of newArrInfo) {
-      const [key, value] = arrVal;
-      setFormValue(key, value);
+    const newArr = Object.entries(userInfo);
+    for (let index = 0; index < newArr.length; index++) {
+      const [key, value] = newArr[index];
+      if (key === "address") {
+        const [key, addressValues] = newArr[index];
+        const [address, districtAddress, proviceAddress] =
+          addressValues.split(",");
+        setFormValue("address", address);
+        setProvinceValue(proviceAddress?.trim());
+        setDistrictValue(districtAddress?.trim());
+        console.log(districtAddress);
+      } else {
+        setFormValue(key, value);
+      }
     }
-    setProvinceValue(objUser.cityAddress);
-    // setDistrictValue(objUser.districtAddress);
   }, []);
   const handleChange = (e, keyName) => {
     const value = e.target.value;
     setFormValue(keyName, value);
   };
 
+  console.log("render");
   return (
     <div className="p-4 flex flex-col gap-y-1">
       <form
@@ -129,7 +149,7 @@ export default function ChangeInfo({ setIsEdit }) {
               data={provicesData}
               control={control}
               onChange={handleChangeProvinces}
-              name="cityAddress"
+              name="provinceAddress"
               register={register}
               label="Chọn tỉnh thành"
               value={provinceValue}
@@ -139,7 +159,7 @@ export default function ChangeInfo({ setIsEdit }) {
             </span>
           </div>
           <span className="text-xs font-normal text-red-600">
-            {errors?.cityAddress?.message}
+            {errors?.provinceAddress?.message}
           </span>
         </Field>
         <Field style={{ marginBottom: "8px" }}>

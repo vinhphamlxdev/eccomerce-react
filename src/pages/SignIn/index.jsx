@@ -4,7 +4,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { useForm } from "react-hook-form";
 import { IoLogInOutline } from "react-icons/io5";
 import { useMutation } from "react-query";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
@@ -36,6 +36,7 @@ const schemaValidate = Yup.object({
 export default function SignInPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.auth.userInfo);
   const {
     control,
     handleSubmit,
@@ -89,6 +90,11 @@ export default function SignInPage() {
     setFormValue(keyName, value);
   };
   const { disabledStyle, isDisabled } = useDisabled(isSubmitting);
+  React.useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, []);
   return (
     <StyledForgotPassword className="forgot-password">
       <BreadCrumb paths={breadcrumbPaths} />

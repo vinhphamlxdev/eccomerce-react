@@ -71,16 +71,7 @@ export const changePasswordValidate = Yup.object({
     .required("Vui lòng xác nhận mật khẩu mới!")
     .oneOf([Yup.ref("newPassword")], "Mật khẩu xác nhận không đúng!"),
 });
-//change info validate
-export const infoValidate = Yup.object({
-  fullName: Yup.string().required("Vui lòng nhập họ tên!"),
-  phoneNumber: Yup.string()
-    .matches(PHONE_REG_EXP, "Vui lòng nhập đúng định dạng số điện thoại!")
-    .required("Vùi lòng nhập số điện thoại!"),
-  address: Yup.string().required("Vui lòng nhập địa chỉ!"),
-  cityAddress: Yup.string().required("Vui lòng chọn tỉnh thành!"),
-  districtAddress: Yup.string().required("Vui lòng chọn quận huyện!"),
-});
+
 //comment validate
 export const commentValidate = Yup.object({
   fullName: Yup.string().required("Vui lòng nhập họ tên!"),

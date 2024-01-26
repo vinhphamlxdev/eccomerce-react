@@ -1,33 +1,24 @@
-import * as React from "react";
-import { styled } from "styled-components";
-import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
-import { Controller, set, useForm, useFormContext } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Field } from "../../components/Field";
-import { Input } from "../../components/Input";
-import useDisabled from "../../Hooks/useDisabled";
-import axios from "axios";
-import { LoadingButton } from "../../components/Loading";
-import Select from "../../components/Select";
-import { getAllAddress } from "../../services/AddressApi";
-import { useMutation, useQuery } from "react-query";
-import BreadCrumb from "../../components/BreadCrumb";
-import HeadingSession from "../../components/HeadingSession";
-import useAddress from "../../Hooks/useAddress";
+import * as React from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import CheckBox from "../../components/Checkbox";
-import useRecaptcha from "../../Hooks/useRecapcha";
+import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  EMAIL_REG_EXP,
-  PHONE_REG_EXP,
-  REGEX_PASSWORD,
-  RE_CAPCHA_KEY,
-} from "../../common/constants";
-import Error from "../../components/Error";
+import { styled } from "styled-components";
+import useAddress from "../../Hooks/useAddress";
+import useRecaptcha from "../../Hooks/useRecapcha";
+import { RE_CAPCHA_KEY } from "../../common/constants";
 import { registerValidate } from "../../common/validateSchema";
+import BreadCrumb from "../../components/BreadCrumb";
+import CheckBox from "../../components/Checkbox";
+import Error from "../../components/Error";
+import { Field } from "../../components/Field";
+import HeadingSession from "../../components/HeadingSession";
+import { Input } from "../../components/Input";
+import Select from "../../components/Select";
 import { registerUser } from "../../services/AuthApi";
+import { useSelector } from "react-redux";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Đăng ký", url: "/signup" },
@@ -35,6 +26,7 @@ const breadcrumbPaths = [
 
 export default function SignUpPage() {
   const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.user?.userInfo);
   const {
     control,
     handleSubmit,
@@ -60,6 +52,7 @@ export default function SignUpPage() {
     handleRecapchaChange,
     handleExpiredRecapcha,
   } = useRecaptcha();
+
   const { mutate: signUpMutation } = useMutation({
     mutationFn: (user) => registerUser(user),
     onSuccess: (data) => {
@@ -116,7 +109,11 @@ export default function SignUpPage() {
     const value = e.target.value;
     setFormValue(keyName, value);
   };
-
+  React.useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, []);
   return (
     <StyledSignUp className="signup-page">
       <BreadCrumb paths={breadcrumbPaths} />

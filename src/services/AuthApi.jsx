@@ -57,3 +57,8 @@ export const changePassword = async (data) => {
   const response = await axiosConfig.patch("/users/change-password", data);
   return response;
 };
+//UPDATE CONTACT INFO
+export const updateContactInfo = async (updateData) => {
+  const response = await axiosConfig.put("/users/contact-info", updateData);
+  return response;
+};

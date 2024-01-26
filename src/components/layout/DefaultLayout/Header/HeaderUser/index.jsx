@@ -5,7 +5,9 @@ import styled from "styled-components";
 export default function HeaderUser({ userInfo }) {
   return (
     <StyledHeaderUser className="p-2 bg-[#DBDBDB] header-account rounded-sm w-full flex flex-col gap-y-2 col-span-3">
-      <span className="text-[#003B4F] text-sm ">Xin chào {userInfo?.name}</span>
+      <span className="text-[#003B4F] text-sm ">
+        Xin chào {userInfo?.fullName}
+      </span>
       <Link
         to="/profile"
         className="px-[0.7rem] h-10 cursor-pointer transition-all hover:opacity-80 py-[0.4rem] flex items-center gap-x-2 rounded-sm bg-[#EAEAEA]"

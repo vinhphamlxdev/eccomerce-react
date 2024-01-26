@@ -7,22 +7,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../../../../assets/logo.jpg";
-import {
-  ACCESS_TOKEN,
-  REFRESH_TOKEN,
-  USER,
-} from "../../../../common/constants";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../../../common/constants";
 import { getUserInfo } from "../../../../services/AuthApi";
+import { setClearUser, setUserInfo } from "../../../../store/auth/authSlice";
 import { isRefreshTokenExpired } from "../../../../utils/isRefreshTokenExpired";
-import { isTokenExpired } from "../../../../utils/isTokenExpired";
 import { categoryData } from "../../../Data";
+import LoadingSpinner from "../../../Loading/LoadingSreen";
 import CategoryMenu from "./CategoryMenu";
 import HeaderLogin from "./HeaderLogin";
 import HeaderUser from "./HeaderUser";
 import LogoutButton from "./LogoutButton";
-import { setClearUser, setUserInfo } from "../../../../store/auth/authSlice";
-import LoadingSpinner from "../../../Loading/LoadingSreen";
-import { toast } from "react-toastify";
 export default function Header({
   showCategoryMenu = false,
   setShowCategoryMenu,
@@ -41,22 +35,21 @@ export default function Header({
     queryKey: ["userInfo", render],
     queryFn: () => getUserInfo(token),
     onSuccess: (data) => {
-      data?.data && dispatch(setUserInfo(data?.data));
+      data?.data && dispatch(setUserInfo(data.data));
       // console.log("get user info success:");
     },
     onError: (err) => {
       console.log("header error:", err);
     },
   });
-
-  console.log("render");
-
   useEffect(() => {
     if (refreshToken && isRefreshTokenExpired(refreshToken)) {
       dispatch(setClearUser());
       navigate("/signin");
     }
   }, [refreshToken]);
+  console.log("render");
+
   return (
     <StyledHeader className="header w-full flex flex-col">
       {query.isLoading && <LoadingSpinner />}
@@ -116,7 +109,7 @@ export default function Header({
         >
           <i className="bi bi-person-circle text-base text-secondary"></i>
           <span className="text-white text-sm leading-[22px]">
-            {userInfo?.name}
+            {userInfo?.fullName}
           </span>
         </Link>
       )}
