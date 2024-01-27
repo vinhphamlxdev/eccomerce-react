@@ -9,7 +9,7 @@ import * as Yup from "yup";
 import { Field } from "../../components/Field";
 import { EMAIL_REG_EXP, RE_CAPCHA_KEY } from "../../common/constants";
 import ReCAPTCHA from "react-google-recaptcha";
-import useRecaptcha from "../../Hooks/useRecapcha";
+import useRecaptcha from "../../hooks/useRecapcha";
 import Button from "../../components/Button";
 import Error from "../../components/Error";
 const breadcrumbPaths = [

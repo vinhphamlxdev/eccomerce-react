@@ -9,8 +9,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import * as Yup from "yup";
-import useDisabled from "../../Hooks/useDisabled";
-import useRecaptcha from "../../Hooks/useRecapcha";
+import useDisabled from "../../hooks/useDisabled";
+import useRecaptcha from "../../hooks/useRecapcha";
 import {
   EMAIL_REG_EXP,
   REGEX_PASSWORD,

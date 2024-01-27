@@ -1,8 +1,8 @@
 import React from "react";
-import useRecaptcha from "../../../Hooks/useRecapcha";
+import useRecaptcha from "../../../hooks/useRecapcha";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import useAddress from "../../../Hooks/useAddress";
+import useAddress from "../../../hooks/useAddress";
 import {
   EMAIL_REG_EXP,
   PHONE_REG_EXP,
@@ -56,7 +56,7 @@ export default function BuyNow() {
     districts,
     handleChangeDistricts,
     handleChangeProvinces,
-    provicesData,
+    provincesData,
     provinceValue,
     setDistrictValue,
     setDistricts,
@@ -140,7 +140,7 @@ export default function BuyNow() {
         <Field>
           <div className="flex gap-x-1 items-center">
             <Select
-              data={provicesData}
+              data={provincesData}
               control={control}
               onChange={handleChangeProvinces}
               name="provinceAddress"

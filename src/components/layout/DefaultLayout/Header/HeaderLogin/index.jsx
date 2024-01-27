@@ -1,24 +1,21 @@
-import React, { Fragment } from "react";
-import { TbLock } from "react-icons/tb";
-import styled from "styled-components";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import * as Yup from "yup";
-import { set, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import React, { Fragment } from "react";
+import { useForm } from "react-hook-form";
+import { TbLock } from "react-icons/tb";
+import { QueryClient, useMutation } from "react-query";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import * as Yup from "yup";
+import { EMAIL_REG_EXP } from "../../../../../common/constants";
+import { loginUser } from "../../../../../services/AuthApi";
+import {
+  setAccessTokenAndRefreshToken,
+  setRender,
+} from "../../../../../store/auth/authSlice";
 import Button from "../../../../Button";
 import Error from "../../../../Error";
 import { Input } from "../../../../Input";
-import {
-  ACCESS_TOKEN,
-  EMAIL_REG_EXP,
-  REGEX_PASSWORD,
-  USER,
-} from "../../../../../common/constants";
-import { useDispatch, useSelector } from "react-redux";
-import { useMutation, QueryClient } from "react-query";
-import { loginUser } from "../../../../../services/AuthApi";
-import { setAccessTokenAndRefreshToken } from "../../../../../store/auth/authSlice";
-import { toast } from "react-toastify";
 import LoadingSpinner from "../../../../Loading/LoadingSreen";
 const schemaValidate = Yup.object({
   emailOrPhone: Yup.string().required(
@@ -26,7 +23,7 @@ const schemaValidate = Yup.object({
   ),
   password: Yup.string().required("Vui lòng nhập mật khẩu!"),
 });
-export default function HeaderLogin({ setRender }) {
+export default function HeaderLogin() {
   const queryClient = new QueryClient();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -54,7 +51,8 @@ export default function HeaderLogin({ setRender }) {
       dispatch(setAccessTokenAndRefreshToken({ accessToken, refreshToken }));
       reset();
       toast.success("Đăng  nhập thành công!");
-      setRender((prevRender) => !prevRender);
+      dispatch(setRender());
+      // setRender((prevRender) => !prevRender);
     },
     onError: (error) => {
       console.log(error);

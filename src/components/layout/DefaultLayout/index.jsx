@@ -5,7 +5,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import { useEffect } from "react";
 import BackTop from "./BackTop/BackTop";
-import useClickOutSide from "../../../Hooks/useClickOutSide";
+import useClickOutSide from "../../../hooks/useClickOutSide";
 import { useQuery } from "@tanstack/react-query";
 import { setUserInfo } from "../../../store/auth/authSlice";
 import { getUserInfo } from "../../../services/AuthApi";

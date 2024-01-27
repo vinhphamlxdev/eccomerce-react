@@ -28,7 +28,7 @@ export const Header = React.memo(function Header({
   const dispatch = useDispatch();
   const carts = useSelector((state) => state.cart.cartItems);
   const userInfo = useSelector((state) => state.auth.userInfo);
-  const [render, setRender] = React.useState(false);
+  const render = useSelector((state) => state.auth.render);
   const token = localStorage.getItem(ACCESS_TOKEN);
   const refreshToken = localStorage.getItem(REFRESH_TOKEN);
   const query = useQuery({
@@ -144,11 +144,7 @@ export const Header = React.memo(function Header({
               </div>
             </div>
           </div>
-          {userInfo ? (
-            <HeaderUser userInfo={userInfo} />
-          ) : (
-            <HeaderLogin setRender={setRender} />
-          )}
+          {userInfo ? <HeaderUser userInfo={userInfo} /> : <HeaderLogin />}
         </div>
       </div>
       <div className="relative z-[200]">

@@ -1,10 +1,10 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { RxUpdate } from "react-icons/rx";
 import { useMutation } from "react-query";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useAddress from "../../../hooks/useAddress";
 import Button from "../../../components/Button";
 import Field from "../../../components/Field/Field";
@@ -13,6 +13,8 @@ import Select from "../../../components/Select";
 import { updateContactInfo } from "../../../services/AuthApi";
 import { PHONE_REG_EXP } from "../../../common/constants";
 import LoadingSpinner from "../../../components/Loading/LoadingSreen";
+import { toast } from "react-toastify";
+import { setRender } from "../../../store/auth/authSlice";
 //change info validate
 export const infoValidate = Yup.object({
   fullName: Yup.string().required("Vui lòng nhập họ tên!"),
@@ -24,6 +26,7 @@ export const infoValidate = Yup.object({
   districtAddress: Yup.string().required("Vui lòng chọn quận huyện!"),
 });
 export default function ChangeInfo({ setIsEdit }) {
+  const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.auth?.userInfo);
   const {
     control,
@@ -43,7 +46,7 @@ export default function ChangeInfo({ setIsEdit }) {
     districts,
     handleChangeDistricts,
     handleChangeProvinces,
-    provicesData,
+    provincesData,
     provinceValue,
     setProvinceValue,
     setDistrictValue,
@@ -52,15 +55,19 @@ export default function ChangeInfo({ setIsEdit }) {
   const mutation = useMutation({
     mutationFn: (updateData) => updateContactInfo(updateData),
     onSuccess: (data) => {
-      console.log(data);
+      setIsEdit((prev) => ({
+        ...prev,
+        isEditContactInfo: false,
+      }));
+      toast.success("Cập nhật thông tin thành công!");
+      reset();
+      dispatch(setRender());
     },
     onError: (err) => {
       console.log(err);
     },
   });
   const handleChangeInfo = (data) => {
-    console.log(data);
-
     const {
       fullName,
       email,
@@ -84,14 +91,11 @@ export default function ChangeInfo({ setIsEdit }) {
       const [key, value] = newArr[index];
       if (key === "address") {
         const [key, addressValues] = newArr[index];
-        const [address, districtAddress, proviceAddress] =
-          addressValues.split(",");
-        setFormValue("address", address);
-        setFormValue("provinceAddress", proviceAddress?.trim());
-        //
-        setProvinceValue(proviceAddress?.trim());
-
-        //
+        const arrAddress = addressValues.split(", ").reverse();
+        const [provinceAddress, districtAddress, ...address] = arrAddress;
+        setFormValue("address", address.reverse().join(", "));
+        setFormValue("provinceAddress", provinceAddress?.trim());
+        setProvinceValue(provinceAddress?.trim());
         setFormValue("districtAddress", districtAddress?.trim());
         setDistrictValue(districtAddress?.trim());
       } else {
@@ -99,20 +103,19 @@ export default function ChangeInfo({ setIsEdit }) {
       }
     }
   }, []);
-  console.log("render");
-  useEffect(() => {
-    const currProvince = provicesData.find(
-      (province) => province.name === provinceValue
-    );
-    if (currProvince) {
-      setDistricts(currProvince.districts);
-    }
-  }, [provinceValue]);
+
   const handleChange = (e, keyName) => {
     const value = e.target.value;
     setFormValue(keyName, value);
   };
-
+  useEffect(() => {
+    if (provincesData?.length > 0) {
+      const currProvince = provincesData.find(
+        (province) => province.name === provinceValue
+      );
+      currProvince && setDistricts(currProvince.districts);
+    }
+  }, [provinceValue, provincesData]);
   return (
     <div className="p-4 flex flex-col gap-y-1">
       {mutation.isLoading && <LoadingSpinner />}
@@ -176,7 +179,7 @@ export default function ChangeInfo({ setIsEdit }) {
           <div className="label">Tỉnh thành</div>
           <div className="relative w-full mt-1">
             <Select
-              data={provicesData}
+              data={provincesData}
               control={control}
               onChange={handleChangeProvinces}
               name="provinceAddress"

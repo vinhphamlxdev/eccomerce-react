@@ -10,8 +10,8 @@ import {
   PHONE_REG_EXP,
   REGEX_PASSWORD,
 } from "../../../common/constants";
-import useAddress from "../../../Hooks/useAddress";
-import useRecaptcha from "../../../Hooks/useRecapcha";
+import useAddress from "../../../hooks/useAddress";
+import useRecaptcha from "../../../hooks/useRecapcha";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginValidate } from "../../../common/validateSchema";

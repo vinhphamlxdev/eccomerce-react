@@ -94,7 +94,7 @@ export default function SignUpPage() {
     districts,
     handleChangeDistricts,
     handleChangeProvinces,
-    provicesData,
+    provincesData,
     provinceValue,
   } = useAddress(setFormValue, clearErrors);
   const handleAgreeTerms = (e) => {
@@ -219,7 +219,7 @@ export default function SignUpPage() {
                 </div>
                 <div className="flex items-center form-control__input relative gap-x-2">
                   <Select
-                    data={provicesData}
+                    data={provincesData}
                     control={control}
                     onChange={handleChangeProvinces}
                     name="provinceAddress"

@@ -29,8 +29,6 @@ export default function Profile() {
     isChangePassword: false,
     isEditContactInfo: false,
   });
-  const addressUser = userInfo?.address?.split(",");
-  // const [address, district, province] = addressUser;
 
   return (
     <StyledProfile className="profile-page">
@@ -128,7 +126,9 @@ export default function Profile() {
                   <span className="text-[#3B3B3B] text-sm w-[110px]">
                     Địa chỉ
                   </span>
-                  <span className="text-[#000] text-base">HCM</span>
+                  <span className="text-[#000] text-base">
+                    {userInfo?.address}
+                  </span>
                 </div>
                 <div className="flex justify-center">
                   <Button

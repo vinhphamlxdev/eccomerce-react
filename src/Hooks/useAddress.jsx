@@ -7,7 +7,7 @@ export default function useAddress(setFormValue, clearErrors) {
   const [districtValue, setDistrictValue] = React.useState("");
   const [districts, setDistricts] = React.useState([]);
 
-  const { data: provicesData } = useQuery({
+  const { data: provincesData } = useQuery({
     queryKey: ["provices"],
     onSuccess: () => {},
     queryFn: () => getAllAddress(),
@@ -25,7 +25,7 @@ export default function useAddress(setFormValue, clearErrors) {
     setProvinceValue(provinceName);
     if (provinceName) {
       clearErrors("cityAddress");
-      const currProvince = provicesData.find(
+      const currProvince = provincesData.find(
         (province) => province.name === provinceName
       );
       if (currProvince) {
@@ -52,7 +52,7 @@ export default function useAddress(setFormValue, clearErrors) {
     districts,
     setDistrictValue,
     setProvinceValue,
-    provicesData,
+    provincesData,
     setDistricts,
   };
 }

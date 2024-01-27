@@ -3,6 +3,7 @@ import { ACCESS_TOKEN, REFRESH_TOKEN, USER } from "../../common/constants";
 
 const initialState = {
   userInfo: JSON.parse(localStorage.getItem(USER)) || null,
+  render: false,
 };
 
 export const authSlice = createSlice({
@@ -21,10 +22,17 @@ export const authSlice = createSlice({
       localStorage.setItem(ACCESS_TOKEN, accessToken);
       localStorage.setItem(REFRESH_TOKEN, refreshToken);
     },
+    setRender: (state, action) => {
+      state.render = !state.render;
+    },
   },
 });
 
-export const { setUserInfo, setClearUser, setAccessTokenAndRefreshToken } =
-  authSlice.actions;
+export const {
+  setUserInfo,
+  setClearUser,
+  setAccessTokenAndRefreshToken,
+  setRender,
+} = authSlice.actions;
 
 export default authSlice.reducer;
