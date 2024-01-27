@@ -12,7 +12,6 @@ export default function Select({
   value = "",
   ...props
 }) {
-  console.log(value);
   return (
     <SelectStyles className="field-select">
       <select

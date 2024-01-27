@@ -143,7 +143,7 @@ export default function BuyNow() {
               data={provicesData}
               control={control}
               onChange={handleChangeProvinces}
-              name="cityAddress"
+              name="provinceAddress"
               register={register}
               label="Chọn tỉnh thành"
               value={provinceValue}
@@ -151,7 +151,7 @@ export default function BuyNow() {
             <span className="text-xs font-normal text-red-600">*</span>
           </div>
           <span className="text-xs font-normal text-red-600">
-            {errors?.cityAddress?.message}
+            {errors?.provinceAddress?.message}
           </span>
         </Field>
         <Field>

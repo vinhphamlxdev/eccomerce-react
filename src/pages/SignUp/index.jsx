@@ -6,8 +6,8 @@ import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { styled } from "styled-components";
-import useAddress from "../../Hooks/useAddress";
-import useRecaptcha from "../../Hooks/useRecapcha";
+import useAddress from "../../hooks/useAddress";
+import useRecaptcha from "../../hooks/useRecapcha";
 import { RE_CAPCHA_KEY } from "../../common/constants";
 import { registerValidate } from "../../common/validateSchema";
 import BreadCrumb from "../../components/BreadCrumb";
@@ -73,7 +73,7 @@ export default function SignUpPage() {
       fullName,
       email,
       districtAddress,
-      cityAddress,
+      provinceAddress,
       address,
       phoneNumber,
       password,
@@ -84,7 +84,7 @@ export default function SignUpPage() {
       password: password,
       phone: `+84${phone}`,
       name: fullName,
-      address: `${address}, ${districtAddress}, ${cityAddress}`,
+      address: `${address}, ${districtAddress}, ${provinceAddress}`,
     };
     console.log(formData);
     signUpMutation(formData);
@@ -222,12 +222,12 @@ export default function SignUpPage() {
                     data={provicesData}
                     control={control}
                     onChange={handleChangeProvinces}
-                    name="cityAddress"
+                    name="provinceAddress"
                     register={register}
                     label="Chọn tỉnh thành"
                     value={provinceValue}
                   />
-                  <Error error={errors?.cityAddress?.message} />
+                  <Error error={errors?.provinceAddress?.message} />
                 </div>
               </Field>
               <Field className="flex">

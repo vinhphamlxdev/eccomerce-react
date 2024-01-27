@@ -1,18 +1,18 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { RxUpdate } from "react-icons/rx";
 import { useMutation } from "react-query";
 import { useSelector } from "react-redux";
-import useAddress from "../../../Hooks/useAddress";
+import useAddress from "../../../hooks/useAddress";
 import Button from "../../../components/Button";
 import Field from "../../../components/Field/Field";
 import Input from "../../../components/Input/Input";
 import Select from "../../../components/Select";
 import { updateContactInfo } from "../../../services/AuthApi";
 import { PHONE_REG_EXP } from "../../../common/constants";
-import * as Yup from "yup";
-
+import LoadingSpinner from "../../../components/Loading/LoadingSreen";
 //change info validate
 export const infoValidate = Yup.object({
   fullName: Yup.string().required("Vui lòng nhập họ tên!"),
@@ -24,9 +24,7 @@ export const infoValidate = Yup.object({
   districtAddress: Yup.string().required("Vui lòng chọn quận huyện!"),
 });
 export default function ChangeInfo({ setIsEdit }) {
-  const userInfo = useSelector((state) => state.auth.userInfo);
-  const countRef = useRef(null);
-  console.log(userInfo);
+  const userInfo = useSelector((state) => state.auth?.userInfo);
   const {
     control,
     handleSubmit,
@@ -56,13 +54,29 @@ export default function ChangeInfo({ setIsEdit }) {
     onSuccess: (data) => {
       console.log(data);
     },
-    onError: (err) => {},
+    onError: (err) => {
+      console.log(err);
+    },
   });
   const handleChangeInfo = (data) => {
     console.log(data);
 
-    const { fullName } = data;
-    // mutation.mutate(data);
+    const {
+      fullName,
+      email,
+      phoneNumber,
+      address,
+      districtAddress,
+      provinceAddress,
+    } = data;
+
+    const updateData = {
+      email: email,
+      phone: `+84${phoneNumber}`,
+      name: fullName,
+      address: `${address}, ${districtAddress}, ${provinceAddress}`,
+    };
+    mutation.mutate(updateData);
   };
   useEffect(() => {
     const newArr = Object.entries(userInfo);
@@ -73,22 +87,35 @@ export default function ChangeInfo({ setIsEdit }) {
         const [address, districtAddress, proviceAddress] =
           addressValues.split(",");
         setFormValue("address", address);
+        setFormValue("provinceAddress", proviceAddress?.trim());
+        //
         setProvinceValue(proviceAddress?.trim());
+
+        //
+        setFormValue("districtAddress", districtAddress?.trim());
         setDistrictValue(districtAddress?.trim());
-        console.log(districtAddress);
       } else {
         setFormValue(key, value);
       }
     }
   }, []);
+  console.log("render");
+  useEffect(() => {
+    const currProvince = provicesData.find(
+      (province) => province.name === provinceValue
+    );
+    if (currProvince) {
+      setDistricts(currProvince.districts);
+    }
+  }, [provinceValue]);
   const handleChange = (e, keyName) => {
     const value = e.target.value;
     setFormValue(keyName, value);
   };
 
-  console.log("render");
   return (
     <div className="p-4 flex flex-col gap-y-1">
+      {mutation.isLoading && <LoadingSpinner />}
       <form
         onSubmit={handleSubmit(handleChangeInfo)}
         className="edit-infomation"
@@ -142,6 +169,9 @@ export default function ChangeInfo({ setIsEdit }) {
             {errors?.address?.message}
           </span>
         </Field>
+        {/*  */}
+
+        {/*  */}
         <Field style={{ marginBottom: "8px" }}>
           <div className="label">Tỉnh thành</div>
           <div className="relative w-full mt-1">

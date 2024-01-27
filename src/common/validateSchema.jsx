@@ -24,7 +24,7 @@ export const registerValidate = Yup.object({
     .required("Vui lòng xác nhận mật khẩu!")
     .oneOf([Yup.ref("password")], "Mật khẩu xác nhận không đúng!"),
   address: Yup.string().required("Vui lòng nhập địa chỉ!"),
-  cityAddress: Yup.string().required("Vui lòng chọn tỉnh thành!"),
+  provinceAddress: Yup.string().required("Vui lòng chọn tỉnh thành!"),
   districtAddress: Yup.string().required("Vui lòng chọn quận huyện!"),
   agreeTerms: Yup.boolean().oneOf([true], "Vui lòng đồng ý để tiếp tục!"),
 });
@@ -49,7 +49,7 @@ export const buynowValidate = Yup.object({
     .matches(EMAIL_REG_EXP, "Email không đúng định dạng!")
     .required("Vui lòng nhập email!"),
   address: Yup.string().required("Vui lòng nhập địa chỉ!"),
-  cityAddress: Yup.string().required("Vui lòng chọn tỉnh thành!"),
+  provinceAddress: Yup.string().required("Vui lòng chọn tỉnh thành!"),
   districtAddress: Yup.string().required("Vui lòng chọn quận huyện!"),
   agreeTerms: Yup.boolean().oneOf([true], "Vui lòng đồng ý để tiếp tục!"),
 });

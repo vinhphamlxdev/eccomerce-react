@@ -18,7 +18,6 @@ export default function useAddress(setFormValue, clearErrors) {
 
   const handleChangeProvinces = (e) => {
     const provinceName = e.target.value;
-    setFormValue("districtAddress", "");
     if (!provinceName) {
       setProvinceValue("");
       setDistricts([]);
@@ -34,6 +33,7 @@ export default function useAddress(setFormValue, clearErrors) {
       }
     }
     setDistrictValue("");
+    setFormValue("districtAddress", "");
   };
   const handleChangeDistricts = (e) => {
     const districtName = e.target.value;
@@ -42,6 +42,8 @@ export default function useAddress(setFormValue, clearErrors) {
       setDistrictValue(districtName);
     }
   };
+  //
+
   return {
     handleChangeProvinces,
     handleChangeDistricts,

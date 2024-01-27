@@ -17,7 +17,8 @@ import CategoryMenu from "./CategoryMenu";
 import HeaderLogin from "./HeaderLogin";
 import HeaderUser from "./HeaderUser";
 import LogoutButton from "./LogoutButton";
-export default function Header({
+
+export const Header = React.memo(function Header({
   showCategoryMenu = false,
   setShowCategoryMenu,
   categoryRef,
@@ -48,8 +49,6 @@ export default function Header({
       navigate("/signin");
     }
   }, [refreshToken]);
-  console.log("render");
-
   return (
     <StyledHeader className="header w-full flex flex-col">
       {query.isLoading && <LoadingSpinner />}
@@ -206,7 +205,10 @@ export default function Header({
       </div>
     </StyledHeader>
   );
-}
+});
+
+export default Header;
+
 const StyledHeader = styled.div`
   .header-search {
     background-color: #6a1300;
