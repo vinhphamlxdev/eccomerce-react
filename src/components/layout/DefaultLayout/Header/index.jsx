@@ -8,7 +8,6 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../../../../assets/logo.jpg";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../../../common/constants";
-import { getUserInfo } from "../../../../services/AuthApi";
 import { setClearUser, setUserInfo } from "../../../../store/auth/authSlice";
 import { isRefreshTokenExpired } from "../../../../utils/isRefreshTokenExpired";
 import { categoryData } from "../../../Data";
@@ -17,6 +16,7 @@ import CategoryMenu from "./CategoryMenu";
 import HeaderLogin from "./HeaderLogin";
 import HeaderUser from "./HeaderUser";
 import LogoutButton from "./LogoutButton";
+import { getUserInfo } from "../../../../services/UserApi";
 
 export const Header = React.memo(function Header({
   showCategoryMenu = false,

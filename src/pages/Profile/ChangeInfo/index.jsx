@@ -10,7 +10,7 @@ import Button from "../../../components/Button";
 import Field from "../../../components/Field/Field";
 import Input from "../../../components/Input/Input";
 import Select from "../../../components/Select";
-import { updateContactInfo } from "../../../services/AuthApi";
+import { updateContactInfo } from "../../../services/UserApi";
 import { PHONE_REG_EXP } from "../../../common/constants";
 import LoadingSpinner from "../../../components/Loading/LoadingSreen";
 import { toast } from "react-toastify";
@@ -40,6 +40,12 @@ export default function ChangeInfo({ setIsEdit }) {
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(infoValidate),
+    defaultValues: {
+      getAddress: function () {},
+      fullName: userInfo?.fullName,
+      phoneNumber: userInfo?.phoneNumber.slice(3),
+      address: userInfo?.address,
+    },
   });
   const {
     districtValue,
@@ -85,24 +91,30 @@ export default function ChangeInfo({ setIsEdit }) {
     };
     mutation.mutate(updateData);
   };
-  useEffect(() => {
-    const newArr = Object.entries(userInfo);
-    for (let index = 0; index < newArr.length; index++) {
-      const [key, value] = newArr[index];
-      if (key === "address") {
-        const [key, addressValues] = newArr[index];
-        const arrAddress = addressValues.split(", ").reverse();
-        const [provinceAddress, districtAddress, ...address] = arrAddress;
-        setFormValue("address", address.reverse().join(", "));
-        setFormValue("provinceAddress", provinceAddress?.trim());
-        setProvinceValue(provinceAddress?.trim());
-        setFormValue("districtAddress", districtAddress?.trim());
-        setDistrictValue(districtAddress?.trim());
-      } else {
-        setFormValue(key, value);
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   const newArr = Object.entries(userInfo);
+  //   for (let index = 0; index < newArr.length; index++) {
+  //     const [key, value] = newArr[index];
+  //     console.log(newArr);
+  //     if (key === "address") {
+  //       const [key, addressValues] = newArr[index];
+  //       const arrAddress = addressValues.split(", ").reverse();
+  //       const [provinceAddress, districtAddress, ...address] = arrAddress;
+  //       setFormValue("address", address.reverse().join(", "));
+  //       setFormValue("provinceAddress", provinceAddress?.trim());
+  //       setProvinceValue(provinceAddress?.trim());
+  //       setFormValue("districtAddress", districtAddress?.trim());
+  //       setDistrictValue(districtAddress?.trim());
+  //     } else if (key === "phoneNumber") {
+  //       const [key, value] = newArr[index];
+  //       const phone = value.slice(3);
+  //       console.log(phone);
+  //       setFormValue("phoneNumber", phone);
+  //     } else {
+  //       setFormValue(key, value);
+  //     }
+  //   }
+  // }, []);
 
   const handleChange = (e, keyName) => {
     const value = e.target.value;

@@ -1,28 +1,14 @@
 import React from "react";
-import BreadCrumb from "../../components/BreadCrumb";
-import HeadingSection from "../../components/HeadingSession";
-import styled from "styled-components";
-import CheckoutType from "../../components/CheckoutType";
-import Select from "../../components/Select";
-import { Field } from "../../components/Field";
-import { Input } from "../../components/Input";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { getAllAddress } from "../../services/AddressApi";
-import { useQuery } from "@tanstack/react-query";
-import useAddress from "../../hooks/useAddress";
-import Button from "../../components/Button";
-import useRecaptcha from "../../hooks/useRecapcha";
-import CheckBox from "../../components/Checkbox";
-import ReCAPTCHA from "react-google-recaptcha";
-import { NavLink } from "react-router-dom";
-import { LuLogIn } from "react-icons/lu";
-import Register from "./Register";
-import Login from "./Login";
-import BuyNow from "./BuyNow";
 import { useSelector } from "react-redux";
+import styled from "styled-components";
+import BreadCrumb from "../../components/BreadCrumb";
+import Button from "../../components/Button";
+import CheckoutType from "../../components/CheckoutType";
+import HeadingSection from "../../components/HeadingSession";
 import OrderItem from "../../components/OrderItem";
+import BuyNow from "./BuyNow";
+import Login from "./Login";
+import Register from "./Register";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Điền Thông Tin", url: "/checkout" },

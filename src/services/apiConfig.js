@@ -1,10 +1,9 @@
 import axios from "axios";
-import { logoutUser, refreshAccessToken } from "./AuthApi";
 import { ACCESS_TOKEN, REFRESH_TOKEN, USER } from "../common/constants";
 import { isTokenExpired } from "../utils/isTokenExpired";
 import { isRefreshTokenExpired } from "../utils/isRefreshTokenExpired";
 import { USER_ACCESS_TOKEN_HEADER } from "../common/constants";
-import { toast } from "react-toastify";
+import { refreshAccessToken } from "./AuthApi";
 const BASE_API = `http://localhost:8080/api/v1`;
 const objKeys = {
   ACCESS_TOKEN,

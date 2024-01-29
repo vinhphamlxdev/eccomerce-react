@@ -17,8 +17,9 @@ import { Field } from "../../components/Field";
 import HeadingSession from "../../components/HeadingSession";
 import { Input } from "../../components/Input";
 import Select from "../../components/Select";
-import { registerUser } from "../../services/AuthApi";
 import { useSelector } from "react-redux";
+import { registerUser } from "../../services/AuthApi";
+import LoadingSreen from "../../components/Loading/LoadingSreen";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Đăng ký", url: "/signup" },
@@ -116,6 +117,7 @@ export default function SignUpPage() {
   }, []);
   return (
     <StyledSignUp className="signup-page">
+      {isSubmitting && <LoadingSreen />}
       <BreadCrumb paths={breadcrumbPaths} />
 
       <div className="signup-container border-session">

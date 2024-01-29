@@ -5,7 +5,7 @@ import {
   USER,
 } from "../../../../../common/constants";
 import { useMutation, useQueryClient } from "react-query";
-import { logoutUser } from "../../../../../services/AuthApi";
+import { logoutUser } from "../../../../../services/UserApi";
 import { useDispatch } from "react-redux";
 import { setClearUser, setUserInfo } from "../../../../../store/auth/authSlice";
 import { IoIosLogOut } from "react-icons/io";

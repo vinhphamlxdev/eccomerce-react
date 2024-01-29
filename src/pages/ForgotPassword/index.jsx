@@ -12,6 +12,11 @@ import ReCAPTCHA from "react-google-recaptcha";
 import useRecaptcha from "../../hooks/useRecapcha";
 import Button from "../../components/Button";
 import Error from "../../components/Error";
+import { useMutation } from "react-query";
+import { resetPassword } from "../../services/AuthApi";
+import { toast } from "react-toastify";
+import LoadingSreen from "../../components/Loading/LoadingSreen";
+import { useNavigate } from "react-router-dom";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Quên mật khẩu", url: "/forgot-password" },
@@ -22,6 +27,7 @@ const schemaValidate = Yup.object({
     .matches(EMAIL_REG_EXP, "Email không đúng định dạng!"),
 });
 export default function ForgotPassword() {
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
@@ -33,14 +39,25 @@ export default function ForgotPassword() {
     mode: "onChange",
     resolver: yupResolver(schemaValidate),
   });
-  const handleGetPassword = async (data) => {
+  const mutation = useMutation({
+    mutationFn: (email) => resetPassword(email),
+    onSuccess: (data) => {
+      console.log(data);
+      toast.success("Đã gửi yêu cầu cấp lại mật khẩu vào email của bạn!");
+      navigate("/reset-password");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+  const handleGetPassword = (email) => {
     if (recaptchaExpired) {
       // Xử lý khi reCAPTCHA hết hạn
       console.log("reCAPTCHA expired. Please refresh and try again.");
       return;
     }
-
-    console.log(data);
+    console.log(email);
+    mutation.mutate(email);
   };
   const {
     reCapchaValue,
@@ -50,6 +67,7 @@ export default function ForgotPassword() {
   } = useRecaptcha();
   return (
     <StyledForgotPassword className="forgot-password">
+      {mutation.isLoading && <LoadingSreen />}
       <BreadCrumb paths={breadcrumbPaths} />
       <div className="border-session forgot-passwork-layout">
         <HeadingSession title="Cấp lại mật khẩu" icon="bi-key" />

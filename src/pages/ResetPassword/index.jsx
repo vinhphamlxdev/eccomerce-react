@@ -2,83 +2,72 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useForm } from "react-hook-form";
-import { IoLogInOutline } from "react-icons/io5";
 import { useMutation } from "react-query";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import * as Yup from "yup";
-import useDisabled from "../../hooks/useDisabled";
-import useRecaptcha from "../../hooks/useRecapcha";
-import {
-  EMAIL_REG_EXP,
-  REGEX_PASSWORD,
-  RE_CAPCHA_KEY,
-} from "../../common/constants";
+import { REGEX_PASSWORD, RE_CAPCHA_KEY } from "../../common/constants";
 import BreadCrumb from "../../components/BreadCrumb";
 import Button from "../../components/Button";
 import Error from "../../components/Error";
 import HeadingSession from "../../components/HeadingSession";
 import { Input } from "../../components/Input";
-import { loginUser } from "../../services/AuthApi";
-import { setAccessTokenAndRefreshToken } from "../../store/auth/authSlice";
+import LoadingSreen from "../../components/Loading/LoadingSreen";
+import useRecaptcha from "../../hooks/useRecapcha";
+import { changePassword } from "../../services/UserApi";
+import { confirmResetPassword } from "../../services/AuthApi";
+import { useNavigate } from "react-router-dom";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
-  { label: "Tài khoản", url: "/signin" },
+  { label: "Quên mật khẩu", url: "/forgot-password" },
 ];
 const schemaValidate = Yup.object({
-  emailOrPhone: Yup.string().required(
-    "Vui lòng nhập email hoặc số điện thoại!"
-  ),
-  signinPassword: Yup.string().required("Vui lòng nhập mật khẩu!"),
+  newPassword: Yup.string()
+    .required("Vui lòng nhập mật khẩu mới!")
+    .matches(
+      REGEX_PASSWORD,
+      "Mật khẩu phải có ít nhất 8 ký tự, ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt!"
+    ),
+  passwordConfirm: Yup.string()
+    .required("Vui lòng xác nhận mật khẩu mới!")
+    .oneOf([Yup.ref("newPassword")], "Mật khẩu xác nhận không đúng!"),
+  token: Yup.string().required("Vui lòng nhập mã xác nhận!"),
 });
-export default function SignInPage() {
-  const dispatch = useDispatch();
+export default function ResetPassword() {
   const navigate = useNavigate();
-  const userInfo = useSelector((state) => state.auth.userInfo);
   const {
     control,
     handleSubmit,
     register,
     setValue: setFormValue,
     clearErrors,
-    reset,
     formState: { errors, isValid, isSubmitting },
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(schemaValidate),
   });
-  const { mutate: signinMutation, isPending } = useMutation({
-    mutationFn: (user) => loginUser(user),
+  const mutation = useMutation({
+    mutationFn: (requestData) => confirmResetPassword(requestData),
     onSuccess: (data) => {
-      console.log("success:", data);
-      const { accessToken, refreshToken } = data;
-      dispatch(setAccessTokenAndRefreshToken({ accessToken, refreshToken }));
-      reset();
-      toast.success("Đăng nhập thành công!");
-      navigate("/");
+      console.log(data);
+      toast.success("Cấp lại mật khẩu thành công, đăng nhập lại để tiếp tục!");
+      navigate("/signin");
     },
     onError: (error) => {
       console.log(error);
-      toast.error("Đăng nhập thất bại!");
     },
   });
-  const handleSignIn = (data) => {
+  const handleGetPassword = (data) => {
     if (recaptchaExpired) {
-      console.log("reCAPTCHA expired. Please refresh and try again.");
       return;
     }
-    const { emailOrPhone, signinPassword } = data;
-    const key = EMAIL_REG_EXP.test(emailOrPhone) ? "email" : "phone";
-
-    const formData = {
-      [key]: emailOrPhone,
-      password: signinPassword,
-      mfaCode: "",
+    const { newPassword, token } = data;
+    const requestData = {
+      newPassword,
+      token,
     };
-
-    signinMutation(formData);
+    console.log(requestData);
+    mutation.mutate(requestData);
   };
   const {
     reCapchaValue,
@@ -86,33 +75,12 @@ export default function SignInPage() {
     handleRecapchaChange,
     handleExpiredRecapcha,
   } = useRecaptcha();
-  const handleInputChange = (e, keyName) => {
-    const value = e.target.value;
-    setFormValue(keyName, value);
-  };
-  const { disabledStyle, isDisabled } = useDisabled(isSubmitting);
-  React.useEffect(() => {
-    if (userInfo) {
-      navigate("/");
-    }
-  }, []);
   return (
     <StyledForgotPassword className="forgot-password">
+      {mutation.isLoading && <LoadingSreen />}
       <BreadCrumb paths={breadcrumbPaths} />
       <div className="border-session forgot-passwork-layout">
-        <HeadingSession
-          title="Đăng nhập"
-          icon="bi-person"
-          leftContent={
-            <Link
-              to={"/signup"}
-              className="text-[#002F3F] text-xs px-2 rounded-sm transition-all hover:opacity-80 bg-[#DBDBDB] flex gap-x-1 items-center py-1"
-            >
-              <i className="bi  bi-person-fill-add text-[#8D1802] text-base" />
-              <span>Đăng ký thành viên</span>
-            </Link>
-          }
-        />
+        <HeadingSession title="Cấp lại mật khẩu" icon="bi-key" />
         <div className="p-3">
           <div className="flex text-sm mb-5 justify-end gap-x-2">
             <span className="text-errBg">*</span>
@@ -121,51 +89,57 @@ export default function SignInPage() {
             </span>
           </div>
           <form
-            onSubmit={handleSubmit(handleSignIn)}
+            onSubmit={handleSubmit(handleGetPassword)}
             className="flex flex-col gap-y-3 justify-center"
           >
             <div className="flex gap-x-3 form-field items-center">
-              <div className="w-[450px] label mb-7 form-label text-[#3B3B3B] flex justify-end">
-                Tài khoản
+              <div className="w-[450px] mb-7 form-label text-base text-[#3B3B3B] flex justify-end">
+                Mật khâu mới
               </div>
               <div className="relative flex flex-col gap-y-2 form-field__input">
-                <Input
-                  name="emailOrPhone"
-                  placeholder="Email hoặc số điện thoại"
-                  control={control}
-                  onChange={(e) => handleInputChange(e, "emailOrPhone")}
-                />
+                <Input name="newPassword" control={control} type="password" />
                 <Error
-                  error={errors?.emailOrPhone?.message}
-                  isRequired={false}
+                  error={errors?.newPassword?.message}
+                  className="error-msg"
                 />
                 <span className="absolute text-errBg text-sm right-[-10px] top-0">
                   *
                 </span>
               </div>
             </div>
-
             <div className="flex gap-x-3 form-field items-center">
-              <div className="w-[450px] label mb-7 form-label text-[#3B3B3B] flex justify-end">
-                Mật khẩu
+              <div className="w-[450px] mb-7 form-label text-base text-[#3B3B3B] flex justify-end">
+                Xác nhận mật khẩu mới
               </div>
               <div className="relative flex flex-col gap-y-2 form-field__input">
                 <Input
-                  name="signinPassword"
+                  name="passwordConfirm"
                   control={control}
-                  onChange={(e) => handleInputChange(e, "signinPassword")}
+                  type="password"
                 />
                 <Error
-                  error={errors?.signinPassword?.message}
-                  isRequired={false}
+                  error={errors?.passwordConfirm?.message}
+                  className="error-msg"
                 />
+                <span className="absolute text-errBg text-sm right-[-10px] top-0">
+                  *
+                </span>
+              </div>
+            </div>
+            <div className="flex gap-x-3 form-field items-center">
+              <div className="w-[450px] mb-7 form-label text-base text-[#3B3B3B] flex justify-end">
+                Mã xác nhận
+              </div>
+              <div className="relative flex flex-col gap-y-2 form-field__input">
+                <Input name="token" control={control} />
+                <Error error={errors?.token?.message} className="error-msg" />
                 <span className="absolute text-errBg text-sm right-[-10px] top-0">
                   *
                 </span>
               </div>
             </div>
             <div className="flex gap-x-3 items-center">
-              <div className="w-[450px] label form-label form-label__capcha  text-[#3B3B3B] flex justify-end"></div>
+              <div className="w-[450px] form-label form-label__capcha  text-base text-[#3B3B3B] flex justify-end"></div>
               <ReCAPTCHA
                 sitekey={RE_CAPCHA_KEY}
                 onChange={handleRecapchaChange}
@@ -173,15 +147,13 @@ export default function SignInPage() {
               />
             </div>
             <div className="flex gap-x-3 items-center">
-              <div className="w-[450px] label form-label form-label__capcha text-[#3B3B3B] flex justify-end"></div>
+              <div className="w-[450px] form-label form-label__capcha text-base text-[#3B3B3B] flex justify-end"></div>
               <Button
-                style={disabledStyle}
-                isDisabled={isDisabled}
                 type="submit"
                 className="bg-bgbtn"
-                title="Đăng nhập"
+                title="Xác nhận mật khẩu"
               >
-                <IoLogInOutline className="text-secondary text-base " />
+                <i className="bi text-secondary text-base bi-cursor-fill"></i>
               </Button>
             </div>
           </form>
@@ -253,5 +225,8 @@ const StyledForgotPassword = styled.div`
     .form-label__capcha {
       display: none;
     }
+  }
+  .error-msg .error-required {
+    display: none;
   }
 `;

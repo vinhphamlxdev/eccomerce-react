@@ -5,10 +5,10 @@ import Footer from "./Footer";
 import Header from "./Header";
 import { useEffect } from "react";
 import BackTop from "./BackTop/BackTop";
-import useClickOutSide from "../../../hooks/useClickOutSide";
 import { useQuery } from "@tanstack/react-query";
 import { setUserInfo } from "../../../store/auth/authSlice";
-import { getUserInfo } from "../../../services/AuthApi";
+import { getUserInfo } from "../../../services/UserApi";
+import useClickOutSide from "../../../hooks/useClickOutSide";
 const DefaultLayout = ({ children }) => {
   const dispatch = useDispatch();
   const { menuRef, popupRef, setShow, show } = useClickOutSide();

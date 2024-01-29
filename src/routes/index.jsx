@@ -6,6 +6,7 @@ import ProductDeatail from "../pages/ProductDetail";
 import SignUpPage from "../pages/SignUp";
 import SignInPage from "../pages/SignIn";
 import Profile from "../pages/Profile";
+import ResetPassword from "../pages/ResetPassword";
 export const publicRoutes = [
   {
     path: "/",
@@ -39,5 +40,9 @@ export const publicRoutes = [
   {
     path: "/profile",
     component: Profile,
+  },
+  {
+    path: "/reset-password",
+    component: ResetPassword,
   },
 ];

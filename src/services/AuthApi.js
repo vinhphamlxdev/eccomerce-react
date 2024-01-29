@@ -1,9 +1,4 @@
-import {
-  ACCESS_TOKEN,
-  REFRESH_TOKEN,
-  USER_ACCESS_TOKEN_HEADER,
-  USER_REFRESH_TOKEN_HEADER,
-} from "../common/constants";
+import { USER_REFRESH_TOKEN_HEADER } from "../common/constants";
 import axiosConfig from "./apiConfig";
 
 //REGISTER USER
@@ -16,20 +11,7 @@ export const loginUser = async (user) => {
   const response = await axiosConfig.post("/login", user);
   return response.data;
 };
-export const getUserInfo = async () => {
-  const response = await axiosConfig.get("/users/user-info");
-  return response;
-};
-//LOGOUT USER
-export const logoutUser = async (accessToken) => {
-  const config = {
-    headers: {
-      [USER_ACCESS_TOKEN_HEADER]: accessToken,
-    },
-  };
-  const response = await axiosConfig.delete("/users/logout", config);
-  return response;
-};
+
 //REFRESH TOKEN
 export const refreshAccessToken = async (refreshToken = "") => {
   try {
@@ -52,13 +34,15 @@ export const refreshAccessToken = async (refreshToken = "") => {
     throw error;
   }
 };
-//CHANGE PASSWORD
-export const changePassword = async (data) => {
-  const response = await axiosConfig.patch("/users/change-password", data);
+
+//RESET PASSWORD
+export const resetPassword = async (email) => {
+  const response = await axiosConfig.post("/reset-password", email);
   return response;
 };
-//UPDATE CONTACT INFO
-export const updateContactInfo = async (updateData) => {
-  const response = await axiosConfig.put("/users/contact-info", updateData);
+
+//CONFIRM RESET PASSWORD
+export const confirmResetPassword = async (data) => {
+  const response = await axiosConfig.post("/reset-password/confirm", data);
   return response;
 };

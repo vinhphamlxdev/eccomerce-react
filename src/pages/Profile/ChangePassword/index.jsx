@@ -8,7 +8,7 @@ import { Input } from "../../../components/Input";
 import { RxUpdate } from "react-icons/rx";
 import { IoClose } from "react-icons/io5";
 import { useMutation } from "react-query";
-import { changePassword } from "../../../services/AuthApi";
+import { changePassword } from "../../../services/UserApi";
 import LoadingSpinner from "../../../components/Loading/LoadingSreen";
 import { toast } from "react-toastify";
 import clearAllLocal from "../../../utils/clearAllLocal";
