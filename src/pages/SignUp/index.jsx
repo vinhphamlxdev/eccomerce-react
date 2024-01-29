@@ -185,6 +185,7 @@ export default function SignUpPage() {
                     onChange={(e) => handleInputChange(e, "password")}
                     name="password"
                     control={control}
+                    type="password"
                   />
                   <Error error={errors?.password?.message} />
                 </div>
@@ -198,6 +199,7 @@ export default function SignUpPage() {
                     onChange={(e) => handleInputChange(e, "passwordConfirm")}
                     name="passwordConfirm"
                     control={control}
+                    type="password"
                   />
                   <Error error={errors?.passwordConfirm?.message} />
                 </div>

@@ -152,6 +152,7 @@ export default function SignInPage() {
               <div className="relative flex flex-col gap-y-2 form-field__input">
                 <Input
                   name="signinPassword"
+                  type="password"
                   control={control}
                   onChange={(e) => handleInputChange(e, "signinPassword")}
                 />

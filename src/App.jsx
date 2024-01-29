@@ -1,12 +1,10 @@
-import { Fragment, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
-import { publicRoutes } from "./routes";
+import { Fragment } from "react";
 import { Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "./App.css";
 import { DefaultLayout } from "./components/layout";
 import { GlobalStyles } from "./styles/GlobalStyles";
-import { ToastContainer } from "react-toastify";
+import { publicRoutes } from "./routes";
 function App() {
   return (
     <Fragment>

@@ -60,8 +60,6 @@ axiosInstance.interceptors.response.use(
         const newToken = await refreshAccessToken(refreshToken);
         if (newToken) {
           localStorage.setItem(ACCESS_TOKEN, newToken);
-          axiosInstance.defaults.headers.common[USER_ACCESS_TOKEN_HEADER] =
-            newToken;
           return axiosInstance(originalRequest);
         }
       }

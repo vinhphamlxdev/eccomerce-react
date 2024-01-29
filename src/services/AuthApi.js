@@ -1,3 +1,4 @@
+import axios from "axios";
 import { USER_REFRESH_TOKEN_HEADER } from "../common/constants";
 import axiosConfig from "./apiConfig";
 

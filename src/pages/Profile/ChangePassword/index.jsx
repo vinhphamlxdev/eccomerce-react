@@ -41,7 +41,7 @@ export default function ChangePassword({ setIsEdit }) {
       navigate("/signin");
     },
     onError: (error) => {
-      toast.error("Mật khẩu cũ không đúng!");
+      toast.error(error?.response?.data?.detail);
     },
   });
   const handleChangePassword = (data) => {
@@ -62,7 +62,7 @@ export default function ChangePassword({ setIsEdit }) {
         <Field style={{ marginBottom: "8px" }}>
           <div className="label">Mật khẩu cũ</div>
           <div className="relative w-full mt-1">
-            <Input name="oldPassword" control={control} />
+            <Input name="oldPassword" control={control} type="password" />
             <span className="absolute text-errBg text-sm right-[-10px] top-0">
               *
             </span>
