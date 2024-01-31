@@ -74,7 +74,7 @@ export default function ChangePassword({ setIsEdit }) {
         <Field style={{ marginBottom: "8px" }}>
           <div className="label">Mật khẩu mới</div>
           <div className="relative w-full mt-1">
-            <Input name="newPassword" control={control} />
+            <Input name="newPassword" control={control} type="password" />
             <span className="absolute text-errBg text-sm right-[-10px] top-0">
               *
             </span>
@@ -86,7 +86,11 @@ export default function ChangePassword({ setIsEdit }) {
         <Field style={{ marginBottom: "8px" }}>
           <div className="label">Xác nhận mật khẩu mới</div>
           <div className="relative w-full mt-1">
-            <Input name="newPasswordConfirm" control={control} />
+            <Input
+              name="newPasswordConfirm"
+              control={control}
+              type="password"
+            />
             <span className="absolute text-errBg text-sm right-[-10px] top-0">
               *
             </span>

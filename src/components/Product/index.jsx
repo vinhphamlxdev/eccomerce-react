@@ -27,7 +27,7 @@ export default function Product() {
             <img className="rounded-sm" src={productlogo} alt="" />
           </div>
         </div>
-        <div className="px-3 pt-3 product-container">
+        <div className="px-3 pt-3 product-container mb-3">
           <ProductList />
           <div className="viewmore-button mt-3 hidden justify-end items-center p-3">
             <Button title="Xem thêm" className="viewmore-btn ">

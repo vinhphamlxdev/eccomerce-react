@@ -15,6 +15,7 @@ import { PHONE_REG_EXP } from "../../../common/constants";
 import LoadingSpinner from "../../../components/Loading/LoadingSreen";
 import { toast } from "react-toastify";
 import { setRender } from "../../../store/auth/authSlice";
+import { getAllDistrict } from "../../../services/AddressApi";
 //change info validate
 export const infoValidate = Yup.object({
   fullName: Yup.string().required("Vui lòng nhập họ tên!"),
@@ -28,6 +29,10 @@ export const infoValidate = Yup.object({
 export default function ChangeInfo({ setIsEdit }) {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.auth?.userInfo);
+  const addressValues = userInfo?.address;
+  const arrAddress = addressValues.split(", ").reverse();
+  const [provinceAddress, districtAddress, ...address] = arrAddress;
+
   const {
     control,
     handleSubmit,
@@ -41,22 +46,25 @@ export default function ChangeInfo({ setIsEdit }) {
     mode: "onChange",
     resolver: yupResolver(infoValidate),
     defaultValues: {
-      getAddress: function () {},
       fullName: userInfo?.fullName,
-      phoneNumber: userInfo?.phoneNumber.slice(3),
-      address: userInfo?.address,
+      phoneNumber: userInfo?.phoneNumber.replace("+84", ""),
+      address: address.reverse().join(", "),
+      provinceAddress: provinceAddress?.trim(),
+      districtAddress: districtAddress?.trim(),
     },
   });
   const {
-    districtValue,
-    districts,
+    isFetchingAddress,
     handleChangeDistricts,
     handleChangeProvinces,
-    provincesData,
+    districtValue,
+    districts,
     provinceValue,
+    provincesData,
     setProvinceValue,
     setDistrictValue,
     setDistricts,
+    setIsFetchingAddress,
   } = useAddress(setFormValue, clearErrors);
   const mutation = useMutation({
     mutationFn: (updateData) => updateContactInfo(updateData),
@@ -73,6 +81,7 @@ export default function ChangeInfo({ setIsEdit }) {
       console.log(err);
     },
   });
+
   const handleChangeInfo = (data) => {
     const {
       fullName,
@@ -89,48 +98,31 @@ export default function ChangeInfo({ setIsEdit }) {
       name: fullName,
       address: `${address}, ${districtAddress}, ${provinceAddress}`,
     };
+
     mutation.mutate(updateData);
   };
-  // useEffect(() => {
-  //   const newArr = Object.entries(userInfo);
-  //   for (let index = 0; index < newArr.length; index++) {
-  //     const [key, value] = newArr[index];
-  //     console.log(newArr);
-  //     if (key === "address") {
-  //       const [key, addressValues] = newArr[index];
-  //       const arrAddress = addressValues.split(", ").reverse();
-  //       const [provinceAddress, districtAddress, ...address] = arrAddress;
-  //       setFormValue("address", address.reverse().join(", "));
-  //       setFormValue("provinceAddress", provinceAddress?.trim());
-  //       setProvinceValue(provinceAddress?.trim());
-  //       setFormValue("districtAddress", districtAddress?.trim());
-  //       setDistrictValue(districtAddress?.trim());
-  //     } else if (key === "phoneNumber") {
-  //       const [key, value] = newArr[index];
-  //       const phone = value.slice(3);
-  //       console.log(phone);
-  //       setFormValue("phoneNumber", phone);
-  //     } else {
-  //       setFormValue(key, value);
-  //     }
-  //   }
-  // }, []);
 
+  useEffect(() => {
+    const provinceId = provincesData.find(
+      (item) => item.province_name === provinceAddress.trim()
+    )?.province_id;
+    if (!provinceId) return;
+    const getDistricts = async () => {
+      const response = await getAllDistrict(provinceId);
+      console.log(response?.results);
+      setDistricts(response?.results);
+    };
+    getDistricts();
+  }, [provincesData]);
   const handleChange = (e, keyName) => {
     const value = e.target.value;
     setFormValue(keyName, value);
   };
-  useEffect(() => {
-    if (provincesData?.length > 0) {
-      const currProvince = provincesData.find(
-        (province) => province.name === provinceValue
-      );
-      currProvince && setDistricts(currProvince.districts);
-    }
-  }, [provinceValue, provincesData]);
+
   return (
     <div className="p-4 flex flex-col gap-y-1">
       {mutation.isLoading && <LoadingSpinner />}
+      {isFetchingAddress && <LoadingSpinner />}
       <form
         onSubmit={handleSubmit(handleChangeInfo)}
         className="edit-infomation"
@@ -197,7 +189,9 @@ export default function ChangeInfo({ setIsEdit }) {
               name="provinceAddress"
               register={register}
               label="Chọn tỉnh thành"
-              value={provinceValue}
+              value={provinceValue || provinceAddress}
+              keyName="province_name"
+              keyId="province_name"
             />
             <span className="absolute text-errBg text-sm right-[-10px] top-0">
               *
@@ -217,7 +211,9 @@ export default function ChangeInfo({ setIsEdit }) {
               name="districtAddress"
               register={register}
               label="Chọn quận huyện"
-              value={districtValue}
+              value={districtValue || districtAddress}
+              keyName="district_name"
+              keyId="district_name"
             />
             <span className="absolute text-errBg text-sm right-[-10px] top-0">
               *

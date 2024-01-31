@@ -10,6 +10,8 @@ export default function Select({
   register,
   label = "",
   value = "",
+  keyName = "",
+  keyId = "",
   ...props
 }) {
   return (
@@ -24,8 +26,8 @@ export default function Select({
         {data?.length > 0 &&
           data.map((item, index) => {
             return (
-              <option key={item.code} value={item.name}>
-                {item.name}
+              <option key={index} value={item[keyId]}>
+                {item[keyName]}
               </option>
             );
           })}

@@ -75,23 +75,26 @@ export default function CartItem({ product = {} }) {
         </div>
         <div className="flex justify-center header-item">
           <div className="flex items-center justify-center">
-            {!isEdit ? (
-              <ActionButton onClick={() => setIsEdit(true)} title="Sửa">
-                <i className="bi text-lg text-secondary bi-pencil-square"></i>
-              </ActionButton>
-            ) : (
-              <ActionButton onClick={handleUpdateQuantity} title="Cập nhật">
-                <RxUpdate className="text-lg text-secondary" />
-              </ActionButton>
+            {!isEdit && (
+              <>
+                <ActionButton onClick={() => setIsEdit(true)} title="Sửa">
+                  <i className="bi text-lg text-secondary bi-pencil-square"></i>
+                </ActionButton>
+
+                <ActionButton onClick={handleDeleteProductFromCart} title="Xóa">
+                  <i className="bi text-lg text-secondary bi-trash"></i>
+                </ActionButton>
+              </>
             )}
-            {!isEdit ? (
-              <ActionButton onClick={handleDeleteProductFromCart} title="Xóa">
-                <i className="bi text-lg text-secondary bi-trash"></i>
-              </ActionButton>
-            ) : (
-              <ActionButton onClick={handleCancelEdit} title="Huỷ">
-                <i className="bi text-lg text-secondary bi-ban"></i>
-              </ActionButton>
+            {isEdit && (
+              <>
+                <ActionButton onClick={handleUpdateQuantity} title="Cập nhật">
+                  <RxUpdate className="text-lg text-secondary" />
+                </ActionButton>
+                <ActionButton onClick={handleCancelEdit} title="Huỷ">
+                  <i className="bi text-lg text-secondary bi-ban"></i>
+                </ActionButton>
+              </>
             )}
           </div>
         </div>

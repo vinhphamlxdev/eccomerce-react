@@ -34,7 +34,6 @@ axiosInstance.interceptors.request.use(
 // // Do something with response data
 axiosInstance.interceptors.response.use(
   (response) => {
-    // console.log("success:", response);
     return response;
   },
 
@@ -43,9 +42,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     const token = localStorage.getItem(ACCESS_TOKEN);
     const refreshToken = localStorage.getItem(REFRESH_TOKEN);
-    const userInfo = localStorage.getItem(USER);
     console.log("error:", error);
-    //If refresh token expired call api to logout
     if (isRefreshTokenExpired(refreshToken)) {
       if (refreshToken) {
         for (const key in objKeys) {

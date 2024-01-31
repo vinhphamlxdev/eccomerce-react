@@ -90,14 +90,6 @@ export default function SignUpPage() {
     console.log(formData);
     signUpMutation(formData);
   };
-  const {
-    districtValue,
-    districts,
-    handleChangeDistricts,
-    handleChangeProvinces,
-    provincesData,
-    provinceValue,
-  } = useAddress(setFormValue, clearErrors);
   const handleAgreeTerms = (e) => {
     const checked = e.target.checked;
     setIsChecked((prev) => ({ ...prev, agreeTerms: checked }));
@@ -110,6 +102,18 @@ export default function SignUpPage() {
     const value = e.target.value;
     setFormValue(keyName, value);
   };
+  const {
+    districtValue,
+    districts,
+    handleChangeDistricts,
+    handleChangeProvinces,
+    provincesData,
+    provinceValue,
+    setDistrictValue,
+    setDistricts,
+    setProvinceValue,
+    isFetchingAddress,
+  } = useAddress(setFormValue, clearErrors);
   React.useEffect(() => {
     if (userInfo) {
       navigate("/");
@@ -118,6 +122,7 @@ export default function SignUpPage() {
   return (
     <StyledSignUp className="signup-page">
       {isSubmitting && <LoadingSreen />}
+      {isFetchingAddress && <LoadingSreen />}
       <BreadCrumb paths={breadcrumbPaths} />
 
       <div className="signup-container border-session">
@@ -230,6 +235,8 @@ export default function SignUpPage() {
                     register={register}
                     label="Chọn tỉnh thành"
                     value={provinceValue}
+                    keyName="province_name"
+                    keyId="province_name"
                   />
                   <Error error={errors?.provinceAddress?.message} />
                 </div>
@@ -247,6 +254,8 @@ export default function SignUpPage() {
                     register={register}
                     label="Chọn quận huyện"
                     value={districtValue}
+                    keyName="district_name"
+                    keyId="district_name"
                   />
                   <Error error={errors?.districtAddress?.message} />
                 </div>
@@ -382,7 +391,7 @@ const StyledSignUp = styled.div`
       flex-direction: column;
       align-items: flex-start;
       .form-error {
-        position: absolute;
+        max-width: 400px;
         left: 0;
         top: 106%;
       }

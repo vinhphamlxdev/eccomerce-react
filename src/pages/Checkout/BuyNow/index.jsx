@@ -1,29 +1,25 @@
-import React from "react";
-import useRecaptcha from "../../../hooks/useRecapcha";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import useAddress from "../../../hooks/useAddress";
-import {
-  EMAIL_REG_EXP,
-  PHONE_REG_EXP,
-  REGEX_PASSWORD,
-  RE_CAPCHA_KEY,
-} from "../../../common/constants";
-import * as Yup from "yup";
+import React from "react";
+import ReCAPTCHA from "react-google-recaptcha";
+import { set, useForm } from "react-hook-form";
+import { useQuery } from "react-query";
+import { RE_CAPCHA_KEY } from "../../../common/constants";
+import { buynowValidate } from "../../../common/validateSchema";
+import Button from "../../../components/Button";
+import CheckBox from "../../../components/Checkbox";
 import { Field } from "../../../components/Field";
 import { Input } from "../../../components/Input";
-import CheckBox from "../../../components/Checkbox";
-import ReCAPTCHA from "react-google-recaptcha";
-import Button from "../../../components/Button";
 import Select from "../../../components/Select";
-import { buynowValidate } from "../../../common/validateSchema";
+import useRecaptcha from "../../../hooks/useRecapcha";
+import { getAllDistrict, getAllProvince } from "../../../services/AddressApi";
+import LoadingSreen from "../../../components/Loading/LoadingSreen";
+import useAddress from "../../../hooks/useAddress";
 
 export default function BuyNow() {
   const [isChecked, setIsChecked] = React.useState({
     agreeTerms: false,
     promoInfo: false,
   });
-
   const {
     control,
     handleSubmit,
@@ -35,7 +31,15 @@ export default function BuyNow() {
     mode: "onChange",
     resolver: yupResolver(buynowValidate),
   });
-
+  const {
+    isFetchingAddress,
+    handleChangeDistricts,
+    handleChangeProvinces,
+    districtValue,
+    districts,
+    provinceValue,
+    provincesData,
+  } = useAddress(setFormValue, clearErrors);
   const {
     reCapchaValue,
     recaptchaExpired,
@@ -44,24 +48,11 @@ export default function BuyNow() {
   } = useRecaptcha();
   const handleRegister = async (data) => {
     if (recaptchaExpired) {
-      // Xử lý khi reCAPTCHA hết hạn
       console.log("reCAPTCHA expired. Please refresh and try again.");
       return;
     }
-
-    console.log(data);
   };
-  const {
-    districtValue,
-    districts,
-    handleChangeDistricts,
-    handleChangeProvinces,
-    provincesData,
-    provinceValue,
-    setDistrictValue,
-    setDistricts,
-    setProvinceValue,
-  } = useAddress(setFormValue, clearErrors);
+
   const handleAgreeTerms = (e) => {
     const checked = e.target.checked;
     setIsChecked((prev) => ({ ...prev, agreeTerms: checked }));
@@ -72,6 +63,7 @@ export default function BuyNow() {
   };
   return (
     <div className="checkout-form__control">
+      {isFetchingAddress && <LoadingSreen />}
       <div className="flex justify-end items-center">
         <span className="text-[#FF6600]  text-sm">*</span>
         <span className="text-[#8D8D8D]  text-sm">là thông tin bắt buộc</span>
@@ -147,6 +139,8 @@ export default function BuyNow() {
               register={register}
               label="Chọn tỉnh thành"
               value={provinceValue}
+              keyName="province_name"
+              keyId="province_name"
             />
             <span className="text-xs font-normal text-red-600">*</span>
           </div>
@@ -164,6 +158,8 @@ export default function BuyNow() {
               register={register}
               label="Chọn quận huyện"
               value={districtValue}
+              keyName="district_name"
+              keyId="district_name"
             />
             <span className="text-xs font-normal text-red-600">*</span>
           </div>

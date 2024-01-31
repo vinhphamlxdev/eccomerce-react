@@ -1,22 +1,18 @@
-import React from "react";
-import useRecaptcha from "../../../hooks/useRecapcha";
 import { yupResolver } from "@hookform/resolvers/yup";
+import React from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { useForm } from "react-hook-form";
-import useAddress from "../../../hooks/useAddress";
-import {
-  EMAIL_REG_EXP,
-  PHONE_REG_EXP,
-  REGEX_PASSWORD,
-  RE_CAPCHA_KEY,
-} from "../../../common/constants";
-import * as Yup from "yup";
+import { RE_CAPCHA_KEY } from "../../../common/constants";
+import { registerValidate } from "../../../common/validateSchema";
+import Button from "../../../components/Button";
+import CheckBox from "../../../components/Checkbox";
 import { Field } from "../../../components/Field";
 import { Input } from "../../../components/Input";
-import CheckBox from "../../../components/Checkbox";
-import ReCAPTCHA from "react-google-recaptcha";
-import Button from "../../../components/Button";
+import LoadingScreen from "../../../components/Loading/LoadingSreen";
 import Select from "../../../components/Select";
-import { registerValidate } from "../../../common/validateSchema";
+import useAddress from "../../../hooks/useAddress";
+import useRecaptcha from "../../../hooks/useRecapcha";
+
 export default function Register() {
   const [isChecked, setIsChecked] = React.useState({
     agreeTerms: false,
@@ -64,6 +60,7 @@ export default function Register() {
     setDistrictValue,
     setDistricts,
     setProvinceValue,
+    isFetchingAddress,
   } = useAddress(setFormValue, clearErrors);
   const handleAgreeTerms = (e) => {
     const checked = e.target.checked;
@@ -75,6 +72,7 @@ export default function Register() {
   };
   return (
     <div className="checkout-form__control">
+      {isFetchingAddress && <LoadingScreen />}
       <div className="flex justify-end items-center">
         <span className="text-[#FF6600]  text-sm">*</span>
         <span className="text-[#8D8D8D]  text-sm">là thông tin bắt buộc</span>
@@ -176,15 +174,17 @@ export default function Register() {
               data={provincesData}
               control={control}
               onChange={handleChangeProvinces}
-              name="cityAddress"
+              name="provinceAddress"
               register={register}
               label="Chọn tỉnh thành"
               value={provinceValue}
+              keyName="province_name"
+              keyId="province_name"
             />
             <span className="text-xs font-normal text-red-600">*</span>
           </div>
           <span className="text-xs font-normal text-red-600">
-            {errors?.cityAddress?.message}
+            {errors?.provinceAddress?.message}
           </span>
         </Field>
         <Field>
@@ -197,6 +197,8 @@ export default function Register() {
               register={register}
               label="Chọn quận huyện"
               value={districtValue}
+              keyName="district_name"
+              keyId="district_name"
             />
             <span className="text-xs font-normal text-red-600">*</span>
           </div>

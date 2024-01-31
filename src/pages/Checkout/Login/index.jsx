@@ -1,20 +1,17 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
+import { useForm } from "react-hook-form";
+import { LuLogIn } from "react-icons/lu";
+import { NavLink } from "react-router-dom";
+import { loginValidate } from "../../../common/validateSchema";
+import Button from "../../../components/Button";
 import { Field } from "../../../components/Field";
 import { Input } from "../../../components/Input";
-import { NavLink } from "react-router-dom";
-import Button from "../../../components/Button";
-import { LuLogIn } from "react-icons/lu";
-import * as Yup from "yup";
-import {
-  EMAIL_REG_EXP,
-  PHONE_REG_EXP,
-  REGEX_PASSWORD,
-} from "../../../common/constants";
-import useAddress from "../../../hooks/useAddress";
 import useRecaptcha from "../../../hooks/useRecapcha";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { loginValidate } from "../../../common/validateSchema";
+import { EMAIL_REG_EXP } from "../../../common/constants";
+import { toast } from "react-toastify";
+import { useMutation } from "react-query";
+import { loginUser } from "../../../services/AuthApi";
 
 export default function Login() {
   const {
@@ -28,33 +25,43 @@ export default function Login() {
     mode: "onChange",
     resolver: yupResolver(loginValidate),
   });
-
+  const {
+    mutate: loginMutatetion,
+    isPending,
+    isLoading,
+  } = useMutation({
+    mutationFn: (reqest) => loginUser(reqest),
+    onSuccess: (data) => {
+      console.log("success:", data);
+      const { accessToken, refreshToken } = data;
+      dispatch(setAccessTokenAndRefreshToken({ accessToken, refreshToken }));
+      reset();
+      toast.success("Đăng  nhập thành công!");
+      dispatch(setRender());
+      // setRender((prevRender) => !prevRender);
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Đăng nhập thất bại!");
+    },
+  });
   const {
     reCapchaValue,
     recaptchaExpired,
     handleRecapchaChange,
     handleExpiredRecapcha,
   } = useRecaptcha();
-  const handleLogin = async (data) => {
-    if (recaptchaExpired) {
-      // Xử lý khi reCAPTCHA hết hạn
-      console.log("reCAPTCHA expired. Please refresh and try again.");
-      return;
-    }
-
-    console.log(data);
+  const handleLogin = (data) => {
+    const { emailOrPhone, password } = data;
+    const key = EMAIL_REG_EXP.test(emailOrPhone) ? "email" : "phone";
+    const formData = {
+      [key]: emailOrPhone,
+      password: password,
+      mfaCode: "",
+    };
+    loginMutatetion(formData);
   };
-  const {
-    districtValue,
-    districts,
-    handleChangeDistricts,
-    handleChangeProvinces,
-    provicesData,
-    provinceValue,
-    setDistrictValue,
-    setDistricts,
-    setProvinceValue,
-  } = useAddress(setFormValue, clearErrors);
+
   const handleAgreeTerms = (e) => {
     const checked = e.target.checked;
     setIsChecked((prev) => ({ ...prev, agreeTerms: checked }));

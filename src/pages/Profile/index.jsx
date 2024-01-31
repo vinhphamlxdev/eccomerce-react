@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import BreadCrumb from "../../components/BreadCrumb";
@@ -6,6 +6,7 @@ import Button from "../../components/Button";
 import HeadingSession from "../../components/HeadingSession";
 import ChangeInfo from "./ChangeInfo";
 import ChangePassword from "./ChangePassword";
+import { useNavigate } from "react-router-dom";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Thành viên", url: "/profile" },
@@ -24,11 +25,16 @@ const navLink = [
 ];
 
 export default function Profile() {
-  const userInfo = useSelector((state) => state.auth.userInfo);
+  const userInfo = useSelector((state) => state.auth?.userInfo);
+  console.log(userInfo);
+  const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState({
     isChangePassword: false,
     isEditContactInfo: false,
   });
+  useEffect(() => {
+    !userInfo && navigate("/");
+  }, [userInfo]);
 
   return (
     <StyledProfile className="profile-page">
@@ -107,7 +113,7 @@ export default function Profile() {
             {!isEdit?.isEditContactInfo && (
               <div className="p-4 flex flex-col gap-y-1">
                 <div className="flex items-center">
-                  <span className="text-[#3B3B3B] text-sm w-[110px]">
+                  <span className="text-[#3B3B3B] text-sm w-[110px] shrink-0">
                     Họ tên
                   </span>
                   <span className="text-[#000] text-base">
@@ -115,15 +121,15 @@ export default function Profile() {
                   </span>
                 </div>
                 <div className="flex items-center">
-                  <span className="text-[#3B3B3B] text-sm w-[110px]">
+                  <span className="text-[#3B3B3B] text-sm w-[110px] shrink-0">
                     Điện thoại
                   </span>
                   <span className="text-[#000] text-base">
-                    {userInfo?.phoneNumber}
+                    {userInfo?.phoneNumber.replace("+84", "")}
                   </span>
                 </div>
                 <div className="flex items-center">
-                  <span className="text-[#3B3B3B] text-sm w-[110px]">
+                  <span className="text-[#3B3B3B] text-sm w-[110px] shrink-0">
                     Địa chỉ
                   </span>
                   <span className="text-[#000] text-base">

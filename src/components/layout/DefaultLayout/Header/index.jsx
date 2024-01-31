@@ -94,7 +94,7 @@ export const Header = React.memo(function Header({
         )}
         {userInfo && <LogoutButton />}
         <NavLink
-          to={"/"}
+          to={"/profile"}
           className="acount-btn hidden items-center  gap-x-2 bg-[#B21E02] text-[#F1F3E4] py-2 px-2 text-sm"
         >
           <i className="bi text-[#FFFF00] text-base bi-person-fill"></i>
@@ -104,7 +104,7 @@ export const Header = React.memo(function Header({
       {userInfo && (
         <Link
           to={"/profile"}
-          className="mt-[1px] bg-primary flex justify-center gap-x-2 py-2 px-3"
+          className="mt-[1px] bg-primary  justify-center gap-x-2 py-2 px-3 hidden account-user"
         >
           <i className="bi bi-person-circle text-base text-secondary"></i>
           <span className="text-white text-sm leading-[22px]">
@@ -327,6 +327,9 @@ const StyledHeader = styled.div`
     }
   }
   @media screen and (max-width: 580px) {
+    .account-user {
+      display: flex;
+    }
     .header-signin {
       display: none;
     }

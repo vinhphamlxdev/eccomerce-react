@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import BreadCrumb from "../../components/BreadCrumb";
@@ -9,14 +9,16 @@ import OrderItem from "../../components/OrderItem";
 import BuyNow from "./BuyNow";
 import Login from "./Login";
 import Register from "./Register";
+import { useNavigate } from "react-router-dom";
 const breadcrumbPaths = [
   { label: "Trang chủ", url: "/" },
   { label: "Điền Thông Tin", url: "/checkout" },
 ];
 
 export default function Checkout() {
-  const carts = useSelector((state) => state.cart.cartItems);
-  console.log("carts", carts);
+  const carts = useSelector((state) => state.cart?.cartItems);
+
+  const navigate = useNavigate();
   const [showType, setShowType] = React.useState({
     isLogin: true,
     isBuyNow: false,
@@ -49,7 +51,9 @@ export default function Checkout() {
       }));
     }
   };
-
+  useEffect(() => {
+    !carts?.length && navigate("/");
+  }, [carts]);
   return (
     <CheckoutStyled className="checkout-page">
       <BreadCrumb paths={breadcrumbPaths} />

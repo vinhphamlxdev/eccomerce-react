@@ -1,22 +1,22 @@
 import React, { useEffect } from "react";
 import { useQuery } from "react-query";
-import { getAllAddress } from "../services/AddressApi";
+import { getAllDistrict, getAllProvince } from "../services/AddressApi";
 
 export default function useAddress(setFormValue, clearErrors) {
   const [provinceValue, setProvinceValue] = React.useState("");
   const [districtValue, setDistrictValue] = React.useState("");
   const [districts, setDistricts] = React.useState([]);
+  const [isFetchingAddress, setIsFetchingAddress] = React.useState(false);
 
   const { data: provincesData } = useQuery({
     queryKey: ["provices"],
-    onSuccess: () => {},
-    queryFn: () => getAllAddress(),
+    queryFn: () => getAllProvince(),
+    staleTime: Infinity,
     onError: (err) => {
       console.log(err);
     },
   });
-
-  const handleChangeProvinces = (e) => {
+  const handleChangeProvinces = async (e) => {
     const provinceName = e.target.value;
     if (!provinceName) {
       setProvinceValue("");
@@ -24,13 +24,17 @@ export default function useAddress(setFormValue, clearErrors) {
     }
     setProvinceValue(provinceName);
     if (provinceName) {
-      clearErrors("cityAddress");
-      const currProvince = provincesData.find(
-        (province) => province.name === provinceName
-      );
-      if (currProvince) {
-        setDistricts(currProvince.districts);
+      //call api to get array district
+      const provinceId = provincesData?.results.find(
+        (province) => province.province_name === provinceName
+      )?.province_id;
+      clearErrors("provinceAddress");
+      setIsFetchingAddress(true);
+      if (provinceId) {
+        const response = await getAllDistrict(provinceId);
+        response?.results && setDistricts(response?.results);
       }
+      setIsFetchingAddress(false);
     }
     setDistrictValue("");
     setFormValue("districtAddress", "");
@@ -42,6 +46,7 @@ export default function useAddress(setFormValue, clearErrors) {
       setDistrictValue(districtName);
     }
   };
+
   //
 
   return {
@@ -52,7 +57,8 @@ export default function useAddress(setFormValue, clearErrors) {
     districts,
     setDistrictValue,
     setProvinceValue,
-    provincesData,
+    provincesData: provincesData?.results || [],
     setDistricts,
+    isFetchingAddress,
   };
 }
