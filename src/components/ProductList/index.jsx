@@ -4,14 +4,9 @@ import ProductItem from "../ProductItem";
 export default function ProductList() {
   return (
     <StyledProductList className="grid grid-cols-6 gap-x-3 gap-y-5 product-list">
-      <ProductItem />
-      <ProductItem />
-      <ProductItem />
-      <ProductItem />
-      <ProductItem />
-      <ProductItem />
-      <ProductItem />
-      <ProductItem />
+      {new Array(12).fill(0).map((item, index) => (
+        <ProductItem key={index} />
+      ))}
     </StyledProductList>
   );
 }

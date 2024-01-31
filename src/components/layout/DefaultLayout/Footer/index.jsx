@@ -4,81 +4,94 @@ import { AiOutlineThunderbolt } from "react-icons/ai";
 import logo from "../../../../assets/bocongthuong.png";
 import ftbg from "../../../../assets/ftbg.jpg";
 import Button from "../../../Button";
+const arrButton = [
+  {
+    title: "Trang chủ",
+    icon: "bi-house",
+  },
+  {
+    title: "Tài liệu kỹ thuật",
+    icon: "bi-file-earmark-pdf",
+  },
+  {
+    title: "Hướng dẫn",
+    icon: "bi-question-circle",
+  },
+  {
+    title: "Bảng giá sản phẩm",
+    icon: "bi-database",
+  },
+  {
+    title: "Liên hệ",
+    icon: "bi-file-earmark-person",
+  },
+  {
+    title: "Quy định - điều khoản sử dụng website",
+    icon: "bi-file-earmark-text",
+  },
+];
+const arrButton2 = [
+  {
+    title: "Công tắc ổ cắm và phụ kiện",
+  },
+  {
+    title: "Phụ kiện tủ điện, vỏ tủ điện",
+  },
+  {
+    title: "Dụng cụ cầm tay, dụng cụ tools",
+  },
+  {
+    title: "Thiết bị chống sét, kim thu sét",
+  },
+  {
+    title: "Điện dân dụng và phụ kiện",
+  },
+  {
+    title: "Thiết bị đóng cắt, chống rò điện",
+  },
+  {
+    title: "Đèn chiếu sáng - đèn trang trí",
+  },
+  {
+    title: "Thiết bị điều khiển, tự động hóa",
+  },
+  {
+    title: "ATS, MTS, UPS, cầu dao đảo",
+  },
+  {
+    title: "Cáp điện, cáp tín hiệu - điều khiển",
+  },
+  {
+    title: "Thiết bị điện trung thế, đường dây",
+  },
+  {
+    title: "Biến áp, ổn áp, tụ bù, cuộn kháng",
+  },
+];
 export default function Footer() {
   return (
     <StyledFooter className="footer-session bg-bgFooter">
       <div className="flex flex-wrap gap-y-3 justify-center items-center p-3 w-full gap-x-3">
-        <Button title="Trang chủ" className="bg-bgbtn">
-          <i className="bi text-base text-secondary bi-house"></i>
-        </Button>
-        <Button title="Tài liệu kỹ thuật" className="bg-bgbtn">
-          <i className="bi text-base text-secondary bi-file-earmark-pdf"></i>
-        </Button>
-        <Button title="Hướng dẫn" className="bg-bgbtn">
-          <i className="bi text-base text-secondary bi-question-circle"></i>
-        </Button>
-        <Button title="Bảng giá sản phẩm" className="bg-bgbtn">
-          <i className="bi text-base text-secondary bi-database"></i>
-        </Button>
-        <Button title="Liên hệ" className="bg-bgbtn">
-          <i className="bi text-base text-secondary bi-file-earmark-person"></i>
-        </Button>
-        <Button
-          title="Quy định - điều khoản sử dụng website"
-          className="bg-bgbtn"
-        >
-          <i className="bi text-base text-secondary bi-file-earmark-text"></i>
-        </Button>
+        {new Array(6).fill(0).map((item, index) => (
+          <Button
+            key={index}
+            title={arrButton[index].title}
+            className="bg-bgbtn"
+          >
+            <i className={`bi ${arrButton[index].icon} text-secondary`} />
+          </Button>
+        ))}
       </div>
       <div className="flex justify-center items-center flex-wrap gap-y-2 p-3 w-full gap-x-3">
-        <button className="bg-transparent hover:bg-white transition-all border-solid border-[#6A1300] border text-[#430B01 py-1 rounded-sm flex items-center px-2 gap-x-1">
-          <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
-          <span className="text-sm">Công Tắc Ổ Cắm và Phụ Kiện</span>
-        </button>
-        <button className="bg-transparent hover:bg-white transition-all border-solid border-[#6A1300] border text-[#430B01 py-1 rounded-sm flex items-center px-2 gap-x-1">
-          <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
-          <span className="text-sm">Phụ Kiện Tủ Điện, Vỏ Tủ Điện</span>
-        </button>
-        <button className="bg-transparent hover:bg-white transition-all border-solid border-[#6A1300] border text-[#430B01 py-1 rounded-sm flex items-center px-2 gap-x-1">
-          <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
-          <span className="text-sm">Dụng cụ cầm tay, Dụng Cụ Tools</span>
-        </button>
-        <button className="bg-transparent hover:bg-white transition-all border-solid border-[#6A1300] border text-[#430B01 py-1 rounded-sm flex items-center px-2 gap-x-1">
-          <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
-          <span className="text-sm">Thiết Bị Chống Sét, Kim Thu Sét</span>
-        </button>
-        <button className="bg-transparent hover:bg-white transition-all border-solid border-[#6A1300] border text-[#430B01 py-1 rounded-sm flex items-center px-2 gap-x-1">
-          <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
-          <span className="text-sm">Điện Dân Dụng và Phụ Kiện</span>
-        </button>
-        <button className="bg-transparent hover:bg-white transition-all border-solid border-[#6A1300] border text-[#430B01 py-1 rounded-sm flex items-center px-2 gap-x-1">
-          <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
-          <span className="text-sm">Thiết Bị Đóng Cắt, Chống Rò Điện</span>
-        </button>
-        <button className="bg-transparent hover:bg-white transition-all border-solid border-[#6A1300] border text-[#430B01 py-1 rounded-sm flex items-center px-2 gap-x-1">
-          <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
-          <span className="text-sm">Đèn Chiếu Sáng - Đèn Trang Trí</span>
-        </button>
-        <button className="bg-transparent hover:bg-white transition-all border-solid border-[#6A1300] border text-[#430B01 py-1 rounded-sm flex items-center px-2 gap-x-1">
-          <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
-          <span className="text-sm">Thiết Bị Điều Khiển, Tự Động Hóa</span>
-        </button>
-        <button className="bg-transparent hover:bg-white transition-all border-solid border-[#6A1300] border text-[#430B01 py-1 rounded-sm flex items-center px-2 gap-x-1">
-          <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
-          <span className="text-sm">ATS, MTS, UPS, Cầu Dao Đảo</span>
-        </button>
-        <button className="bg-transparent hover:bg-white transition-all border-solid border-[#6A1300] border text-[#430B01 py-1 rounded-sm flex items-center px-2 gap-x-1">
-          <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
-          <span className="text-sm">Cáp Điện, Cáp Tín Hiệu - Điều Khiển</span>
-        </button>
-        <button className="bg-transparent hover:bg-white transition-all border-solid border-[#6A1300] border text-[#430B01 py-1 rounded-sm flex items-center px-2 gap-x-1">
-          <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
-          <span className="text-sm">Thiết Bị Điện Trung Thế, Đường Dây</span>
-        </button>
-        <button className="bg-transparent hover:bg-white transition-all border-solid border-[#6A1300] border text-[#430B01 py-1 rounded-sm flex items-center px-2 gap-x-1">
-          <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
-          <span className="text-sm">Biến Áp, Ổn Áp, Tụ bù, Cuộn kháng</span>
-        </button>
+        {new Array(12).fill(0).map((item, index) => (
+          <button
+            key={index}
+            className="bg-transparent hover:bg-white transition-all border-solid border-[#6A1300] border text-[#430B01 py-1 rounded-sm flex items-center px-2 gap-x-1"
+          >
+            <AiOutlineThunderbolt className="text-base text-[#B21E02]" />
+            <span className="text-sm">{arrButton2[index].title}</span>
+          </button>
+        ))}
       </div>
       <div className="p-3 border-dotted border-t border-primary">
         <div className="flex justify-center items-center">
